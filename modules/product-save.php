@@ -14,12 +14,10 @@ add_action('admin_post_k86_save_product', 'k86_save_product');
 
 function k86_save_product() {
 
-    // Kiểm tra quyền
     if (!current_user_can('manage_options')) {
         wp_die('Bạn không có quyền.');
     }
 
-    // Kiểm tra Nonce
     check_admin_referer('k86_save_product', 'k86_nonce');
 
     global $wpdb;
@@ -41,16 +39,8 @@ function k86_save_product() {
             'status'      => 'active'
         ),
         array(
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s'
+            '%s','%s','%s','%s','%s',
+            '%s','%s','%s','%s','%s'
         )
     );
 
@@ -68,12 +58,10 @@ add_action('admin_post_k86_update_product', 'k86_update_product');
 
 function k86_update_product() {
 
-    // Kiểm tra quyền
     if (!current_user_can('manage_options')) {
         wp_die('Bạn không có quyền.');
     }
 
-    // Kiểm tra Nonce
     check_admin_referer('k86_update_product', 'k86_nonce');
 
     global $wpdb;
@@ -97,13 +85,7 @@ function k86_update_product() {
             'id' => $id
         ),
         array(
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s',
-            '%s'
+            '%s','%s','%s','%s','%s','%s','%s'
         ),
         array(
             '%d'
