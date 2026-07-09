@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Plugin Name: K86 Pro
@@ -22,7 +21,7 @@ require_once plugin_dir_path(__FILE__) . 'modules/product-manager.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-add.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-edit.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
-require_once plugin_dir_path(__FILE__) . 'modules/product-delete.php';   // ← Thêm dòng này
+require_once plugin_dir_path(__FILE__) . 'modules/product-delete.php';
 
 register_activation_hook(__FILE__, 'k86_install');
 
@@ -53,4 +52,25 @@ function k86_install() {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
     dbDelta($sql);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tải CSS, JavaScript và Media Library
+|--------------------------------------------------------------------------
+*/
+
+add_action('admin_enqueue_scripts', 'k86_admin_assets');
+
+function k86_admin_assets($hook) {
+
+    wp_enqueue_media();
+
+    wp_enqueue_script(
+        'k86-media',
+        plugin_dir_url(__FILE__) . 'assets/js/media.js',
+        array('jquery'),
+        '1.0.0',
+        true
+    );
 }
