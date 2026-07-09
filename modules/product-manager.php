@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -27,7 +28,7 @@ function k86_products_page() {
 
         <h1>Quản lý sản phẩm</h1>
 
-        <a href="#" class="page-title-action">
+        <a href="<?php echo admin_url('admin.php?page=k86-add-product'); ?>" class="page-title-action">
             + Thêm sản phẩm
         </a>
 
