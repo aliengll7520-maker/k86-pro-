@@ -1,4 +1,3 @@
-
 <?php
 
 if (!defined('ABSPATH')) {
@@ -71,11 +70,9 @@ function k86_products_page() {
 
                     <td>
 
-                        <a href="<?php echo esc_url(
-                            admin_url(
-                                'admin.php?page=k86-edit-product&id=' . absint($product->id)
-                            )
-                        ); ?>">
+                        <a href="<?php echo esc_url(admin_url(
+                            'admin.php?page=k86-edit-product&id=' . absint($product->id)
+                        )); ?>">
                             Sửa
                         </a>
 
