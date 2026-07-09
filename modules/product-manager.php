@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -24,7 +23,15 @@ function k86_products_page() {
 
 <div class="wrap">
 
-    <h1>Quản lý sản phẩm</h1>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+
+        <h1>Quản lý sản phẩm</h1>
+
+        <a href="#" class="page-title-action">
+            + Thêm sản phẩm
+        </a>
+
+    </div>
 
     <p>Đây là nơi quản lý các sản phẩm Affiliate của K86 Pro.</p>
 
