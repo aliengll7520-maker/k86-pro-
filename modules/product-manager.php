@@ -16,10 +16,14 @@ function k86_product_menu() {
         'k86-products',
         'k86_products_page'
     );
-
 }
 
 function k86_products_page() {
+
+    global $wpdb;
+
+    $table = $wpdb->prefix . 'k86_products';
+    $products = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC");
 ?>
 
 <div class="wrap">
@@ -28,7 +32,7 @@ function k86_products_page() {
 
         <h1>Quản lý sản phẩm</h1>
 
-        <a href="<?php echo admin_url('admin.php?page=k86-add-product'); ?>" class="page-title-action">
+        <a href="<?php echo esc_url(admin_url('admin.php?page=k86-add-product')); ?>" class="page-title-action">
             + Thêm sản phẩm
         </a>
 
@@ -47,11 +51,27 @@ function k86_products_page() {
         </thead>
 
         <tbody>
+
+        <?php if (!empty($products)) : ?>
+
+            <?php foreach ($products as $product) : ?>
+
+                <tr>
+                    <td><?php echo esc_html($product->name); ?></td>
+                    <td><?php echo esc_html($product->price); ?></td>
+                    <td><?php echo esc_html($product->status); ?></td>
+                </tr>
+
+            <?php endforeach; ?>
+
+        <?php else : ?>
+
             <tr>
-                <td>Camera Wifi TP-Link Tapo C220</td>
-                <td>699.000đ</td>
-                <td>Hoạt động</td>
+                <td colspan="3">Chưa có sản phẩm nào.</td>
             </tr>
+
+        <?php endif; ?>
+
         </tbody>
 
     </table>
