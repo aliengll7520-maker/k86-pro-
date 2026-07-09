@@ -62,13 +62,29 @@ function k86_products_page() {
             <?php foreach ($products as $product) : ?>
 
                 <tr>
+
                     <td><?php echo esc_html($product->name); ?></td>
+
                     <td><?php echo esc_html($product->price); ?></td>
+
                     <td><?php echo esc_html(ucfirst($product->status)); ?></td>
 
                     <td>
-                        <a href="#">Sửa</a> |
-                        <a href="#">Xóa</a>
+
+                        <a href="<?php echo esc_url(
+                            admin_url(
+                                'admin.php?page=k86-edit-product&id=' . absint($product->id)
+                            )
+                        ); ?>">
+                            Sửa
+                        </a>
+
+                        |
+
+                        <a href="#">
+                            Xóa
+                        </a>
+
                     </td>
 
                 </tr>
