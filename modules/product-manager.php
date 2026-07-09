@@ -1,3 +1,4 @@
+
 <?php
 
 if (!defined('ABSPATH')) {
@@ -23,7 +24,10 @@ function k86_products_page() {
     global $wpdb;
 
     $table = $wpdb->prefix . 'k86_products';
-    $products = $wpdb->get_results("SELECT * FROM $table ORDER BY id DESC");
+
+    $products = $wpdb->get_results(
+        "SELECT * FROM {$table} ORDER BY id DESC"
+    );
 ?>
 
 <div class="wrap">
@@ -59,7 +63,7 @@ function k86_products_page() {
                 <tr>
                     <td><?php echo esc_html($product->name); ?></td>
                     <td><?php echo esc_html($product->price); ?></td>
-                    <td><?php echo esc_html($product->status); ?></td>
+                    <td><?php echo esc_html(ucfirst($product->status)); ?></td>
                 </tr>
 
             <?php endforeach; ?>
