@@ -48,6 +48,27 @@ function k86_add_product_form() {
                 </td>
             </tr>
 
+            <!-- Thêm trường Ảnh sản phẩm -->
+
+            <tr>
+                <th><label for="image">Ảnh sản phẩm</label></th>
+                <td>
+
+                    <input
+                        type="text"
+                        id="image"
+                        name="image"
+                        class="regular-text"
+                        placeholder="https://..."
+                    >
+
+                    <p class="description">
+                        Tạm thời nhập URL ảnh. Phiên bản tiếp theo sẽ dùng Media Library.
+                    </p>
+
+                </td>
+            </tr>
+
             <tr>
                 <th><label for="shopee">Link Shopee</label></th>
                 <td>
