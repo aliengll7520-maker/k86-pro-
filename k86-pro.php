@@ -16,3 +16,4 @@ if (!defined('ABSPATH')) {
 require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 require_once plugin_dir_path(__FILE__) . 'admin/admin.php';
 require_once plugin_dir_path(__FILE__) . 'modules/affiliate-box.php';
+require_once plugin_dir_path(__FILE__) . 'settings/settings.php';
