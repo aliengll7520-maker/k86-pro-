@@ -6,17 +6,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function k86_affiliate_box() {
 
-    return '
+    ob_start();
+    ?>
+
     <div class="k86-box">
-        <h3 class="k86-title">K86 Affiliate Box</h3>
+        <h3 class="k86-title">Camera Wifi TP-Link Tapo C220</h3>
 
-        <p>Đây là hộp sản phẩm đầu tiên của K86 Pro.</p>
+        <p>
+            Camera AI 4MP, quay 360°, đàm thoại 2 chiều,
+            phát hiện chuyển động thông minh.
+        </p>
 
-        <a href="#" class="k86-buy">
-            Mua ngay
+        <div class="k86-price">
+            Giá tham khảo: <strong>699.000đ</strong>
+        </div>
+
+        <a class="k86-buy" href="#" target="_blank">
+            🛒 Mua ngay
         </a>
-    </div>';
+    </div>
 
+    <?php
+    return ob_get_clean();
 }
 
 add_shortcode( 'k86_box', 'k86_affiliate_box' );
