@@ -34,7 +34,7 @@ function k86_save_product() {
             'shopee'      => esc_url_raw($_POST['shopee'] ?? ''),
             'tiktok'      => esc_url_raw($_POST['tiktok'] ?? ''),
             'lazada'      => esc_url_raw($_POST['lazada'] ?? ''),
-            'image'       => '',
+            'image'       => esc_url_raw($_POST['image'] ?? ''),
             'description' => sanitize_textarea_field($_POST['description'] ?? ''),
             'status'      => 'active'
         ),
@@ -79,13 +79,15 @@ function k86_update_product() {
             'shopee'      => esc_url_raw($_POST['shopee'] ?? ''),
             'tiktok'      => esc_url_raw($_POST['tiktok'] ?? ''),
             'lazada'      => esc_url_raw($_POST['lazada'] ?? ''),
+            'image'       => esc_url_raw($_POST['image'] ?? ''),
             'description' => sanitize_textarea_field($_POST['description'] ?? '')
         ),
         array(
             'id' => $id
         ),
         array(
-            '%s','%s','%s','%s','%s','%s','%s'
+            '%s','%s','%s','%s',
+            '%s','%s','%s','%s'
         ),
         array(
             '%d'
