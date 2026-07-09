@@ -51,6 +51,7 @@ function k86_products_page() {
                 <th>Tên sản phẩm</th>
                 <th>Giá</th>
                 <th>Trạng thái</th>
+                <th>Thao tác</th>
             </tr>
         </thead>
 
@@ -64,6 +65,12 @@ function k86_products_page() {
                     <td><?php echo esc_html($product->name); ?></td>
                     <td><?php echo esc_html($product->price); ?></td>
                     <td><?php echo esc_html(ucfirst($product->status)); ?></td>
+
+                    <td>
+                        <a href="#">Sửa</a> |
+                        <a href="#">Xóa</a>
+                    </td>
+
                 </tr>
 
             <?php endforeach; ?>
@@ -71,7 +78,7 @@ function k86_products_page() {
         <?php else : ?>
 
             <tr>
-                <td colspan="3">Chưa có sản phẩm nào.</td>
+                <td colspan="4">Chưa có sản phẩm nào.</td>
             </tr>
 
         <?php endif; ?>
