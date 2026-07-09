@@ -78,7 +78,14 @@ function k86_products_page() {
 
                         |
 
-                        <a href="#">
+                        <a href="<?php echo wp_nonce_url(
+                            admin_url(
+                                'admin-post.php?action=k86_delete_product&id=' . absint($product->id)
+                            ),
+                            'k86_delete_product',
+                            'k86_nonce'
+                        ); ?>"
+                        onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
                             Xóa
                         </a>
 
