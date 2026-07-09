@@ -47,10 +47,15 @@ function k86_products_page() {
 
         <thead>
             <tr>
+
+                <!-- Cột ảnh -->
+                <th>Ảnh</th>
+
                 <th>Tên sản phẩm</th>
                 <th>Giá</th>
                 <th>Trạng thái</th>
                 <th>Thao tác</th>
+
             </tr>
         </thead>
 
@@ -62,6 +67,25 @@ function k86_products_page() {
 
                 <tr>
 
+                    <!-- Hiển thị ảnh -->
+                    <td>
+
+                        <?php if (!empty($product->image)) : ?>
+
+                            <img
+                                src="<?php echo esc_url($product->image); ?>"
+                                width="60"
+                                height="60"
+                                style="object-fit:cover;border-radius:6px;">
+
+                        <?php else : ?>
+
+                            Không có ảnh
+
+                        <?php endif; ?>
+
+                    </td>
+
                     <td><?php echo esc_html($product->name); ?></td>
 
                     <td><?php echo esc_html($product->price); ?></td>
@@ -70,9 +94,11 @@ function k86_products_page() {
 
                     <td>
 
-                        <a href="<?php echo esc_url(admin_url(
-                            'admin.php?page=k86-edit-product&id=' . absint($product->id)
-                        )); ?>">
+                        <a href="<?php echo esc_url(
+                            admin_url(
+                                'admin.php?page=k86-edit-product&id=' . absint($product->id)
+                            )
+                        ); ?>">
                             Sửa
                         </a>
 
@@ -98,7 +124,10 @@ function k86_products_page() {
         <?php else : ?>
 
             <tr>
-                <td colspan="4">Chưa có sản phẩm nào.</td>
+
+                <!-- Đổi colspan từ 4 thành 5 -->
+                <td colspan="5">Chưa có sản phẩm nào.</td>
+
             </tr>
 
         <?php endif; ?>
