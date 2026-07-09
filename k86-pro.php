@@ -16,11 +16,16 @@ require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 require_once plugin_dir_path(__FILE__) . 'admin/admin.php';
 require_once plugin_dir_path(__FILE__) . 'modules/affiliate-box.php';
 require_once plugin_dir_path(__FILE__) . 'settings/settings.php';
+
 require_once plugin_dir_path(__FILE__) . 'modules/product-manager.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-add.php';
+require_once plugin_dir_path(__FILE__) . 'modules/product-edit.php';   // <-- Thêm dòng này
+require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
+
 register_activation_hook(__FILE__, 'k86_install');
 
 function k86_install() {
+
     global $wpdb;
 
     $table = $wpdb->prefix . 'k86_products';
@@ -44,6 +49,6 @@ function k86_install() {
     ) $charset_collate;";
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
     dbDelta($sql);
 }
-require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
