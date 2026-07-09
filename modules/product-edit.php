@@ -1,4 +1,3 @@
-
 <?php
 
 if (!defined('ABSPATH')) {
@@ -39,7 +38,9 @@ function k86_edit_product_form() {
         return;
     }
 
-?><div class="wrap">
+?>
+
+<div class="wrap">
 
     <h1>Sửa sản phẩm Affiliate</h1>
 
@@ -111,6 +112,22 @@ function k86_edit_product_form() {
                         name="lazada"
                         class="large-text"
                         value="<?php echo esc_attr($product->lazada); ?>">
+                </td>
+            </tr>
+
+            <tr>
+                <th><label for="image">Ảnh sản phẩm</label></th>
+                <td>
+                    <input
+                        type="url"
+                        id="image"
+                        name="image"
+                        class="large-text"
+                        value="<?php echo esc_attr($product->image); ?>">
+
+                    <p class="description">
+                        Dán URL ảnh sản phẩm. (Ở phiên bản sau sẽ hỗ trợ chọn từ Media Library.)
+                    </p>
                 </td>
             </tr>
 
