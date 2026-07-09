@@ -33,3 +33,30 @@ font-weight:bold;
 .k86-button:hover{
 background:#ff4500;
 }
+.k86-box{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:20px;
+    background:#fff;
+    margin:20px 0;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+
+.k86-box h3{
+    margin:0 0 10px;
+    color:#ff6600;
+}
+
+.k86-buy{
+    display:inline-block;
+    background:#ff6600;
+    color:#fff;
+    padding:10px 20px;
+    border-radius:6px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.k86-buy:hover{
+    background:#e65100;
+}
