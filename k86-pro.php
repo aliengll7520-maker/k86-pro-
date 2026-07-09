@@ -19,7 +19,7 @@ require_once plugin_dir_path(__FILE__) . 'settings/settings.php';
 
 require_once plugin_dir_path(__FILE__) . 'modules/product-manager.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-add.php';
-require_once plugin_dir_path(__FILE__) . 'modules/product-edit.php';   // <-- Thêm dòng này
+require_once plugin_dir_path(__FILE__) . 'modules/product-edit.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
 
 register_activation_hook(__FILE__, 'k86_install');
