@@ -1,3 +1,4 @@
+
 <?php
 
 if (!defined('ABSPATH')) {
@@ -16,25 +17,15 @@ function k86_edit_product_page() {
         'k86-edit-product',
         'k86_edit_product_form'
     );
-
 }
 
 function k86_edit_product_form() {
-
-    if (!current_user_can('manage_options')) {
-        wp_die('Bạn không có quyền.');
-    }
 
     global $wpdb;
 
     $table = $wpdb->prefix . 'k86_products';
 
     $id = isset($_GET['id']) ? absint($_GET['id']) : 0;
-
-    if (!$id) {
-        echo '<div class="notice notice-error"><p>ID sản phẩm không hợp lệ.</p></div>';
-        return;
-    }
 
     $product = $wpdb->get_row(
         $wpdb->prepare(
@@ -48,55 +39,102 @@ function k86_edit_product_form() {
         return;
     }
 
-?>
+?><div class="wrap">
 
-<div class="wrap">
+    <h1>Sửa sản phẩm Affiliate</h1>
 
-    <h1>Sửa sản phẩm</h1>
+    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
 
-    <table class="form-table">
+        <input type="hidden" name="action" value="k86_update_product">
 
-        <tr>
-            <th>ID</th>
-            <td><?php echo esc_html($product->id); ?></td>
-        </tr>
+        <input type="hidden" name="id" value="<?php echo absint($product->id); ?>">
 
-        <tr>
-            <th>Tên sản phẩm</th>
-            <td><?php echo esc_html($product->name); ?></td>
-        </tr>
+        <?php wp_nonce_field('k86_update_product', 'k86_nonce'); ?>
 
-        <tr>
-            <th>Giá</th>
-            <td><?php echo esc_html($product->price); ?></td>
-        </tr>
+        <table class="form-table">
 
-        <tr>
-            <th>Link Shopee</th>
-            <td><?php echo esc_html($product->shopee); ?></td>
-        </tr>
+            <tr>
+                <th><label for="name">Tên sản phẩm</label></th>
+                <td>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        class="regular-text"
+                        value="<?php echo esc_attr($product->name); ?>"
+                        required>
+                </td>
+            </tr>
 
-        <tr>
-            <th>Link TikTok</th>
-            <td><?php echo esc_html($product->tiktok); ?></td>
-        </tr>
+            <tr>
+                <th><label for="price">Giá</label></th>
+                <td>
+                    <input
+                        type="text"
+                        id="price"
+                        name="price"
+                        class="regular-text"
+                        value="<?php echo esc_attr($product->price); ?>">
+                </td>
+            </tr>
 
-        <tr>
-            <th>Link Lazada</th>
-            <td><?php echo esc_html($product->lazada); ?></td>
-        </tr>
+            <tr>
+                <th><label for="shopee">Link Shopee</label></th>
+                <td>
+                    <input
+                        type="url"
+                        id="shopee"
+                        name="shopee"
+                        class="large-text"
+                        value="<?php echo esc_attr($product->shopee); ?>">
+                </td>
+            </tr>
 
-        <tr>
-            <th>Trạng thái</th>
-            <td><?php echo esc_html($product->status); ?></td>
-        </tr>
+            <tr>
+                <th><label for="tiktok">Link TikTok Shop</label></th>
+                <td>
+                    <input
+                        type="url"
+                        id="tiktok"
+                        name="tiktok"
+                        class="large-text"
+                        value="<?php echo esc_attr($product->tiktok); ?>">
+                </td>
+            </tr>
 
-    </table>
+            <tr>
+                <th><label for="lazada">Link Lazada</label></th>
+                <td>
+                    <input
+                        type="url"
+                        id="lazada"
+                        name="lazada"
+                        class="large-text"
+                        value="<?php echo esc_attr($product->lazada); ?>">
+                </td>
+            </tr>
 
-    <p>
-        <strong>Giai đoạn tiếp theo:</strong>
-        Chúng ta sẽ biến bảng thông tin này thành biểu mẫu để cập nhật dữ liệu.
-    </p>
+            <tr>
+                <th><label for="description">Mô tả</label></th>
+                <td>
+                    <textarea
+                        id="description"
+                        name="description"
+                        rows="6"
+                        class="large-text"><?php echo esc_textarea($product->description); ?></textarea>
+                </td>
+            </tr>
+
+        </table>
+
+        <p>
+            <input
+                type="submit"
+                class="button button-primary"
+                value="Cập nhật sản phẩm">
+        </p>
+
+    </form>
 
 </div>
 
