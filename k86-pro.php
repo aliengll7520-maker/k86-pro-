@@ -12,6 +12,12 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+/*
+|--------------------------------------------------------------------------
+| Nạp các module
+|--------------------------------------------------------------------------
+*/
+
 require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
 require_once plugin_dir_path(__FILE__) . 'admin/admin.php';
 require_once plugin_dir_path(__FILE__) . 'modules/affiliate-box.php';
@@ -22,6 +28,12 @@ require_once plugin_dir_path(__FILE__) . 'modules/product-add.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-edit.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-delete.php';
+
+/*
+|--------------------------------------------------------------------------
+| Kích hoạt plugin
+|--------------------------------------------------------------------------
+*/
 
 register_activation_hook(__FILE__, 'k86_install');
 
