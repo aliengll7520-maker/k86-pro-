@@ -1,3 +1,4 @@
+
 <?php
 /**
  * Plugin Name: K86 Pro
@@ -21,6 +22,7 @@ require_once plugin_dir_path(__FILE__) . 'modules/product-manager.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-add.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-edit.php';
 require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
+require_once plugin_dir_path(__FILE__) . 'modules/product-delete.php';   // ← Thêm dòng này
 
 register_activation_hook(__FILE__, 'k86_install');
 
