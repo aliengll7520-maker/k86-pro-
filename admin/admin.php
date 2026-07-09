@@ -1,9 +1,10 @@
 <?php
-if (!defined('ABSPATH')) {
+
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_action('admin_menu', 'k86_pro_admin_menu');
+add_action( 'admin_menu', 'k86_pro_admin_menu' );
 
 function k86_pro_admin_menu() {
 
@@ -20,10 +21,26 @@ function k86_pro_admin_menu() {
 }
 
 function k86_pro_dashboard() {
-    ?>
-    <div class="wrap">
-        <h1>K86 Pro</h1>
-        <p>Chào mừng đến với plugin K86 Pro.</p>
-    </div>
-    <?php
+?>
+<div class="wrap">
+
+    <h1>🚀 K86 Pro Dashboard</h1>
+
+    <p><strong>Phiên bản:</strong> 1.0.0</p>
+
+    <p>Chào mừng bạn đến với plugin <strong>K86 Pro</strong>.</p>
+
+    <hr>
+
+    <h2>Trạng thái Plugin</h2>
+
+    <ul>
+        <li>✅ Affiliate Box: Hoạt động</li>
+        <li>✅ Shortcode: <code>[k86_box]</code></li>
+        <li>✅ CSS: Đã tải</li>
+        <li>✅ Cài đặt: Sẵn sàng</li>
+    </ul>
+
+</div>
+<?php
 }
