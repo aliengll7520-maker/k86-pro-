@@ -46,3 +46,4 @@ function k86_install() {
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
 }
+require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
