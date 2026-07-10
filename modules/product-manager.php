@@ -84,12 +84,12 @@ if (!empty($keyword)) {
             <tr>
 
                 <!-- Cột ảnh -->
-                <th>Ảnh</th>
-
-                <th>Tên sản phẩm</th>
-                <th>Giá</th>
-                <th>Trạng thái</th>
-                <th>Thao tác</th>
+                <th>ID</th>
+<th>Ảnh</th>
+<th>Tên sản phẩm</th>
+<th>Giá</th>
+<th>Trạng thái</th>
+<th>Thao tác</th>
 
             </tr>
         </thead>
@@ -100,10 +100,16 @@ if (!empty($keyword)) {
 
             <?php foreach ($products as $product) : ?>
 
-                <tr>
+            
 
-                    <!-- Hiển thị ảnh -->
-                    <td>
+<tr>
+
+    <td><?php echo absint($product->id); ?></td>
+
+    <!-- Hiển thị ảnh -->
+    <td>
+
+        
 
                         <?php if (!empty($product->image)) : ?>
 
@@ -161,7 +167,7 @@ if (!empty($keyword)) {
             <tr>
 
                 <!-- Đổi colspan từ 4 thành 5 -->
-                <td colspan="5">Chưa có sản phẩm nào.</td>
+                <td colspan="6">Chưa có sản phẩm nào.</td>
 
             </tr>
 
