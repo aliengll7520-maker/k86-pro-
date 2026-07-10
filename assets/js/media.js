@@ -1,11 +1,12 @@
-
 jQuery(function ($) {
 
-    console.log("K86 Media Loaded");
+    alert("K86 Media Loaded");
 
     $('#k86-upload-image').on('click', function (e) {
 
         e.preventDefault();
+
+        alert("Đã bấm nút Chọn ảnh");
 
         var frame = wp.media({
             title: 'Chọn ảnh sản phẩm',
