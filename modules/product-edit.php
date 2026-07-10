@@ -125,9 +125,18 @@ function k86_edit_product_form() {
                         class="large-text"
                         value="<?php echo esc_attr($product->image); ?>">
 
-                    <p class="description">
-                        Dán URL ảnh sản phẩm. (Ở phiên bản sau sẽ hỗ trợ chọn từ Media Library.)
-                    </p>
+                    <button
+    type="button"
+    id="k86-upload-image"
+    class="button">
+    Chọn ảnh
+</button>
+
+<div id="k86-image-preview" style="margin-top:10px;">
+    <?php if (!empty($product->image)) : ?>
+        <img src="<?php echo esc_url($product->image); ?>" style="max-width:200px;">
+    <?php endif; ?>
+</div>
                 </td>
             </tr>
 
