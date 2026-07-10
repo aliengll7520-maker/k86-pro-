@@ -24,9 +24,27 @@ function k86_products_page() {
 
     $table = $wpdb->prefix . 'k86_products';
 
+    $keyword = sanitize_text_field($_GET['s'] ?? '');
+
+if (!empty($keyword)) {
+
+    $products = $wpdb->get_results(
+        $wpdb->prepare(
+            "SELECT * FROM {$table}
+             WHERE name LIKE %s
+             ORDER BY id DESC",
+            '%' . $wpdb->esc_like($keyword) . '%'
+        )
+    );
+
+} else {
+
     $products = $wpdb->get_results(
         "SELECT * FROM {$table} ORDER BY id DESC"
     );
+
+}
+
 ?>
 
 <div class="wrap">
@@ -42,6 +60,23 @@ function k86_products_page() {
     </div>
 
     <p>Đây là nơi quản lý các sản phẩm Affiliate của K86 Pro.</p>
+    <form method="get" style="margin:20px 0;">
+
+    <input type="hidden" name="page" value="k86-products">
+
+    <input
+        type="search"
+        name="s"
+        value="<?php echo esc_attr($_GET['s'] ?? ''); ?>"
+        placeholder="Tìm sản phẩm..."
+        class="regular-text">
+
+    <input
+        type="submit"
+        class="button"
+        value="Tìm kiếm">
+
+    </form>
 
     <table class="widefat striped">
 
