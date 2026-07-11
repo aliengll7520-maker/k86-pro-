@@ -1,6 +1,6 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! d?efined( 'ABSPATH' ) ) {
     exit;
 }
 
