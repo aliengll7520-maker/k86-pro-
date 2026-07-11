@@ -1,7 +1,7 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+	exit;
 }
 
 /**
@@ -10,333 +10,151 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Version: 1.2.0
  */
 
-add_action( 'admin_menu', 'k86_add_product_page' );
-
-function k86_add_product_page() {
-
-    add_submenu_page(
-        null,
-        'Thêm sản phẩm',
-        'Thêm sản phẩm',
-        'manage_options',
-        'k86-add-product',
-        'k86_add_product_form'
-    );
-
-}
-
+/**
+ * Form thêm sản phẩm
+ */
 function k86_add_product_form() {
 
-    if ( ! current_user_can( 'manage_options' ) ) {
-        return;
-    }
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Bạn không có quyền truy cập.', 'k86-pro' ) );
+	}
+	?>
 
-?>
+	<div class="wrap">
 
-<div class="wrap">
+		<h1>Thêm sản phẩm Affiliate</h1>
 
-<h1>Thêm sản phẩm Affiliate</h1>
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 
-<form method="post"
-action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
+			<input type="hidden" name="action" value="k86_save_product">
 
-<input
-type="hidden"
-name="action"
-value="k86_save_product">
+			<?php wp_nonce_field( 'k86_save_product', 'k86_nonce' ); ?>
 
-<?php wp_nonce_field( 'k86_save_product', 'k86_nonce' ); ?>
+			<table class="form-table">
 
-<table class="form-table">
+				<tr>
+					<th><label for="name">Tên sản phẩm</label></th>
+					<td>
+						<input type="text" id="name" name="name" class="regular-text" required>
+					</td>
+				</tr>
 
-<tr>
+				<tr>
+					<th><label for="price">Giá bán</label></th>
+					<td>
+						<input type="text" id="price" name="price" class="regular-text">
+					</td>
+				</tr>
 
-<th>
+				<tr>
+					<th><label for="sale_price">Giá khuyến mãi</label></th>
+					<td>
+						<input type="text" id="sale_price" name="sale_price" class="regular-text">
+					</td>
+				</tr>
 
-<label for="name">
+				<tr>
+					<th><label for="shopee">Link Shopee</label></th>
+					<td>
+						<input type="url" id="shopee" name="shopee" class="large-text">
+					</td>
+				</tr>
 
-Tên sản phẩm
+				<tr>
+					<th><label for="tiktok">Link TikTok Shop</label></th>
+					<td>
+						<input type="url" id="tiktok" name="tiktok" class="large-text">
+					</td>
+				</tr>
 
-</label>
+				<tr>
+					<th><label for="lazada">Link Lazada</label></th>
+					<td>
+						<input type="url" id="lazada" name="lazada" class="large-text">
+					</td>
+				</tr>
 
-</th>
+				<tr>
+					<th><label for="image">Ảnh sản phẩm</label></th>
+					<td>
 
-<td>
+						<input type="url" id="image" name="image" class="large-text">
 
-<input
-type="text"
-id="name"
-name="name"
-class="regular-text"
-required>
+						<p style="margin-top:10px;">
 
-</td>
+							<button type="button" id="k86-upload-image" class="button button-secondary">
+								📷 Chọn ảnh
+							</button>
 
-</tr>
+							<button type="button" id="k86-remove-image" class="button">
+								❌ Xóa ảnh
+							</button>
 
-<tr>
+						</p>
 
-<th>
+						<div id="k86-image-preview" style="margin-top:15px;"></div>
 
-<label for="price">
+						<p class="description">
+							Bạn có thể chọn ảnh từ Media Library hoặc dán URL.
+						</p>
 
-Giá bán
+					</td>
+				</tr>
 
-</label>
+				<tr>
+					<th><label for="description">Mô tả sản phẩm</label></th>
+					<td>
 
-</th>
+						<textarea id="description" name="description" rows="8" class="large-text"></textarea>
 
-<td>
+						<p class="description">
+							Mô tả ngắn về sản phẩm, ưu điểm, thông số kỹ thuật...
+						</p>
 
-<input
-type="text"
-id="price"
-name="price"
-class="regular-text">
+					</td>
+				</tr>
 
-</td>
+				<tr>
+					<th><label for="status">Trạng thái</label></th>
+					<td>
 
-</tr>
+						<select id="status" name="status">
 
-<tr>
+							<option value="active" selected>
+								Hoạt động
+							</option>
 
-<th>
+							<option value="inactive">
+								Tạm ẩn
+							</option>
 
-<label for="sale_price">
+						</select>
 
-Giá khuyến mãi
+					</td>
+				</tr>
 
-</label>
+			</table>
 
-</th>
+			<p class="submit">
 
-<td>
+				<input
+					type="submit"
+					class="button button-primary button-large"
+					value="💾 Lưu sản phẩm">
 
-<input
-type="text"
-id="sale_price"
-name="sale_price"
-class="regular-text">
+				<a
+					href="<?php echo esc_url( admin_url( 'admin.php?page=k86-products' ) ); ?>"
+					class="button button-large">
 
-</td>
+					Hủy
 
-</tr>
-    <tr>
+				</a>
 
-<th>
+			</p>
 
-<label for="shopee">
+		</form>
 
-Link Shopee
+	</div>
 
-</label>
-
-</th>
-
-<td>
-
-<input
-type="url"
-id="shopee"
-name="shopee"
-class="large-text">
-
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-
-<label for="tiktok">
-
-Link TikTok Shop
-
-</label>
-
-</th>
-
-<td>
-
-<input
-type="url"
-id="tiktok"
-name="tiktok"
-class="large-text">
-
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-
-<label for="lazada">
-
-Link Lazada
-
-</label>
-
-</th>
-
-<td>
-
-<input
-type="url"
-id="lazada"
-name="lazada"
-class="large-text">
-
-</td>
-
-</tr>
-
-<tr>
-
-<th>
-
-<label for="image">
-
-Ảnh sản phẩm
-
-</label>
-
-</th>
-
-<td>
-
-<input
-type="url"
-id="image"
-name="image"
-class="large-text">
-
-<p style="margin-top:10px;">
-
-<button
-type="button"
-id="k86-upload-image"
-class="button button-secondary">
-
-📷 Chọn ảnh
-
-</button>
-
-<button
-type="button"
-id="k86-remove-image"
-class="button">
-
-❌ Xóa ảnh
-
-</button>
-
-</p>
-
-<div
-id="k86-image-preview"
-style="margin-top:15px;">
-
-</div>
-
-<p class="description">
-
-Bạn có thể chọn ảnh từ Media Library hoặc dán URL.
-
-</p>
-
-</td>
-
-</tr>
-    <tr>
-
-    <th>
-
-        <label for="description">
-
-            Mô tả sản phẩm
-
-        </label>
-
-    </th>
-
-    <td>
-
-        <textarea
-            id="description"
-            name="description"
-            rows="8"
-            class="large-text"></textarea>
-
-        <p class="description">
-
-            Mô tả ngắn về sản phẩm, ưu điểm, thông số kỹ thuật...
-
-        </p>
-
-    </td>
-
-</tr>
-
-<tr>
-
-    <th>
-
-        <label for="status">
-
-            Trạng thái
-
-        </label>
-
-    </th>
-
-    <td>
-
-        <select
-            id="status"
-            name="status">
-
-            <option value="active" selected>
-
-                Hoạt động
-
-            </option>
-
-            <option value="inactive">
-
-                Tạm ẩn
-
-            </option>
-
-        </select>
-
-    </td>
-
-</tr>
-
-</table>
-
-<p class="submit">
-
-    <input
-        type="submit"
-        class="button button-primary button-large"
-        value="💾 Lưu sản phẩm">
-
-    <a
-        href="<?php echo admin_url( 'admin.php?page=k86-products' ); ?>"
-        class="button button-large">
-
-        Hủy
-
-    </a>
-
-</p>
-
-</form>
-
-</div>
-    <?php
+	<?php
 }
