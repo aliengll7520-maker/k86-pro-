@@ -337,4 +337,5 @@ Bạn có thể chọn ảnh từ Media Library hoặc dán URL.
 
 </form>
 
-</div>
+</div><?php
+}
