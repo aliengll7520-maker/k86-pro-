@@ -19,14 +19,63 @@ function k86_product_manager_page() {
 	}
 
 	$products = k86_get_products();
+	/*
+	|--------------------------------------------------------------------------
+	| Thống kê sản phẩm
+	|--------------------------------------------------------------------------
+	*/
 
+	$total_products  = count( $products );
+
+	$active_products = 0;
+
+	$sale_products   = 0;
+
+	$total_price     = 0;
+
+	foreach ( $products as $item ) {
+
+		if ( empty( $item->status ) || $item->status === 'active' ) {
+
+			$active_products++;
+
+		}
+
+		if ( ! empty( $item->sale_price ) ) {
+
+			$sale_products++;
+
+		}
+
+		$total_price += (float) preg_replace(
+			'/[^0-9]/',
+			'',
+			$item->price
+		);
+
+	}
+
+	$average_price = $total_products
+		? round( $total_price / $total_products )
+		: 0;
 	?>
 
 	<div class="wrap">
 
 		<h1 class="wp-heading-inline">
-			Quản lý sản phẩm
-		</h1>
+	📦 Quản lý sản phẩm
+</h1>
+
+<p style="
+	margin:12px 0 18px;
+	font-size:14px;
+	color:#555;
+">
+
+	Quản lý toàn bộ sản phẩm Affiliate của K86 Pro.
+	Sử dụng nút <strong>📋 Copy</strong> để chèn nhanh sản phẩm vào bài viết bằng shortcode.
+
+</p>
 
 		<a
 			href="<?php echo esc_url( admin_url( 'admin.php?page=k86-add-product' ) ); ?>"
@@ -37,6 +86,72 @@ function k86_product_manager_page() {
 		</a>
 
 		<hr class="wp-header-end">
+		<div style="
+		display:grid;
+		grid-template-columns:repeat(4,minmax(180px,1fr));
+		gap:15px;
+		margin:20px 0;
+	">
+
+		<div style="background:#fff;padding:18px;border-left:5px solid #2271b1;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+
+			<div style="font-size:14px;color:#666;">📦 Tổng sản phẩm</div>
+
+			<div style="font-size:28px;font-weight:bold;margin-top:8px;">
+
+				<?php echo esc_html( $total_products ); ?>
+
+			</div>
+
+		</div>
+
+		<div style="background:#fff;padding:18px;border-left:5px solid #46b450;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+
+			<div style="font-size:14px;color:#666;">🟢 Đang hoạt động</div>
+
+			<div style="font-size:28px;font-weight:bold;margin-top:8px;">
+
+				<?php echo esc_html( $active_products ); ?>
+
+			</div>
+
+		</div>
+
+		<div style="background:#fff;padding:18px;border-left:5px solid #dba617;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+
+			<div style="font-size:14px;color:#666;">🔥 Có khuyến mãi</div>
+
+			<div style="font-size:28px;font-weight:bold;margin-top:8px;">
+
+				<?php echo esc_html( $sale_products ); ?>
+
+			</div>
+
+		</div>
+
+		<div style="background:#fff;padding:18px;border-left:5px solid #d63638;box-shadow:0 1px 4px rgba(0,0,0,.08);">
+
+			<div style="font-size:14px;color:#666;">💰 Giá trung bình</div>
+
+			<div style="font-size:28px;font-weight:bold;margin-top:8px;">
+
+				<?php echo number_format( $average_price, 0, ',', '.' ); ?> ₫
+
+			</div>
+
+		</div>
+
+	</div>
+			<p style="margin:20px 0 15px;">
+
+	<input
+		type="search"
+		id="k86-search-product"
+		class="regular-text"
+		placeholder="🔍 Tìm sản phẩm theo tên..."
+		style="width:320px;">
+
+			</p>
 
 		<table class="widefat striped">
 
@@ -213,7 +328,26 @@ function k86_product_manager_page() {
 	<script>
 
 	document.addEventListener('DOMContentLoaded', function () {
+// Tìm kiếm sản phẩm
+const search = document.getElementById('k86-search-product');
 
+if (search) {
+
+	search.addEventListener('keyup', function () {
+
+		const keyword = this.value.toLowerCase();
+
+		document.querySelectorAll('tbody tr').forEach(function(row){
+
+			const text = row.innerText.toLowerCase();
+
+			row.style.display = text.includes(keyword) ? '' : 'none';
+
+		});
+
+	});
+
+}
 		document.querySelectorAll('.k86-copy-shortcode').forEach(function(button){
 
 			button.addEventListener('click', function(){
