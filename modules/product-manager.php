@@ -1,158 +1,140 @@
 <?php
 
-if (!defined('ABSPATH')) {
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_action('admin_menu', 'k86_product_menu');
+add_action( 'admin_menu', 'k86_product_manager_menu' );
 
-function k86_product_menu() {
+function k86_product_manager_menu() {
 
     add_submenu_page(
-        'k86-pro',
-        'Sản phẩm',
+        'k86-dashboard',
+        'Quản lý sản phẩm',
         'Sản phẩm',
         'manage_options',
         'k86-products',
-        'k86_products_page'
+        'k86_product_manager_page'
     );
 }
 
-function k86_products_page() {
+function k86_product_manager_page() {
 
-    global $wpdb;
+    if ( ! current_user_can( 'manage_options' ) ) {
+        return;
+    }
 
-    $table = $wpdb->prefix . 'k86_products';
-
-    $keyword = sanitize_text_field($_GET['s'] ?? '');
-
-if (!empty($keyword)) {
-
-    $products = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT * FROM {$table}
-             WHERE name LIKE %s
-             ORDER BY id DESC",
-            '%' . $wpdb->esc_like($keyword) . '%'
-        )
-    );
-
-} else {
-
-    $products = $wpdb->get_results(
-        "SELECT * FROM {$table} ORDER BY id DESC"
-    );
-
-}
+    $products = k86_get_products();
 
 ?>
-
 <div class="wrap">
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+    <h1 class="wp-heading-inline">Quản lý sản phẩm</h1>
 
-        <h1>Quản lý sản phẩm</h1>
+    <a href="<?php echo admin_url( 'admin.php?page=k86-add-product' ); ?>"
+       class="page-title-action">
+        Thêm mới
+    </a>
 
-        <a href="<?php echo esc_url(admin_url('admin.php?page=k86-add-product')); ?>" class="page-title-action">
-            + Thêm sản phẩm
-        </a>
-
-    </div>
-
-    <p>Đây là nơi quản lý các sản phẩm Affiliate của K86 Pro.</p>
-    <form method="get" style="margin:20px 0;">
-
-    <input type="hidden" name="page" value="k86-products">
-
-    <input
-        type="search"
-        name="s"
-        value="<?php echo esc_attr($_GET['s'] ?? ''); ?>"
-        placeholder="Tìm sản phẩm..."
-        class="regular-text">
-
-    <input
-        type="submit"
-        class="button"
-        value="Tìm kiếm">
-
-    </form>
+    <hr class="wp-header-end">
 
     <table class="widefat striped">
 
         <thead>
-            <tr>
 
-                <!-- Cột ảnh -->
-                <th>ID</th>
-<th>Ảnh</th>
-<th>Tên sản phẩm</th>
-<th>Giá</th>
-<th>Trạng thái</th>
-<th>Thao tác</th>
+        <tr>
 
-            </tr>
+            <th width="60">ID</th>
+
+            <th>Ảnh</th>
+
+            <th>Tên sản phẩm</th>
+
+            <th>Giá</th>
+
+            <th>Shopee</th>
+
+            <th>TikTok</th>
+
+            <th>Lazada</th>
+
+            <th width="180">Thao tác</th>
+
+        </tr>
+
         </thead>
 
         <tbody>
 
-        <?php if (!empty($products)) : ?>
+        <?php if ( $products ) : ?>
 
-            <?php foreach ($products as $product) : ?>
+            <?php foreach ( $products as $product ) : ?>
 
-            
+                <tr>
 
-<tr>
+                    <td><?php echo $product->id; ?></td>
 
-    <td><?php echo absint($product->id); ?></td>
+                    <td>
 
-    <!-- Hiển thị ảnh -->
-    <td>
-
-        
-
-                        <?php if (!empty($product->image)) : ?>
+                        <?php if ( ! empty( $product->image ) ) : ?>
 
                             <img
-                                src="<?php echo esc_url($product->image); ?>"
-                                width="60"
-                                height="60"
-                                style="object-fit:cover;border-radius:6px;">
-
-                        <?php else : ?>
-
-                            Không có ảnh
+                                src="<?php echo esc_url( $product->image ); ?>"
+                                width="70">
 
                         <?php endif; ?>
 
                     </td>
 
-                    <td><?php echo esc_html($product->name); ?></td>
+                    <td>
 
-                    <td><?php echo esc_html($product->price); ?></td>
+                        <strong>
 
-                    <td><?php echo esc_html(ucfirst($product->status)); ?></td>
+                            <?php echo esc_html( $product->name ); ?>
+
+                        </strong>
+
+                    </td>
 
                     <td>
 
-                        <a href="<?php echo esc_url(
-                            admin_url(
-                                'admin.php?page=k86-edit-product&id=' . absint($product->id)
-                            )
-                        ); ?>">
+                        <?php echo esc_html( $product->price ); ?>
+
+                    </td>
+
+                    <td>
+
+                        <?php echo ! empty( $product->shopee ) ? '✔' : '-'; ?>
+
+                    </td>
+
+                    <td>
+
+                        <?php echo ! empty( $product->tiktok ) ? '✔' : '-'; ?>
+
+                    </td>
+
+                    <td>
+
+                        <?php echo ! empty( $product->lazada ) ? '✔' : '-'; ?>
+
+                    </td>
+
+                    <td>
+
+                        <a
+                        class="button button-primary"
+                        href="<?php echo admin_url( 'admin.php?page=k86-edit-product&id=' . $product->id ); ?>">
                             Sửa
                         </a>
 
-                        |
-
-                        <a href="<?php echo wp_nonce_url(
-                            admin_url(
-                                'admin-post.php?action=k86_delete_product&id=' . absint($product->id)
-                            ),
-                            'k86_delete_product',
-                            'k86_nonce'
-                        ); ?>"
-                        onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+                        <a
+                        class="button button-secondary"
+                        onclick="return confirm('Bạn có chắc muốn xóa?')"
+                        href="<?php echo wp_nonce_url(
+                            admin_url( 'admin-post.php?action=k86_delete_product&id=' . $product->id ),
+                            'k86_delete_product'
+                        ); ?>">
                             Xóa
                         </a>
 
@@ -166,8 +148,11 @@ if (!empty($keyword)) {
 
             <tr>
 
-                <!-- Đổi colspan từ 4 thành 5 -->
-                <td colspan="6">Chưa có sản phẩm nào.</td>
+                <td colspan="8">
+
+                    Chưa có sản phẩm nào.
+
+                </td>
 
             </tr>
 
@@ -180,4 +165,5 @@ if (!empty($keyword)) {
 </div>
 
 <?php
-}
+
+}         
