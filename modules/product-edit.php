@@ -1,168 +1,168 @@
 <?php
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-add_action('admin_menu', 'k86_edit_product_page');
+/**
+ * K86 Pro
+ * Module: Product Edit
+ * Version: 1.2.0
+ */
 
-function k86_edit_product_page() {
-
-    add_submenu_page(
-        null,
-        'Sửa sản phẩm',
-        'Sửa sản phẩm',
-        'manage_options',
-        'k86-edit-product',
-        'k86_edit_product_form'
-    );
-}
-
+/**
+ * Form sửa sản phẩm
+ */
 function k86_edit_product_form() {
 
-    global $wpdb;
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Bạn không có quyền truy cập.', 'k86-pro' ) );
+	}
 
-    $table = $wpdb->prefix . 'k86_products';
+	global $wpdb;
 
-    $id = isset($_GET['id']) ? absint($_GET['id']) : 0;
+	$table = $wpdb->prefix . 'k86_products';
 
-    $product = $wpdb->get_row(
-        $wpdb->prepare(
-            "SELECT * FROM {$table} WHERE id = %d",
-            $id
-        )
-    );
+	$id = isset( $_GET['id'] ) ? absint( $_GET['id'] ) : 0;
 
-    if (!$product) {
-        echo '<div class="notice notice-error"><p>Không tìm thấy sản phẩm.</p></div>';
-        return;
-    }
+	$product = $wpdb->get_row(
+		$wpdb->prepare(
+			"SELECT * FROM {$table} WHERE id = %d",
+			$id
+		)
+	);
 
-?>
+	if ( ! $product ) {
+		echo '<div class="notice notice-error"><p>Không tìm thấy sản phẩm.</p></div>';
+		return;
+	}
+	?>
 
-<div class="wrap">
+	<div class="wrap">
 
-    <h1>Sửa sản phẩm Affiliate</h1>
+		<h1>Sửa sản phẩm Affiliate</h1>
 
-    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 
-        <input type="hidden" name="action" value="k86_update_product">
+			<input type="hidden" name="action" value="k86_update_product">
 
-        <input type="hidden" name="id" value="<?php echo absint($product->id); ?>">
+			<input type="hidden" name="id" value="<?php echo absint( $product->id ); ?>">
 
-        <?php wp_nonce_field('k86_update_product', 'k86_nonce'); ?>
+			<?php wp_nonce_field( 'k86_update_product', 'k86_nonce' ); ?>
 
-        <table class="form-table">
+			<table class="form-table">
 
-            <tr>
-                <th><label for="name">Tên sản phẩm</label></th>
-                <td>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        class="regular-text"
-                        value="<?php echo esc_attr($product->name); ?>"
-                        required>
-                </td>
-            </tr>
+				<tr>
+					<th><label for="name">Tên sản phẩm</label></th>
+					<td>
+						<input type="text"
+							   id="name"
+							   name="name"
+							   class="regular-text"
+							   value="<?php echo esc_attr( $product->name ); ?>"
+							   required>
+					</td>
+				</tr>
 
-            <tr>
-                <th><label for="price">Giá</label></th>
-                <td>
-                    <input
-                        type="text"
-                        id="price"
-                        name="price"
-                        class="regular-text"
-                        value="<?php echo esc_attr($product->price); ?>">
-                </td>
-            </tr>
+				<tr>
+					<th><label for="price">Giá</label></th>
+					<td>
+						<input type="text"
+							   id="price"
+							   name="price"
+							   class="regular-text"
+							   value="<?php echo esc_attr( $product->price ); ?>">
+					</td>
+				</tr>
 
-            <tr>
-                <th><label for="shopee">Link Shopee</label></th>
-                <td>
-                    <input
-                        type="url"
-                        id="shopee"
-                        name="shopee"
-                        class="large-text"
-                        value="<?php echo esc_attr($product->shopee); ?>">
-                </td>
-            </tr>
+				<tr>
+					<th><label for="shopee">Link Shopee</label></th>
+					<td>
+						<input type="url"
+							   id="shopee"
+							   name="shopee"
+							   class="large-text"
+							   value="<?php echo esc_attr( $product->shopee ); ?>">
+					</td>
+				</tr>
 
-            <tr>
-                <th><label for="tiktok">Link TikTok Shop</label></th>
-                <td>
-                    <input
-                        type="url"
-                        id="tiktok"
-                        name="tiktok"
-                        class="large-text"
-                        value="<?php echo esc_attr($product->tiktok); ?>">
-                </td>
-            </tr>
+				<tr>
+					<th><label for="tiktok">Link TikTok Shop</label></th>
+					<td>
+						<input type="url"
+							   id="tiktok"
+							   name="tiktok"
+							   class="large-text"
+							   value="<?php echo esc_attr( $product->tiktok ); ?>">
+					</td>
+				</tr>
 
-            <tr>
-                <th><label for="lazada">Link Lazada</label></th>
-                <td>
-                    <input
-                        type="url"
-                        id="lazada"
-                        name="lazada"
-                        class="large-text"
-                        value="<?php echo esc_attr($product->lazada); ?>">
-                </td>
-            </tr>
+				<tr>
+					<th><label for="lazada">Link Lazada</label></th>
+					<td>
+						<input type="url"
+							   id="lazada"
+							   name="lazada"
+							   class="large-text"
+							   value="<?php echo esc_attr( $product->lazada ); ?>">
+					</td>
+				</tr>
 
-            <tr>
-                <th><label for="image">Ảnh sản phẩm</label></th>
-                <td>
-                    <input
-                        type="url"
-                        id="image"
-                        name="image"
-                        class="large-text"
-                        value="<?php echo esc_attr($product->image); ?>">
+				<tr>
+					<th><label for="image">Ảnh sản phẩm</label></th>
+					<td>
 
-                    <button
-    type="button"
-    id="k86-upload-image"
-    class="button">
-    Chọn ảnh
-</button>
+						<input type="url"
+							   id="image"
+							   name="image"
+							   class="large-text"
+							   value="<?php echo esc_attr( $product->image ); ?>">
 
-<div id="k86-image-preview" style="margin-top:10px;">
-    <?php if (!empty($product->image)) : ?>
-        <img src="<?php echo esc_url($product->image); ?>" style="max-width:200px;">
-    <?php endif; ?>
-</div>
-                </td>
-            </tr>
+						<button type="button"
+								id="k86-upload-image"
+								class="button">
+							Chọn ảnh
+						</button>
 
-            <tr>
-                <th><label for="description">Mô tả</label></th>
-                <td>
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows="6"
-                        class="large-text"><?php echo esc_textarea($product->description); ?></textarea>
-                </td>
-            </tr>
+						<div id="k86-image-preview" style="margin-top:10px;">
 
-        </table>
+							<?php if ( ! empty( $product->image ) ) : ?>
 
-        <p>
-            <input
-                type="submit"
-                class="button button-primary"
-                value="Cập nhật sản phẩm">
-        </p>
+								<img src="<?php echo esc_url( $product->image ); ?>" style="max-width:200px;" alt="">
 
-    </form>
+							<?php endif; ?>
 
-</div>
+						</div>
 
-<?php
+					</td>
+				</tr>
+
+				<tr>
+					<th><label for="description">Mô tả</label></th>
+					<td>
+
+						<textarea
+							id="description"
+							name="description"
+							rows="6"
+							class="large-text"><?php echo esc_textarea( $product->description ); ?></textarea>
+
+					</td>
+				</tr>
+
+			</table>
+
+			<p>
+
+				<input type="submit"
+					   class="button button-primary"
+					   value="Cập nhật sản phẩm">
+
+			</p>
+
+		</form>
+
+	</div>
+
+	<?php
 }
