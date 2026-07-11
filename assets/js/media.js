@@ -1,34 +1,59 @@
 jQuery(function ($) {
 
-    console.log("K86 Media Loaded");
+    let frame = null;
 
-    $('#k86-upload-image').on('click', function (e) {
+    $(document).on('click', '#k86-upload-image', function (e) {
 
         e.preventDefault();
 
-        console.log("Đã bấm nút Chọn ảnh");
+        if (frame) {
+            frame.open();
+            return;
+        }
 
-        var frame = wp.media({
-            title: 'Chọn ảnh sản phẩm',
+        frame = wp.media({
+
+            title: k86Pro.title,
+
             button: {
-                text: 'Sử dụng ảnh này'
+                text: k86Pro.button
             },
+
             multiple: false
+
         });
 
         frame.on('select', function () {
 
-            var attachment = frame.state().get('selection').first().toJSON();
+            const attachment = frame
+                .state()
+                .get('selection')
+                .first()
+                .toJSON();
 
             $('#image').val(attachment.url);
 
             $('#k86-image-preview').html(
-                '<img src="' + attachment.url + '" style="max-width:200px;">'
+
+                '<img src="' +
+                attachment.url +
+                '" style="max-width:220px;border-radius:10px;border:1px solid #ddd;">'
+
             );
 
         });
 
         frame.open();
+
+    });
+
+    $(document).on('click', '#k86-remove-image', function (e) {
+
+        e.preventDefault();
+
+        $('#image').val('');
+
+        $('#k86-image-preview').html('');
 
     });
 
