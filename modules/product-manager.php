@@ -1,169 +1,113 @@
 <?php
 
-if ( ! d?efined( 'ABSPATH' ) ) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-add_action( 'admin_menu', 'k86_product_manager_menu' );
-
-function k86_product_manager_menu() {
-
-    add_submenu_page(
-        'k86-dashboard',
-        'Quản lý sản phẩm',
-        'Sản phẩm',
-        'manage_options',
-        'k86-products',
-        'k86_product_manager_page'
-    );
-}
-
+/**
+ * Trang Quản lý sản phẩm
+ */
 function k86_product_manager_page() {
 
-    if ( ! current_user_can( 'manage_options' ) ) {
-        return;
-    }
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( esc_html__( 'Bạn không có quyền truy cập trang này.', 'k86-pro' ) );
+	}
 
-    $products = k86_get_products();
+	$products = k86_get_products();
+	?>
 
-?>
-<div class="wrap">
+	<div class="wrap">
 
-    <h1 class="wp-heading-inline">Quản lý sản phẩm</h1>
+		<h1 class="wp-heading-inline">Quản lý sản phẩm</h1>
 
-    <a href="<?php echo admin_url( 'admin.php?page=k86-add-product' ); ?>"
-       class="page-title-action">
-        Thêm mới
-    </a>
+		<a href="<?php echo esc_url( admin_url( 'admin.php?page=k86-add-product' ) ); ?>" class="page-title-action">
+			Thêm mới
+		</a>
 
-    <hr class="wp-header-end">
+		<hr class="wp-header-end">
 
-    <table class="widefat striped">
+		<table class="widefat striped">
 
-        <thead>
+			<thead>
+				<tr>
+					<th width="60">ID</th>
+					<th>Ảnh</th>
+					<th>Tên sản phẩm</th>
+					<th>Giá</th>
+					<th>Shopee</th>
+					<th>TikTok</th>
+					<th>Lazada</th>
+					<th width="180">Thao tác</th>
+				</tr>
+			</thead>
 
-        <tr>
+			<tbody>
 
-            <th width="60">ID</th>
+			<?php if ( ! empty( $products ) ) : ?>
 
-            <th>Ảnh</th>
+				<?php foreach ( $products as $product ) : ?>
 
-            <th>Tên sản phẩm</th>
+					<tr>
 
-            <th>Giá</th>
+						<td><?php echo esc_html( $product->id ); ?></td>
 
-            <th>Shopee</th>
+						<td>
+							<?php if ( ! empty( $product->image ) ) : ?>
+								<img src="<?php echo esc_url( $product->image ); ?>" width="70" alt="">
+							<?php endif; ?>
+						</td>
 
-            <th>TikTok</th>
+						<td>
+							<strong><?php echo esc_html( $product->name ); ?></strong>
+						</td>
 
-            <th>Lazada</th>
+						<td><?php echo esc_html( $product->price ); ?></td>
 
-            <th width="180">Thao tác</th>
+						<td><?php echo ! empty( $product->shopee ) ? '✔' : '-'; ?></td>
 
-        </tr>
+						<td><?php echo ! empty( $product->tiktok ) ? '✔' : '-'; ?></td>
 
-        </thead>
+						<td><?php echo ! empty( $product->lazada ) ? '✔' : '-'; ?></td>
 
-        <tbody>
+						<td>
 
-        <?php if ( $products ) : ?>
+							<a class="button button-primary"
+							   href="<?php echo esc_url( admin_url( 'admin.php?page=k86-edit-product&id=' . absint( $product->id ) ) ); ?>">
+								Sửa
+							</a>
 
-            <?php foreach ( $products as $product ) : ?>
+							<a class="button button-secondary"
+							   onclick="return confirm('Bạn có chắc muốn xóa?');"
+							   href="<?php echo esc_url(
+								   wp_nonce_url(
+									   admin_url( 'admin-post.php?action=k86_delete_product&id=' . absint( $product->id ) ),
+									   'k86_delete_product'
+								   )
+							   ); ?>">
+								Xóa
+							</a>
 
-                <tr>
+						</td>
 
-                    <td><?php echo $product->id; ?></td>
+					</tr>
 
-                    <td>
+				<?php endforeach; ?>
 
-                        <?php if ( ! empty( $product->image ) ) : ?>
+			<?php else : ?>
 
-                            <img
-                                src="<?php echo esc_url( $product->image ); ?>"
-                                width="70">
+				<tr>
+					<td colspan="8">
+						Chưa có sản phẩm nào.
+					</td>
+				</tr>
 
-                        <?php endif; ?>
+			<?php endif; ?>
 
-                    </td>
+			</tbody>
 
-                    <td>
+		</table>
 
-                        <strong>
+	</div>
 
-                            <?php echo esc_html( $product->name ); ?>
-
-                        </strong>
-
-                    </td>
-
-                    <td>
-
-                        <?php echo esc_html( $product->price ); ?>
-
-                    </td>
-
-                    <td>
-
-                        <?php echo ! empty( $product->shopee ) ? '✔' : '-'; ?>
-
-                    </td>
-
-                    <td>
-
-                        <?php echo ! empty( $product->tiktok ) ? '✔' : '-'; ?>
-
-                    </td>
-
-                    <td>
-
-                        <?php echo ! empty( $product->lazada ) ? '✔' : '-'; ?>
-
-                    </td>
-
-                    <td>
-
-                        <a
-                        class="button button-primary"
-                        href="<?php echo admin_url( 'admin.php?page=k86-edit-product&id=' . $product->id ); ?>">
-                            Sửa
-                        </a>
-
-                        <a
-                        class="button button-secondary"
-                        onclick="return confirm('Bạn có chắc muốn xóa?')"
-                        href="<?php echo wp_nonce_url(
-                            admin_url( 'admin-post.php?action=k86_delete_product&id=' . $product->id ),
-                            'k86_delete_product'
-                        ); ?>">
-                            Xóa
-                        </a>
-
-                    </td>
-
-                </tr>
-
-            <?php endforeach; ?>
-
-        <?php else : ?>
-
-            <tr>
-
-                <td colspan="8">
-
-                    Chưa có sản phẩm nào.
-
-                </td>
-
-            </tr>
-
-        <?php endif; ?>
-
-        </tbody>
-
-    </table>
-
-</div>
-
-<?php
-
-}         
+	<?php
+}
