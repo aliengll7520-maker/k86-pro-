@@ -5,8 +5,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Trang Quản lý sản phẩm
+ * --------------------------------------------------------
+ * K86 Pro
+ * Module: Product Manager
+ * Version: 1.3.1
+ * --------------------------------------------------------
  */
+
 function k86_product_manager_page() {
 
 	if ( ! current_user_can( 'manage_options' ) ) {
@@ -14,11 +19,14 @@ function k86_product_manager_page() {
 	}
 
 	$products = k86_get_products();
+
 	?>
 
 	<div class="wrap">
 
-		<h1 class="wp-heading-inline">Quản lý sản phẩm</h1>
+		<h1 class="wp-heading-inline">
+			Quản lý sản phẩm
+		</h1>
 
 		<a
 			href="<?php echo esc_url( admin_url( 'admin.php?page=k86-add-product' ) ); ?>"
@@ -38,19 +46,19 @@ function k86_product_manager_page() {
 
 					<th width="60">ID</th>
 
-					<th>Ảnh</th>
+					<th width="90">Ảnh</th>
 
 					<th>Tên sản phẩm</th>
 
-					<th>Giá</th>
+					<th width="120">Giá</th>
 
-					<th width="180">Shortcode</th>
+					<th width="250">Shortcode</th>
 
-					<th>Shopee</th>
+					<th width="70">Shopee</th>
 
-					<th>TikTok</th>
+					<th width="70">TikTok</th>
 
-					<th>Lazada</th>
+					<th width="70">Lazada</th>
 
 					<th width="180">Thao tác</th>
 
@@ -65,8 +73,11 @@ function k86_product_manager_page() {
 			<?php foreach ( $products as $product ) : ?>
 
 				<tr>
+										<td>
 
-					<td><?php echo esc_html( $product->id ); ?></td>
+						<?php echo esc_html( $product->id ); ?>
+
+					</td>
 
 					<td>
 
@@ -75,7 +86,12 @@ function k86_product_manager_page() {
 							<img
 								src="<?php echo esc_url( $product->image ); ?>"
 								width="70"
+								style="border-radius:6px;"
 								alt="">
+
+						<?php else : ?>
+
+							—
 
 						<?php endif; ?>
 
@@ -96,19 +112,32 @@ function k86_product_manager_page() {
 						<?php echo esc_html( $product->price ); ?>
 
 					</td>
-					<td>
+										<td>
 
-						<input
-							type="text"
-							class="regular-text k86-shortcode"
-							value='[k86_product id="<?php echo absint( $product->id ); ?>"]'
-							readonly
-							onclick="this.select();document.execCommand('copy');">
+						<div style="display:flex;align-items:center;gap:8px;">
 
-						<p style="margin-top:6px;">
+							<input
+								type="text"
+								class="regular-text k86-shortcode"
+								readonly
+								value='[k86_product id="<?php echo absint( $product->id ); ?>"]'>
+
+							<button
+								type="button"
+								class="button k86-copy-shortcode">
+
+								📋 Copy
+
+							</button>
+
+						</div>
+
+						<p style="margin:6px 0 0;">
 
 							<small style="color:#2271b1;">
-								📋 Nhấp vào ô để Copy
+
+								Nhấn Copy để sao chép shortcode.
+
 							</small>
 
 						</p>
@@ -132,7 +161,7 @@ function k86_product_manager_page() {
 						<?php echo ! empty( $product->lazada ) ? '✔' : '-'; ?>
 
 					</td>
-							<td>
+										<td>
 
 						<a
 							class="button button-primary"
@@ -144,7 +173,7 @@ function k86_product_manager_page() {
 
 						<a
 							class="button button-secondary"
-							onclick="return confirm('Bạn có chắc muốn xóa?');"
+							onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');"
 							href="<?php echo esc_url(
 								wp_nonce_url(
 									admin_url( 'admin-post.php?action=k86_delete_product&id=' . absint( $product->id ) ),
@@ -166,7 +195,7 @@ function k86_product_manager_page() {
 
 				<tr>
 
-					<td colspan="9">
+					<td colspan="9" style="text-align:center;padding:20px;">
 
 						Chưa có sản phẩm nào.
 
@@ -175,12 +204,54 @@ function k86_product_manager_page() {
 				</tr>
 
 			<?php endif; ?>
-
-			</tbody>
+				</tbody>
 
 		</table>
 
 	</div>
+
+	<script>
+
+	document.addEventListener('DOMContentLoaded', function () {
+
+		document.querySelectorAll('.k86-copy-shortcode').forEach(function(button){
+
+			button.addEventListener('click', function(){
+
+				let input = this.parentNode.querySelector('.k86-shortcode');
+
+				if (!input) {
+					return;
+				}
+
+				navigator.clipboard.writeText(input.value).then(() => {
+
+					let oldText = this.innerHTML;
+
+					this.innerHTML = '✅ Đã copy';
+
+					setTimeout(() => {
+
+						this.innerHTML = oldText;
+
+					}, 1500);
+
+				}).catch(() => {
+
+					input.select();
+					document.execCommand('copy');
+
+					alert('Đã sao chép shortcode.');
+
+				});
+
+			});
+
+		});
+
+	});
+
+	</script>
 
 	<?php
 
