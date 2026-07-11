@@ -3,41 +3,69 @@
  * Plugin Name: K86 Pro
  * Plugin URI: https://github.com/aliengll7520-maker/k86-pro
  * Description: Plugin Affiliate dành cho K86Shop.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Liểng Sang
- * License: GPL2
+ * Author URI: https://k86shop.com
+ * License: GPL-2.0+
+ * Text Domain: k86-pro
  */
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /*
 |--------------------------------------------------------------------------
-| Nạp các module
+| Hằng số Plugin
 |--------------------------------------------------------------------------
 */
 
-require_once plugin_dir_path(__FILE__) . 'includes/functions.php';
+define( 'K86_PRO_VERSION', '1.2.0' );
+define( 'K86_PRO_FILE', __FILE__ );
+define( 'K86_PRO_PATH', plugin_dir_path( __FILE__ ) );
+define( 'K86_PRO_URL', plugin_dir_url( __FILE__ ) );
 
-require_once plugin_dir_path(__FILE__) . 'admin/admin.php';
+/*
+|--------------------------------------------------------------------------
+| Nạp các Module
+|--------------------------------------------------------------------------
+*/
 
-require_once plugin_dir_path(__FILE__) . 'settings/settings.php';
+$modules = array(
 
-require_once plugin_dir_path(__FILE__) . 'modules/affiliate-box.php';
+	'includes/functions.php',
 
-require_once plugin_dir_path(__FILE__) . 'modules/product-manager.php';
+	'admin/admin.php',
 
-require_once plugin_dir_path(__FILE__) . 'modules/product-add.php';
+	'settings/settings.php',
 
-require_once plugin_dir_path(__FILE__) . 'modules/product-edit.php';
+	'modules/affiliate-box.php',
 
-require_once plugin_dir_path(__FILE__) . 'modules/product-save.php';
+	'modules/product-manager.php',
 
-require_once plugin_dir_path(__FILE__) . 'modules/product-delete.php';
+	'modules/product-add.php',
 
-require_once plugin_dir_path(__FILE__) . 'modules/product-shortcode.php';
+	'modules/product-edit.php',
 
+	'modules/product-save.php',
+
+	'modules/product-delete.php',
+
+	'modules/product-shortcode.php',
+
+);
+
+foreach ( $modules as $module ) {
+
+	$file = K86_PRO_PATH . $module;
+
+	if ( file_exists( $file ) ) {
+
+		require_once $file;
+
+	}
+
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -45,85 +73,104 @@ require_once plugin_dir_path(__FILE__) . 'modules/product-shortcode.php';
 |--------------------------------------------------------------------------
 */
 
-register_activation_hook(__FILE__, 'k86_install');
+register_activation_hook( __FILE__, 'k86_install' );
 
 function k86_install() {
 
-    global $wpdb;
+	global $wpdb;
 
-    $table = $wpdb->prefix . 'k86_products';
+	$table = $wpdb->prefix . 'k86_products';
 
-    $charset_collate = $wpdb->get_charset_collate();
+	$charset_collate = $wpdb->get_charset_collate();
 
-    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-    $sql = "CREATE TABLE {$table} (
+	$sql = "CREATE TABLE {$table} (
 
-        id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+		id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 
-        name VARCHAR(255) NOT NULL,
+		name VARCHAR(255) NOT NULL,
 
-        slug VARCHAR(255) NOT NULL,
+		slug VARCHAR(255) NOT NULL,
 
-        price VARCHAR(50) DEFAULT '',
+		price VARCHAR(50) DEFAULT '',
 
-        sale_price VARCHAR(50) DEFAULT '',
+		sale_price VARCHAR(50) DEFAULT '',
 
-        shopee TEXT,
+		shopee TEXT,
 
-        tiktok TEXT,
+		tiktok TEXT,
 
-        lazada TEXT,
+		lazada TEXT,
 
-        image TEXT,
+		image TEXT,
 
-        description LONGTEXT,
+		description LONGTEXT,
 
-        status VARCHAR(20) DEFAULT 'active',
+		status VARCHAR(20) DEFAULT 'active',
 
-        created DATETIME DEFAULT CURRENT_TIMESTAMP,
+		created DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-        PRIMARY KEY (id)
+		PRIMARY KEY (id)
 
-    ) {$charset_collate};";
+	) {$charset_collate};";
 
-    dbDelta($sql);
+	dbDelta( $sql );
+
 }
-
 
 /*
 |--------------------------------------------------------------------------
-| Nạp CSS + JavaScript + Media Library
+| Tải CSS + JavaScript
 |--------------------------------------------------------------------------
 */
 
-add_action('admin_enqueue_scripts', 'k86_admin_assets');
+add_action( 'admin_enqueue_scripts', 'k86_admin_assets' );
 
-function k86_admin_assets($hook){
+function k86_admin_assets( $hook ) {
 
-    wp_enqueue_media();
+	wp_enqueue_media();
 
-    wp_enqueue_style(
-        'k86-admin-style',
-        plugin_dir_url(__FILE__) . 'assets/style.css',
-        array(),
-        '1.1.0'
-    );
+	wp_enqueue_style(
 
-    wp_enqueue_script(
-        'k86-media',
-        plugin_dir_url(__FILE__) . 'assets/js/media.js',
-        array('jquery'),
-        '1.1.0',
-        true
-    );
+		'k86-admin-style',
 
-    wp_localize_script(
-        'k86-media',
-        'k86Pro',
-        array(
-            'title'  => 'Chọn ảnh sản phẩm',
-            'button' => 'Sử dụng ảnh này'
-        )
-    );
+		K86_PRO_URL . 'assets/style.css',
+
+		array(),
+
+		K86_PRO_VERSION
+
+	);
+
+	wp_enqueue_script(
+
+		'k86-media',
+
+		K86_PRO_URL . 'assets/js/media.js',
+
+		array( 'jquery' ),
+
+		K86_PRO_VERSION,
+
+		true
+
+	);
+
+	wp_localize_script(
+
+		'k86-media',
+
+		'k86Pro',
+
+		array(
+
+			'title'  => 'Chọn ảnh sản phẩm',
+
+			'button' => 'Sử dụng ảnh này',
+
+		)
+
+	);
+
 }
