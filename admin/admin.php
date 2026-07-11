@@ -4,43 +4,62 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_action( 'admin_menu', 'k86_pro_admin_menu' );
+/**
+ * Đăng ký menu K86 Pro
+ */
+add_action( 'admin_menu', 'k86_admin_menu' );
 
-function k86_pro_admin_menu() {
+function k86_admin_menu() {
 
     add_menu_page(
         'K86 Pro',
         'K86 Pro',
         'manage_options',
-        'k86-pro',
-        'k86_pro_dashboard',
-        'dashicons-admin-generic',
-        25
+        'k86-dashboard',
+        'k86_dashboard_page',
+        'dashicons-store',
+        26
     );
 
+    add_submenu_page(
+        'k86-dashboard',
+        'Dashboard',
+        'Dashboard',
+        'manage_options',
+        'k86-dashboard',
+        'k86_dashboard_page'
+    );
+
+    add_submenu_page(
+        'k86-dashboard',
+        'Quản lý sản phẩm',
+        'Sản phẩm',
+        'manage_options',
+        'k86-products',
+        'k86_product_manager_page'
+    );
+
+    add_submenu_page(
+        'k86-dashboard',
+        'Cài đặt',
+        'Cài đặt',
+        'manage_options',
+        'k86-settings',
+        'k86_settings_page'
+    );
 }
 
-function k86_pro_dashboard() {
-?>
-<div class="wrap">
+/**
+ * Dashboard
+ */
+function k86_dashboard_page() {
+    ?>
+    <div class="wrap">
+        <h1>K86 Pro Dashboard</h1>
 
-    <h1>🚀 K86 Pro Dashboard</h1>
+        <p>Chào mừng bạn đến với K86 Pro.</p>
 
-    <p><strong>Phiên bản:</strong> 1.0.0</p>
-
-    <p>Chào mừng bạn đến với plugin <strong>K86 Pro</strong>.</p>
-
-    <hr>
-
-    <h2>Trạng thái Plugin</h2>
-
-    <ul>
-        <li>✅ Affiliate Box: Hoạt động</li>
-        <li>✅ Shortcode: <code>[k86_box]</code></li>
-        <li>✅ CSS: Đã tải</li>
-        <li>✅ Cài đặt: Sẵn sàng</li>
-    </ul>
-
-</div>
-<?php
+        <p>Plugin Affiliate dành riêng cho K86Shop.</p>
+    </div>
+    <?php
 }
