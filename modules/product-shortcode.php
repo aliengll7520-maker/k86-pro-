@@ -3,7 +3,7 @@
  * K86 Pro
  *
  * Module: Product Shortcode
- * Version: 1.4.0
+ * Version: 1.4.1 Stable
  * Author: Liểng Sang
  */
 
@@ -45,12 +45,12 @@ function k86_product_shortcode( $atts ) {
 
 	/*
 	|--------------------------------------------------------------------------
-	| Đọc cài đặt
+	| Cài đặt K86 Pro
 	|--------------------------------------------------------------------------
 	*/
 
-	$settings = get_option(
-		'k86_settings',
+	$settings = wp_parse_args(
+		get_option( 'k86_settings', array() ),
 		array(
 			'show_shopee'      => 1,
 			'show_tiktok'      => 1,
@@ -60,6 +60,13 @@ function k86_product_shortcode( $atts ) {
 			'show_description' => 1,
 		)
 	);
+
+	$show_shopee      = ! empty( $settings['show_shopee'] );
+	$show_tiktok      = ! empty( $settings['show_tiktok'] );
+	$show_lazada      = ! empty( $settings['show_lazada'] );
+	$show_discount    = ! empty( $settings['show_discount'] );
+	$show_save_money  = ! empty( $settings['show_save_money'] );
+	$show_description = ! empty( $settings['show_description'] );
 
 	/*
 	|--------------------------------------------------------------------------
@@ -86,6 +93,7 @@ function k86_product_shortcode( $atts ) {
 	ob_start();
 
 ?>
+
 <div class="k86-product-box" style="
 border:1px solid #e5e5e5;
 border-radius:12px;
@@ -94,7 +102,7 @@ margin:20px 0;
 background:#fff;
 box-shadow:0 2px 10px rgba(0,0,0,.05);
 ">
-	<?php if ( $settings['show_discount'] && $discount_percent > 0 ) : ?>
+	<?php if ( $show_discount && $discount_percent > 0 ) : ?>
 
 <div style="
 display:inline-block;
@@ -167,7 +175,7 @@ margin-bottom:8px;
 
 </div>
 
-<?php if ( $settings['show_save_money'] ) : ?>
+<?php if ( $show_save_money ) : ?>
 
 <div style="
 color:#2e7d32;
@@ -197,7 +205,7 @@ color:#e53935;
 <?php endif; ?>
 
 </div>
-	<?php if ( $settings['show_description'] && ! empty( $product->description ) ) : ?>
+	<?php if ( $show_description && ! empty( $product->description ) ) : ?>
 
 <div style="
 line-height:1.8;
@@ -212,7 +220,7 @@ color:#444;
 
 <?php endif; ?>
 
-<?php if ( $settings['show_shopee'] && ! empty( $product->shopee ) ) : ?>
+<?php if ( $show_shopee && ! empty( $product->shopee ) ) : ?>
 
 <p style="margin-bottom:12px;">
 
@@ -240,7 +248,7 @@ font-size:16px;
 
 <?php endif; ?>
 
-<?php if ( $settings['show_tiktok'] && ! empty( $product->tiktok ) ) : ?>
+<?php if ( $show_tiktok && ! empty( $product->tiktok ) ) : ?>
 
 <p style="margin-bottom:12px;">
 
@@ -267,7 +275,7 @@ font-size:16px;
 </p>
 
 <?php endif; ?>
-	<?php if ( $settings['show_lazada'] && ! empty( $product->lazada ) ) : ?>
+	<?php if ( $show_lazada && ! empty( $product->lazada ) ) : ?>
 
 <p style="margin-bottom:12px;">
 
@@ -298,6 +306,11 @@ font-size:16px;
 </div>
 	<?php
 
-return ob_get_clean();
+/*
+|--------------------------------------------------------------------------
+| Kết thúc Product Box
+|--------------------------------------------------------------------------
+*/
 
+return ob_get_clean();
 }
