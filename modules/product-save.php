@@ -4,6 +4,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * --------------------------------------------------------
+ * K86 Pro
+ * Module: Product Save
+ * Version: 1.5.0.2
+ * Status: Development
+ * --------------------------------------------------------
+ */
+
 /*
 |--------------------------------------------------------------------------
 | Lưu sản phẩm mới
@@ -23,11 +32,11 @@ function k86_save_product() {
 	global $wpdb;
 
 	$table = $wpdb->prefix . 'k86_products';
-
-	$wpdb->insert(
+		$wpdb->insert(
 		$table,
 		array(
 			'name'        => sanitize_text_field( $_POST['name'] ?? '' ),
+			'brand'       => sanitize_text_field( $_POST['brand'] ?? '' ),
 			'slug'        => sanitize_title( $_POST['name'] ?? '' ),
 			'price'       => sanitize_text_field( $_POST['price'] ?? '' ),
 			'sale_price'  => sanitize_text_field( $_POST['sale_price'] ?? '' ),
@@ -39,20 +48,24 @@ function k86_save_product() {
 			'status'      => sanitize_text_field( $_POST['status'] ?? 'active' ),
 		),
 		array(
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
+			'%s', // name
+			'%s', // brand
+			'%s', // slug
+			'%s', // price
+			'%s', // sale_price
+			'%s', // shopee
+			'%s', // tiktok
+			'%s', // lazada
+			'%s', // image
+			'%s', // description
+			'%s', // status
 		)
 	);
 
-	wp_safe_redirect( admin_url( 'admin.php?page=k86-products' ) );
+	wp_safe_redirect(
+		admin_url( 'admin.php?page=k86-products' )
+	);
+
 	exit;
 }
 
@@ -77,11 +90,11 @@ function k86_update_product() {
 	$table = $wpdb->prefix . 'k86_products';
 
 	$id = absint( $_POST['id'] ?? 0 );
-
-	$wpdb->update(
+		$wpdb->update(
 		$table,
 		array(
 			'name'        => sanitize_text_field( $_POST['name'] ?? '' ),
+			'brand'       => sanitize_text_field( $_POST['brand'] ?? '' ),
 			'slug'        => sanitize_title( $_POST['name'] ?? '' ),
 			'price'       => sanitize_text_field( $_POST['price'] ?? '' ),
 			'sale_price'  => sanitize_text_field( $_POST['sale_price'] ?? '' ),
@@ -96,22 +109,26 @@ function k86_update_product() {
 			'id' => $id,
 		),
 		array(
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
-			'%s',
+			'%s', // name
+			'%s', // brand
+			'%s', // slug
+			'%s', // price
+			'%s', // sale_price
+			'%s', // shopee
+			'%s', // tiktok
+			'%s', // lazada
+			'%s', // image
+			'%s', // description
+			'%s', // status
 		),
 		array(
 			'%d',
 		)
 	);
 
-	wp_safe_redirect( admin_url( 'admin.php?page=k86-products' ) );
+	wp_safe_redirect(
+		admin_url( 'admin.php?page=k86-products' )
+	);
+
 	exit;
 }
