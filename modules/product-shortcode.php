@@ -3,11 +3,8 @@
  * K86 Pro
  *
  * Module: Product Shortcode
- * Version: 1.2.0
+ * Version: 1.4.0
  * Author: Liểng Sang
- *
- * Shortcode:
- * [k86_product id="1"]
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -48,12 +45,30 @@ function k86_product_shortcode( $atts ) {
 
 	/*
 	|--------------------------------------------------------------------------
+	| Đọc cài đặt
+	|--------------------------------------------------------------------------
+	*/
+
+	$settings = get_option(
+		'k86_settings',
+		array(
+			'show_shopee'      => 1,
+			'show_tiktok'      => 1,
+			'show_lazada'      => 1,
+			'show_discount'    => 1,
+			'show_save_money'  => 1,
+			'show_description' => 1,
+		)
+	);
+
+	/*
+	|--------------------------------------------------------------------------
 	| Tính giá
 	|--------------------------------------------------------------------------
 	*/
 
-	$price       = (float) preg_replace( '/[^0-9]/', '', $product->price );
-	$sale_price  = (float) preg_replace( '/[^0-9]/', '', $product->sale_price );
+	$price      = (float) preg_replace( '/[^0-9]/', '', $product->price );
+	$sale_price = (float) preg_replace( '/[^0-9]/', '', $product->sale_price );
 
 	$discount_percent = 0;
 	$saving_money     = 0;
@@ -71,7 +86,7 @@ function k86_product_shortcode( $atts ) {
 	ob_start();
 
 ?>
-    <div class="k86-product-box" style="
+<div class="k86-product-box" style="
 border:1px solid #e5e5e5;
 border-radius:12px;
 padding:20px;
@@ -79,8 +94,7 @@ margin:20px 0;
 background:#fff;
 box-shadow:0 2px 10px rgba(0,0,0,.05);
 ">
-
-<?php if ( $discount_percent > 0 ) : ?>
+	<?php if ( $settings['show_discount'] && $discount_percent > 0 ) : ?>
 
 <div style="
 display:inline-block;
@@ -126,58 +140,64 @@ line-height:1.5;
 <?php echo esc_html( $product->name ); ?>
 
 </h2>
-    <div style="margin-bottom:20px;">
+
+<div style="margin-bottom:20px;">
 
 <?php if ( $sale_price > 0 && $sale_price < $price ) : ?>
 
-    <div style="
-    font-size:18px;
-    color:#888;
-    text-decoration:line-through;
-    margin-bottom:5px;
-    ">
+<div style="
+font-size:18px;
+color:#888;
+text-decoration:line-through;
+margin-bottom:5px;
+">
 
-        <?php echo esc_html( number_format( $price, 0, ',', '.' ) ); ?> ₫
+<?php echo esc_html( number_format( $price, 0, ',', '.' ) ); ?> ₫
 
-    </div>
+</div>
 
-    <div style="
-    font-size:32px;
-    font-weight:bold;
-    color:#e53935;
-    margin-bottom:8px;
-    ">
+<div style="
+font-size:32px;
+font-weight:bold;
+color:#e53935;
+margin-bottom:8px;
+">
 
-        <?php echo esc_html( number_format( $sale_price, 0, ',', '.' ) ); ?> ₫
+<?php echo esc_html( number_format( $sale_price, 0, ',', '.' ) ); ?> ₫
 
-    </div>
+</div>
 
-    <div style="
-    color:#2e7d32;
-    font-weight:bold;
-    ">
+<?php if ( $settings['show_save_money'] ) : ?>
 
-        💰 Tiết kiệm
-        <?php echo esc_html( number_format( $saving_money, 0, ',', '.' ) ); ?> ₫
+<div style="
+color:#2e7d32;
+font-weight:bold;
+">
 
-    </div>
+💰 Tiết kiệm
 
-<?php else : ?>
+<?php echo esc_html( number_format( $saving_money, 0, ',', '.' ) ); ?> ₫
 
-    <div style="
-    font-size:32px;
-    font-weight:bold;
-    color:#e53935;
-    ">
-
-        <?php echo esc_html( number_format( $price, 0, ',', '.' ) ); ?> ₫
-
-    </div>
+</div>
 
 <?php endif; ?>
 
-    </div>
-    <?php if ( ! empty( $product->description ) ) : ?>
+<?php else : ?>
+
+<div style="
+font-size:32px;
+font-weight:bold;
+color:#e53935;
+">
+
+<?php echo esc_html( number_format( $price, 0, ',', '.' ) ); ?> ₫
+
+</div>
+
+<?php endif; ?>
+
+</div>
+	<?php if ( $settings['show_description'] && ! empty( $product->description ) ) : ?>
 
 <div style="
 line-height:1.8;
@@ -191,7 +211,8 @@ color:#444;
 </div>
 
 <?php endif; ?>
-    <?php if ( ! empty( $product->shopee ) ) : ?>
+
+<?php if ( $settings['show_shopee'] && ! empty( $product->shopee ) ) : ?>
 
 <p style="margin-bottom:12px;">
 
@@ -219,7 +240,7 @@ font-size:16px;
 
 <?php endif; ?>
 
-<?php if ( ! empty( $product->tiktok ) ) : ?>
+<?php if ( $settings['show_tiktok'] && ! empty( $product->tiktok ) ) : ?>
 
 <p style="margin-bottom:12px;">
 
@@ -246,10 +267,9 @@ font-size:16px;
 </p>
 
 <?php endif; ?>
+	<?php if ( $settings['show_lazada'] && ! empty( $product->lazada ) ) : ?>
 
-<?php if ( ! empty( $product->lazada ) ) : ?>
-
-<p>
+<p style="margin-bottom:12px;">
 
 <a
 href="<?php echo esc_url( $product->lazada ); ?>"
@@ -274,10 +294,10 @@ font-size:16px;
 </p>
 
 <?php endif; ?>
-    </div>
 
-<?php
+</div>
+	<?php
 
-	return ob_get_clean();
+return ob_get_clean();
 
 }
