@@ -4,6 +4,7 @@
  * K86 Pro
  * Core: Install
  * Version: 1.0.0
+ * Status: Stable
  * --------------------------------------------------------
  */
 
@@ -23,7 +24,7 @@ function k86_install_database() {
 	$charset_collate = $wpdb->get_charset_collate();
 
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-  
+
 	$sql = "CREATE TABLE {$table} (
 
 		id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -59,13 +60,15 @@ function k86_install_database() {
 		PRIMARY KEY (id)
 
 	) {$charset_collate};";
-  	dbDelta( $sql );
+
+	dbDelta( $sql );
 
 	update_option( 'k86_db_version', K86_DB_VERSION );
 
 }
+
 /**
- * Kích hoạt cài đặt Database
+ * Kích hoạt Database khi Plugin được kích hoạt
  */
 register_activation_hook(
 	K86_PRO_FILE,
