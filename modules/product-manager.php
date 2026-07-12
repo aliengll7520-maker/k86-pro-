@@ -8,15 +8,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * --------------------------------------------------------
  * K86 Pro
  * Module: Product Manager
- * Version: 1.5.0.4
- * Status: Development
+ * Version: 1.5.0.5
+ * Status: RC1
  * --------------------------------------------------------
  */
 
 /**
  * Trang quản lý sản phẩm
  */
-function k86_products_page() {
+function k86_product_manager_page() {
 
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( esc_html__( 'Bạn không có quyền truy cập.', 'k86-pro' ) );
@@ -46,159 +46,165 @@ function k86_products_page() {
 
 		<hr class="wp-header-end">
 
-		<table class="widefat fixed striped">
+		<table class="widefat striped">
 
 			<thead>
 
 				<tr>
 
-					<th width="60">ID</th>
+					<th style="width:60px;">ID</th>
 
-					<th width="80">Ảnh</th>
+					<th style="width:80px;">Ảnh</th>
 
-					<th>Tên sản phẩm</th>
+					<th style="min-width:280px;">Tên sản phẩm</th>
 
-					<th width="180">Thương hiệu</th>
+					<th style="width:180px;">Thương hiệu</th>
 
-					<th width="140">Giá</th>
+					<th style="width:140px;">Giá</th>
 
-					<th width="120">Trạng thái</th>
+					<th style="width:120px;">Trạng thái</th>
 
-					<th width="180">Thao tác</th>
+					<th style="width:180px;">Thao tác</th>
 
 				</tr>
 
 			</thead>
 
 			<tbody>
-	<?php if ( ! empty( $products ) ) : ?>
 
-	<?php foreach ( $products as $product ) : ?>
+			<?php if ( ! empty( $products ) ) : ?>
 
-		<tr>
+				<?php foreach ( $products as $product ) : ?>
 
-			<td>
+					<tr>
 
-				<?php echo (int) $product->id; ?>
+						<td>
 
-			</td>
+							<?php echo (int) $product->id; ?>
 
-			<td>
+						</td>
 
-				<?php if ( ! empty( $product->image ) ) : ?>
+						<td>
 
-					<img
-						src="<?php echo esc_url( $product->image ); ?>"
-						alt="<?php echo esc_attr( $product->name ); ?>"
-						style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
+							<?php if ( ! empty( $product->image ) ) : ?>
 
-				<?php else : ?>
+								<img
+									src="<?php echo esc_url( $product->image ); ?>"
+									alt="<?php echo esc_attr( $product->name ); ?>"
+									style="width:60px;height:60px;object-fit:cover;border-radius:8px;">
 
-					—
+							<?php else : ?>
 
-				<?php endif; ?>
+								—
 
-			</td>
+							<?php endif; ?>
 
-			<td>
+						</td>
 
-				<strong>
+						<td style="min-width:280px;">
 
-					<?php echo esc_html( $product->name ); ?>
+							<strong>
 
-				</strong>
+								<?php echo esc_html( $product->name ); ?>
 
-			</td>
+							</strong>
 
-			<td>
+						</td>
 
-				<?php echo esc_html( $product->brand ); ?>
+						<td>
 
-			</td>
+							<?php
+							echo ! empty( $product->brand )
+								? esc_html( $product->brand )
+								: '—';
+							?>
 
-			<td>
+						</td>
 
-				<?php
+						<td>
 
-				if ( ! empty( $product->sale_price ) ) {
+							<?php
 
-					echo '<strong style="color:#d63638;">' .
-						esc_html( $product->sale_price ) .
-						'</strong><br>';
+							if ( ! empty( $product->sale_price ) ) {
 
-					echo '<del>' .
-						esc_html( $product->price ) .
-						'</del>';
+								echo '<strong style="color:#d63638;">' .
+									esc_html( $product->sale_price ) .
+									'</strong><br>';
 
-				} else {
+								echo '<del>' .
+									esc_html( $product->price ) .
+									'</del>';
 
-					echo esc_html( $product->price );
+							} else {
 
-				}
+								echo esc_html( $product->price );
 
-				?>
+							}
 
-			</td>
-					<td>
+							?>
 
-				<?php if ( 'active' === $product->status ) : ?>
+						</td>
 
-					<span style="color:#00a32a;font-weight:bold;">
+						<td>
 
-						Hoạt động
+							<?php if ( 'active' === $product->status ) : ?>
 
-					</span>
+								<span style="color:#00a32a;font-weight:bold;">
 
-				<?php else : ?>
+									Hoạt động
 
-					<span style="color:#d63638;font-weight:bold;">
+								</span>
 
-						Tạm ẩn
+							<?php else : ?>
 
-					</span>
+								<span style="color:#d63638;font-weight:bold;">
 
-				<?php endif; ?>
+									Tạm ẩn
 
-			</td>
+								</span>
 
-			<td>
+							<?php endif; ?>
 
-				<a
-					class="button button-primary"
-					href="<?php echo esc_url( admin_url( 'admin.php?page=k86-edit-product&id=' . absint( $product->id ) ) ); ?>">
+						</td>
 
-					Sửa
+						<td>
 
-				</a>
+							<a
+								class="button button-primary"
+								href="<?php echo esc_url( admin_url( 'admin.php?page=k86-edit-product&id=' . absint( $product->id ) ) ); ?>">
 
-				<a
-					class="button button-secondary"
-					href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=k86_delete_product&id=' . absint( $product->id ) ), 'k86_delete_product' ) ); ?>"
-					onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
+								Sửa
 
-					Xóa
+							</a>
 
-				</a>
+							<a
+								class="button button-secondary"
+								href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=k86_delete_product&id=' . absint( $product->id ) ), 'k86_delete_product' ) ); ?>"
+								onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">
 
-			</td>
+								Xóa
 
-		</tr>
+							</a>
 
-	<?php endforeach; ?>
+						</td>
 
-<?php else : ?>
+					</tr>
 
-	<tr>
+				<?php endforeach; ?>
 
-		<td colspan="7" style="text-align:center;padding:30px;">
+			<?php else : ?>
 
-			Chưa có sản phẩm nào.
+				<tr>
 
-		</td>
+					<td colspan="7" style="text-align:center;padding:30px;">
 
-	</tr>
+						Chưa có sản phẩm nào.
 
-<?php endif; ?>
+					</td>
+
+				</tr>
+
+			<?php endif; ?>
 
 			</tbody>
 
@@ -206,6 +212,5 @@ function k86_products_page() {
 
 	</div>
 
-<?php
-
+	<?php
 }
