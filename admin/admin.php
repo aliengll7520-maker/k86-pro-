@@ -63,7 +63,7 @@ function k86_admin_menu() {
 		'Sản phẩm',
 		'manage_options',
 		'k86-products',
-		'k86_products_page'
+		'k86_product_manager_page'
 	);
 
 	/*
