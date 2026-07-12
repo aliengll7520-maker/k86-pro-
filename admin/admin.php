@@ -5,11 +5,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Đăng ký menu K86 Pro
+ * --------------------------------------------------------
+ * K86 Pro
+ * Admin Menu
+ * Version: 1.5.0.6
+ * Status: Development
+ * --------------------------------------------------------
+ */
+
+/**
+ * Đăng ký Menu K86 Pro
  */
 add_action( 'admin_menu', 'k86_admin_menu' );
 
 function k86_admin_menu() {
+
+	/*
+	|--------------------------------------------------------------------------
+	| Menu chính
+	|--------------------------------------------------------------------------
+	*/
 
 	add_menu_page(
 		'K86 Pro',
@@ -21,6 +36,12 @@ function k86_admin_menu() {
 		26
 	);
 
+	/*
+	|--------------------------------------------------------------------------
+	| Dashboard
+	|--------------------------------------------------------------------------
+	*/
+
 	add_submenu_page(
 		'k86-dashboard',
 		'Dashboard',
@@ -30,14 +51,26 @@ function k86_admin_menu() {
 		'k86_dashboard_page'
 	);
 
+	/*
+	|--------------------------------------------------------------------------
+	| Quản lý sản phẩm
+	|--------------------------------------------------------------------------
+	*/
+
 	add_submenu_page(
 		'k86-dashboard',
 		'Quản lý sản phẩm',
 		'Sản phẩm',
 		'manage_options',
 		'k86-products',
-		'k86_product_manager_page'
+		'k86_products_page'
 	);
+
+	/*
+	|--------------------------------------------------------------------------
+	| Cài đặt
+	|--------------------------------------------------------------------------
+	*/
 
 	add_submenu_page(
 		'k86-dashboard',
@@ -48,9 +81,12 @@ function k86_admin_menu() {
 		'k86_settings_page'
 	);
 
-	/**
-	 * Trang ẩn: Thêm sản phẩm
-	 */
+	/*
+	|--------------------------------------------------------------------------
+	| Trang ẩn: Thêm sản phẩm
+	|--------------------------------------------------------------------------
+	*/
+
 	add_submenu_page(
 		null,
 		'Thêm sản phẩm',
@@ -60,9 +96,12 @@ function k86_admin_menu() {
 		'k86_add_product_form'
 	);
 
-	/**
-	 * Trang ẩn: Sửa sản phẩm
-	 */
+	/*
+	|--------------------------------------------------------------------------
+	| Trang ẩn: Sửa sản phẩm
+	|--------------------------------------------------------------------------
+	*/
+
 	add_submenu_page(
 		null,
 		'Sửa sản phẩm',
@@ -71,6 +110,7 @@ function k86_admin_menu() {
 		'k86-edit-product',
 		'k86_edit_product_form'
 	);
+
 }
 
 /**
@@ -78,12 +118,16 @@ function k86_admin_menu() {
  */
 function k86_dashboard_page() {
 	?>
+
 	<div class="wrap">
+
 		<h1>K86 Pro Dashboard</h1>
 
 		<p>Chào mừng bạn đến với K86 Pro.</p>
 
 		<p>Plugin Affiliate dành riêng cho K86Shop.</p>
+
 	</div>
+
 	<?php
 }
