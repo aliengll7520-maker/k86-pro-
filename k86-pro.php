@@ -3,7 +3,7 @@
  * Plugin Name: K86 Pro
  * Plugin URI: https://github.com/aliengll7520-maker/k86-pro
  * Description: Plugin Affiliate Platform dành cho K86Shop.
- * Version: 1.5.0
+ * Version: 1.5.1
  * Author: Liểng Sang
  * Author URI: https://k86shop.com
  * License: GPL-2.0+
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 |--------------------------------------------------------------------------
 */
 
-define( 'K86_PRO_VERSION', '1.5.0' );
+define( 'K86_PRO_VERSION', '1.5.1' );
 define( 'K86_PRO_FILE', __FILE__ );
 define( 'K86_PRO_PATH', plugin_dir_path( __FILE__ ) );
 define( 'K86_PRO_URL', plugin_dir_url( __FILE__ ) );
@@ -34,6 +34,7 @@ define( 'K86_PRO_URL', plugin_dir_url( __FILE__ ) );
 require_once K86_PRO_PATH . 'core/version.php';
 require_once K86_PRO_PATH . 'core/install.php';
 require_once K86_PRO_PATH . 'core/upgrade.php';
+
 /*
 |--------------------------------------------------------------------------
 | Load Modules
@@ -75,6 +76,7 @@ foreach ( $modules as $module ) {
 	}
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Register Activation Hook
@@ -126,6 +128,7 @@ function k86_admin_assets() {
 	);
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Plugin Loaded
