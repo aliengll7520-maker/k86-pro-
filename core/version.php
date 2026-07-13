@@ -3,8 +3,8 @@
  * --------------------------------------------------------
  * K86 Pro
  * Core: Version Manager
- * Version: 1.5.1
- * Status: Development
+ * Version: 1.5.2
+ * Status: Framework RC1
  * --------------------------------------------------------
  */
 
@@ -14,18 +14,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * --------------------------------------------------------
- * Phiên bản Database của K86 Pro
+ * Database Version
  * --------------------------------------------------------
  *
- * Chỉ tăng phiên bản khi có thay đổi cấu trúc Database.
+ * Plugin Version được quản lý trong:
+ * k86-pro.php
+ *
+ * Database Version chỉ tăng khi có thay đổi
+ * cấu trúc Cơ sở dữ liệu.
  *
  * Ví dụ:
- * - Thêm cột mới
- * - Xóa cột
- * - Đổi kiểu dữ liệu
- * - Thêm bảng mới
+ * - Thêm bảng mới.
+ * - Xóa bảng.
+ * - Thêm cột.
+ * - Xóa cột.
+ * - Đổi kiểu dữ liệu.
  *
- * Không tăng phiên bản khi chỉ sửa giao diện
- * hoặc chỉnh sửa mã nguồn.
+ * Không tăng Database Version khi:
+ * - Chỉnh sửa giao diện.
+ * - Sửa lỗi PHP.
+ * - Thay đổi CSS hoặc JavaScript.
+ * - Thêm chức năng không liên quan Database.
  */
-define( 'K86_DB_VERSION', '1.1.0' );
+
+/**
+ * Database Version
+ */
+if ( ! defined( 'K86_DB_VERSION' ) ) {
+
+	define( 'K86_DB_VERSION', '1.1.0' );
+
+}
