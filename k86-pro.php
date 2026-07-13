@@ -2,8 +2,8 @@
 /**
  * Plugin Name: K86 Pro
  * Plugin URI: https://github.com/aliengll7520-maker/k86-pro
- * Description: Plugin Affiliate Platform dành cho K86Shop.
- * Version: 1.5.1
+ * Description: Affiliate Platform dành cho K86Shop.
+ * Version: 1.6.0
  * Author: Liểng Sang
  * Author URI: https://k86shop.com
  * License: GPL-2.0+
@@ -20,10 +20,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 |--------------------------------------------------------------------------
 */
 
-define( 'K86_PRO_VERSION', '1.5.1' );
+define( 'K86_PRO_VERSION', '1.6.0' );
+
 define( 'K86_PRO_FILE', __FILE__ );
+
+define( 'K86_PRO_BASENAME', plugin_basename( __FILE__ ) );
+
 define( 'K86_PRO_PATH', plugin_dir_path( __FILE__ ) );
+
 define( 'K86_PRO_URL', plugin_dir_url( __FILE__ ) );
+
+define( 'K86_PRO_INC', K86_PRO_PATH . 'includes/' );
+
+define( 'K86_PRO_MODULES', K86_PRO_PATH . 'modules/' );
+
+define( 'K86_PRO_ASSETS', K86_PRO_URL . 'assets/' );
+
+/*
+|--------------------------------------------------------------------------
+| Before Core Loaded
+|--------------------------------------------------------------------------
+*/
+
+do_action( 'k86_before_core' );
 
 /*
 |--------------------------------------------------------------------------
@@ -32,9 +51,26 @@ define( 'K86_PRO_URL', plugin_dir_url( __FILE__ ) );
 */
 
 require_once K86_PRO_PATH . 'core/version.php';
+
 require_once K86_PRO_PATH . 'core/install.php';
+
 require_once K86_PRO_PATH . 'core/upgrade.php';
 
+/*
+|--------------------------------------------------------------------------
+| Core Loaded
+|--------------------------------------------------------------------------
+*/
+
+do_action( 'k86_core_loaded' );
+
+/*
+|--------------------------------------------------------------------------
+| Before Modules Loaded
+|--------------------------------------------------------------------------
+*/
+
+do_action( 'k86_before_modules' );
 /*
 |--------------------------------------------------------------------------
 | Load Modules
@@ -43,13 +79,43 @@ require_once K86_PRO_PATH . 'core/upgrade.php';
 
 $modules = array(
 
+	/*
+	|--------------------------------------------------------------------------
+	| Framework
+	|--------------------------------------------------------------------------
+	*/
+
 	'includes/functions.php',
+
+	/*
+	|--------------------------------------------------------------------------
+	| Admin
+	|--------------------------------------------------------------------------
+	*/
 
 	'admin/admin.php',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Settings
+	|--------------------------------------------------------------------------
+	*/
+
 	'settings/settings.php',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Affiliate
+	|--------------------------------------------------------------------------
+	*/
+
 	'modules/affiliate-box.php',
+
+	/*
+	|--------------------------------------------------------------------------
+	| Product Engine
+	|--------------------------------------------------------------------------
+	*/
 
 	'modules/product-manager.php',
 
@@ -79,6 +145,13 @@ foreach ( $modules as $module ) {
 
 /*
 |--------------------------------------------------------------------------
+| Modules Loaded
+|--------------------------------------------------------------------------
+*/
+
+do_action( 'k86_modules_loaded' );
+/*
+|--------------------------------------------------------------------------
 | Register Activation Hook
 |--------------------------------------------------------------------------
 */
@@ -90,7 +163,7 @@ register_activation_hook(
 
 /*
 |--------------------------------------------------------------------------
-| Load Assets
+| Load Admin Assets
 |--------------------------------------------------------------------------
 */
 
@@ -105,14 +178,14 @@ function k86_admin_assets() {
 
 	wp_enqueue_style(
 		'k86-admin-style',
-		K86_PRO_URL . 'assets/style.css',
+		K86_PRO_ASSETS . 'style.css',
 		array(),
 		K86_PRO_VERSION
 	);
 
 	wp_enqueue_script(
 		'k86-media',
-		K86_PRO_URL . 'assets/js/media.js',
+		K86_PRO_ASSETS . 'js/media.js',
 		array( 'jquery' ),
 		K86_PRO_VERSION,
 		true
@@ -122,13 +195,13 @@ function k86_admin_assets() {
 		'k86-media',
 		'k86Pro',
 		array(
-			'title'  => 'Chọn ảnh sản phẩm',
-			'button' => 'Sử dụng ảnh này',
+			'title'   => 'Chọn ảnh sản phẩm',
+			'button'  => 'Sử dụng ảnh này',
+			'version' => K86_PRO_VERSION,
 		)
 	);
 
 }
-
 /*
 |--------------------------------------------------------------------------
 | Plugin Loaded
@@ -136,3 +209,16 @@ function k86_admin_assets() {
 */
 
 do_action( 'k86_pro_loaded' );
+
+/*
+|--------------------------------------------------------------------------
+| Framework Ready
+|--------------------------------------------------------------------------
+|
+| Điểm khởi động chung của toàn bộ K86 Pro.
+| Các Module mở rộng trong tương lai chỉ cần
+| Hook vào đây mà không phải sửa file gốc.
+|
+*/
+
+do_action( 'k86_framework_ready' );
