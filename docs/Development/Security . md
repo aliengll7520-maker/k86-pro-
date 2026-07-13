@@ -1,0 +1,182 @@
+# Security
+
+Version: 1.0.0
+
+Status: Development
+
+Owner: K86 Pro Team
+
+---
+
+# 1. Mục tiêu
+
+Tài liệu này quy định các tiêu chuẩn bảo mật của K86 Pro.
+
+Mọi Module và Engine đều phải tuân thủ.
+
+---
+
+# 2. Nguyên tắc
+
+- Security First.
+- Không tin tưởng dữ liệu người dùng.
+- Kiểm tra quyền trước khi xử lý.
+- Escape toàn bộ dữ liệu khi hiển thị.
+- Sanitize toàn bộ dữ liệu khi lưu.
+
+---
+
+# 3. User Permission
+
+Các Capability chính:
+
+- manage_options
+- edit_posts
+- upload_files
+- read
+
+Không cho phép truy cập trái quyền.
+
+---
+
+# 4. Nonce
+
+Mọi Form phải có:
+
+- wp_nonce_field()
+
+Mọi Request phải kiểm tra:
+
+- check_admin_referer()
+- wp_verify_nonce()
+
+---
+
+# 5. Data Validation
+
+Kiểm tra:
+
+- ID
+- URL
+- Email
+- Price
+- Number
+- Text
+
+Không lưu dữ liệu không hợp lệ.
+
+---
+
+# 6. Data Sanitization
+
+Ví dụ:
+
+- sanitize_text_field()
+- sanitize_email()
+- sanitize_textarea_field()
+- esc_url_raw()
+- absint()
+
+---
+
+# 7. Escape Output
+
+Ví dụ:
+
+- esc_html()
+- esc_attr()
+- esc_url()
+- wp_kses_post()
+
+Không echo dữ liệu thô.
+
+---
+
+# 8. Database
+
+Luôn dùng:
+
+$wpdb->prepare()
+
+Không nối chuỗi SQL trực tiếp.
+
+---
+
+# 9. File Upload
+
+Chỉ cho phép:
+
+- jpg
+- jpeg
+- png
+- webp
+
+Kiểm tra MIME Type.
+
+Không cho upload file PHP.
+
+---
+
+# 10. REST API
+
+- Permission Callback.
+- Authentication.
+- Rate Limit (tương lai).
+
+---
+
+# 11. AI Security
+
+- Không lưu API Key trong mã nguồn.
+- API Key lưu trong Settings.
+- Mã hóa thông tin nhạy cảm.
+- Giới hạn số lượng Request.
+
+---
+
+# 12. Logging
+
+Ghi log:
+
+- Error
+- Warning
+- Security Event
+
+Không ghi Password hoặc API Key.
+
+---
+
+# 13. Backup
+
+Khuyến nghị:
+
+- Sao lưu Database.
+- Sao lưu Upload.
+- Sao lưu Settings.
+
+---
+
+# 14. Checklist
+
+Trước khi phát hành:
+
+- Nonce
+- Capability
+- Validation
+- Sanitization
+- Escape
+- SQL Prepare
+- REST Permission
+- Upload Security
+
+---
+
+# 15. Version
+
+Version:
+
+1.0.0
+
+Status:
+
+Development
