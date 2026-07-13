@@ -1,0 +1,214 @@
+# Testing
+
+Version: 1.0.0
+
+Status: Development
+
+Owner: K86 Pro Team
+
+---
+
+# 1. Mục tiêu
+
+Tài liệu này quy định quy trình kiểm thử của K86 Pro trước khi phát hành.
+
+Mọi Module và Engine phải được kiểm thử đầy đủ.
+
+---
+
+# 2. Nguyên tắc
+
+- Test trước khi Merge.
+- Không phát hành khi còn lỗi nghiêm trọng.
+- Kiểm thử từng Module độc lập.
+- Kiểm thử toàn hệ thống.
+
+---
+
+# 3. Các loại kiểm thử
+
+## Unit Test
+
+Kiểm tra từng Function.
+
+Ví dụ:
+
+- Save Product
+- Delete Product
+- Update Product
+
+---
+
+## Integration Test
+
+Kiểm tra các Module làm việc cùng nhau.
+
+Ví dụ:
+
+Product Engine
+
+↓
+
+Affiliate Engine
+
+↓
+
+Analytics Engine
+
+---
+
+## UI Test
+
+Kiểm tra:
+
+- Dashboard
+- Form
+- Button
+- Menu
+- Responsive
+
+---
+
+## Database Test
+
+Kiểm tra:
+
+- Tạo bảng
+- Nâng cấp bảng
+- Thêm dữ liệu
+- Sửa dữ liệu
+- Xóa dữ liệu
+
+---
+
+## Security Test
+
+Kiểm tra:
+
+- Nonce
+- Capability
+- SQL Injection
+- XSS
+- CSRF
+- File Upload
+
+---
+
+## API Test
+
+Kiểm tra:
+
+- Endpoint
+- Authentication
+- Response
+- Error Code
+- JSON
+
+---
+
+## Performance Test
+
+Kiểm tra:
+
+- Tốc độ tải
+- Bộ nhớ
+- Query Database
+- API Response
+
+---
+
+# 4. Checklist
+
+Core
+
+- Plugin Activate
+- Plugin Deactivate
+- Plugin Delete
+
+Database
+
+- Create Table
+- Upgrade Table
+- Backup
+
+Products
+
+- Add
+- Edit
+- Delete
+- Search
+
+Affiliate
+
+- Link
+- Click
+- Redirect
+
+AI
+
+- Chat
+- Prompt
+- Response
+
+Security
+
+- Nonce
+- Validation
+- Sanitization
+- Escape
+
+---
+
+# 5. Quy trình
+
+Developer
+
+↓
+
+Local Test
+
+↓
+
+Development Test
+
+↓
+
+Beta
+
+↓
+
+Stable
+
+---
+
+# 6. Bug Report
+
+Mỗi lỗi cần ghi:
+
+- ID
+- Mô tả
+- Module
+- Mức độ
+- Người sửa
+- Ngày sửa
+- Trạng thái
+
+---
+
+# 7. Quy tắc
+
+- Không bỏ qua lỗi.
+- Không sửa lỗi trực tiếp trên Stable.
+- Ghi đầy đủ thay đổi.
+
+---
+
+# 8. Version
+
+Version:
+
+1.0.0
+
+Status:
+
+Development
