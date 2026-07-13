@@ -162,6 +162,64 @@ Ví dụ:
 - Lazada
 - WooCommerce
 - REST API
+- # K86 Pro Architecture
+
+## 1. Giới thiệu
+
+K86 Pro được thiết kế theo kiến trúc Engine nhằm dễ mở rộng và phát triển lâu dài.
+
+---
+
+## 2. Business Architecture (Kiến trúc nghiệp vụ)
+
+                     K86 Pro Platform
+                            │
+                            ▼
+                    Shopping Assistant
+                     (Trợ lý mua sắm)
+                            │
+        ┌───────────────────┼───────────────────┐
+        ▼                   ▼                   ▼
+ Product Engine     Knowledge Engine      AI Engine
+        │                   │                   │
+        └───────────────────┼───────────────────┘
+                            ▼
+                   Affiliate Engine
+                            │
+        ┌───────────────────┼───────────────────┐
+        ▼                   ▼                   ▼
+       Shopee          TikTok Shop          Lazada
+
+---
+
+## 3. Mô tả từng Engine
+
+### Shopping Assistant Engine
+...
+
+### Product Engine
+...
+
+### Knowledge Engine
+...
+
+### AI Engine
+...
+
+### Affiliate Engine
+...
+
+---
+
+## 4. Technical Architecture
+
+(Sơ đồ kỹ thuật của plugin WordPress sẽ bổ sung sau)
+
+---
+
+## 5. Quy tắc phát triển
+
+...
 
 ---
 
