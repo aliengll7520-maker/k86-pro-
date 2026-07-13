@@ -26,7 +26,7 @@ add_shortcode(
  * Shortcode:
  * [k86_product id="1"]
  *
- * @param array $atts Thuộc tính Shortcode.
+ * @param array $atts Thuộc tính shortcode.
  * @return string
  */
 function k86_product_shortcode( $atts ) {
@@ -45,18 +45,12 @@ function k86_product_shortcode( $atts ) {
 		return '';
 	}
 
-	/**
-	 * Lấy sản phẩm.
-	 */
 	$product = k86_get_product( $product_id );
 
 	if ( ! $product ) {
 		return '';
 	}
 
-	/**
-	 * Cài đặt K86 Pro.
-	 */
 	$settings = wp_parse_args(
 		get_option(
 			'k86_settings',
@@ -78,11 +72,6 @@ function k86_product_shortcode( $atts ) {
 	$show_discount    = ! empty( $settings['show_discount'] );
 	$show_save_money  = ! empty( $settings['show_save_money'] );
 	$show_description = ! empty( $settings['show_description'] );
-		/**
-	 * --------------------------------------------------------
-	 * Tính giá
-	 * --------------------------------------------------------
-	 */
 
 	$price = (float) preg_replace(
 		'/[^0-9]/',
@@ -99,34 +88,25 @@ function k86_product_shortcode( $atts ) {
 	$discount_percent = 0;
 	$saving_money     = 0;
 
-	if (
-		$sale_price > 0 &&
-		$sale_price < $price
-	) {
+	if ( $sale_price > 0 && $sale_price < $price ) {
 
 		$discount_percent = round(
-			(
-				( $price - $sale_price ) /
-				$price
-			) * 100
+			( ( $price - $sale_price ) / $price ) * 100
 		);
 
 		$saving_money = $price - $sale_price;
 
 	}
 
-	/**
-	 * Hook trước khi hiển thị Product Box.
-	 */
 	do_action(
 		'k86_product_box_before',
 		$product
 	);
 
 	ob_start();
-?>
 
-<div
+	?>
+	<div
 	class="k86-product-box"
 	style="
 		border:1px solid #e5e5e5;
@@ -151,10 +131,9 @@ function k86_product_shortcode( $atts ) {
 				margin-bottom:15px;
 			">
 
-			🔥
 			<?php
 			printf(
-				esc_html__( 'Giảm %d%%', 'k86-pro' ),
+				esc_html__( '🔥 Giảm %d%%', 'k86-pro' ),
 				$discount_percent
 			);
 			?>
@@ -176,8 +155,16 @@ function k86_product_shortcode( $atts ) {
 				alt="<?php echo esc_attr( $product->name ); ?>"
 				style="
 					max-width:260px;
-					width:
-		<h2
+					width:100%;
+					height:auto;
+					border-radius:10px;
+				">
+
+		</div>
+
+	<?php endif; ?>
+
+	<h2
 		style="
 			margin:0 0 10px;
 			font-size:24px;
@@ -205,8 +192,7 @@ function k86_product_shortcode( $atts ) {
 		</div>
 
 	<?php endif; ?>
-
-	<div style="margin-bottom:20px;">
+		<div style="margin-bottom:20px;">
 
 		<?php if ( $sale_price > 0 && $sale_price < $price ) : ?>
 
@@ -276,7 +262,7 @@ function k86_product_shortcode( $atts ) {
 
 		<?php endif; ?>
 
-	</div>
+		</div>
 		<?php if ( $show_description && ! empty( $product->description ) ) : ?>
 
 		<div
@@ -320,8 +306,7 @@ function k86_product_shortcode( $atts ) {
 		</p>
 
 	<?php endif; ?>
-
-	<?php if ( $show_tiktok && ! empty( $product->tiktok ) ) : ?>
+		<?php if ( $show_tiktok && ! empty( $product->tiktok ) ) : ?>
 
 		<p style="margin-bottom:12px;">
 
@@ -348,7 +333,8 @@ function k86_product_shortcode( $atts ) {
 		</p>
 
 	<?php endif; ?>
-		<?php if ( $show_lazada && ! empty( $product->lazada ) ) : ?>
+
+	<?php if ( $show_lazada && ! empty( $product->lazada ) ) : ?>
 
 		<p style="margin-bottom:12px;">
 
@@ -375,14 +361,13 @@ function k86_product_shortcode( $atts ) {
 		</p>
 
 	<?php endif; ?>
-
-	<?php
+		<?php
 	/**
 	 * Hook sau khi hiển thị Product Box.
 	 *
 	 * Cho phép các module mở rộng
 	 * bổ sung nội dung mà không cần
-	 * chỉnh sửa Product Shortcode.
+	 * sửa trực tiếp Product Box.
 	 */
 	do_action(
 		'k86_product_box_after',
@@ -390,9 +375,10 @@ function k86_product_shortcode( $atts ) {
 	);
 	?>
 
-		</div>
-	<?php
-	/**
+</div>
+
+<?php
+		/**
 	 * --------------------------------------------------------
 	 * Kết thúc Product Box
 	 * --------------------------------------------------------
@@ -404,11 +390,12 @@ function k86_product_shortcode( $atts ) {
 	 * Cho phép các Module khác
 	 * thay đổi HTML trước khi trả về.
 	 */
-	return apply_filters(
+	$output = apply_filters(
 		'k86_product_box_output',
 		$output,
 		$product,
 		$settings
 	);
 
+	return $output;
 }
