@@ -3,8 +3,8 @@
  * --------------------------------------------------------
  * K86 Pro
  * Core: Install
- * Version: 1.0.0
- * Status: Stable
+ * Version: 1.5.2
+ * Status: Framework RC1
  * --------------------------------------------------------
  */
 
@@ -13,7 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Cài đặt Database lần đầu
+ * Cài đặt hoặc cập nhật Database
+ *
+ * Được gọi khi Plugin được kích hoạt.
+ *
+ * @return void
  */
 function k86_install_database() {
 
@@ -23,9 +27,15 @@ function k86_install_database() {
 
 	$charset_collate = $wpdb->get_charset_collate();
 
+	// Kiểm tra hằng số Database Version.
+	if ( ! defined( 'K86_DB_VERSION' ) ) {
+		return;
+	}
+
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-	$sql = "CREATE TABLE {$table} (
+	$sql = "
+	CREATE TABLE {$table} (
 
 		id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 
@@ -59,18 +69,24 @@ function k86_install_database() {
 
 		PRIMARY KEY (id)
 
-	) {$charset_collate};";
-
+	) {$charset_collate};
+	";
+	
 	dbDelta( $sql );
 
-	update_option( 'k86_db_version', K86_DB_VERSION );
+	/**
+	 * Cập nhật phiên bản Database
+	 */
+	update_option(
+		'k86_db_version',
+		K86_DB_VERSION
+	);
 
+	/**
+	 * Hook sau khi cài đặt Database
+	 *
+	 * Cho phép các Module mở rộng
+	 * thực hiện cài đặt dữ liệu riêng.
+	 */
+	do_action( 'k86_database_installed' );
 }
-
-/**
- * Kích hoạt Database khi Plugin được kích hoạt
- */
-register_activation_hook(
-	K86_PRO_FILE,
-	'k86_install_database'
-);
