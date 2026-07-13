@@ -1,4 +1,12 @@
 <?php
+/**
+ * --------------------------------------------------------
+ * K86 Pro
+ * Module: Product Save
+ * Version: 1.5.2
+ * Status: Framework RC1
+ * --------------------------------------------------------
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -6,47 +14,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * --------------------------------------------------------
- * K86 Pro
- * Module: Product Save
- * Version: 1.5.0.2
- * Status: Development
+ * Lưu sản phẩm mới
  * --------------------------------------------------------
  */
 
-/*
-|--------------------------------------------------------------------------
-| Lưu sản phẩm mới
-|--------------------------------------------------------------------------
-*/
-
 add_action( 'admin_post_k86_save_product', 'k86_save_product' );
 
+/**
+ * Lưu sản phẩm.
+ *
+ * @return void
+ */
 function k86_save_product() {
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( 'Bạn không có quyền.' );
+		wp_die(
+			esc_html__( 'Bạn không có quyền truy cập.', 'k86-pro' )
+		);
 	}
 
-	check_admin_referer( 'k86_save_product', 'k86_nonce' );
+	check_admin_referer(
+		'k86_save_product',
+		'k86_nonce'
+	);
 
 	global $wpdb;
 
-	$table = $wpdb->prefix . 'k86_products';
+	$table = k86_get_table();
+
+	$data = array(
+		'name'        => sanitize_text_field( $_POST['name'] ?? '' ),
+		'brand'       => sanitize_text_field( $_POST['brand'] ?? '' ),
+		'slug'        => sanitize_title( $_POST['name'] ?? '' ),
+		'price'       => sanitize_text_field( $_POST['price'] ?? '' ),
+		'sale_price'  => sanitize_text_field( $_POST['sale_price'] ?? '' ),
+		'shopee'      => esc_url_raw( $_POST['shopee'] ?? '' ),
+		'tiktok'      => esc_url_raw( $_POST['tiktok'] ?? '' ),
+		'lazada'      => esc_url_raw( $_POST['lazada'] ?? '' ),
+		'image'       => esc_url_raw( $_POST['image'] ?? '' ),
+		'description' => sanitize_textarea_field( $_POST['description'] ?? '' ),
+		'status'      => sanitize_text_field( $_POST['status'] ?? 'active' ),
+	);
 		$wpdb->insert(
 		$table,
-		array(
-			'name'        => sanitize_text_field( $_POST['name'] ?? '' ),
-			'brand'       => sanitize_text_field( $_POST['brand'] ?? '' ),
-			'slug'        => sanitize_title( $_POST['name'] ?? '' ),
-			'price'       => sanitize_text_field( $_POST['price'] ?? '' ),
-			'sale_price'  => sanitize_text_field( $_POST['sale_price'] ?? '' ),
-			'shopee'      => esc_url_raw( $_POST['shopee'] ?? '' ),
-			'tiktok'      => esc_url_raw( $_POST['tiktok'] ?? '' ),
-			'lazada'      => esc_url_raw( $_POST['lazada'] ?? '' ),
-			'image'       => esc_url_raw( $_POST['image'] ?? '' ),
-			'description' => sanitize_textarea_field( $_POST['description'] ?? '' ),
-			'status'      => sanitize_text_field( $_POST['status'] ?? 'active' ),
-		),
+		$data,
 		array(
 			'%s', // name
 			'%s', // brand
@@ -62,49 +73,75 @@ function k86_save_product() {
 		)
 	);
 
+	/**
+	 * Hook sau khi lưu sản phẩm.
+	 *
+	 * Cho phép Shopping Assistant,
+	 * AI Engine,
+	 * Affiliate Engine,
+	 * Analytics Engine...
+	 * xử lý dữ liệu sau khi thêm sản phẩm.
+	 */
+	do_action(
+		'k86_product_saved',
+		$wpdb->insert_id,
+		$data
+	);
+
 	wp_safe_redirect(
 		admin_url( 'admin.php?page=k86-products' )
 	);
 
 	exit;
 }
-
-/*
-|--------------------------------------------------------------------------
-| Cập nhật sản phẩm
-|--------------------------------------------------------------------------
-*/
+/**
+ * --------------------------------------------------------
+ * Cập nhật sản phẩm
+ * --------------------------------------------------------
+ */
 
 add_action( 'admin_post_k86_update_product', 'k86_update_product' );
 
+/**
+ * Cập nhật sản phẩm.
+ *
+ * @return void
+ */
 function k86_update_product() {
 
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( 'Bạn không có quyền.' );
+		wp_die(
+			esc_html__( 'Bạn không có quyền truy cập.', 'k86-pro' )
+		);
 	}
 
-	check_admin_referer( 'k86_update_product', 'k86_nonce' );
+	check_admin_referer(
+		'k86_update_product',
+		'k86_nonce'
+	);
 
 	global $wpdb;
 
-	$table = $wpdb->prefix . 'k86_products';
+	$table = k86_get_table();
 
 	$id = absint( $_POST['id'] ?? 0 );
+
+	$data = array(
+		'name'        => sanitize_text_field( $_POST['name'] ?? '' ),
+		'brand'       => sanitize_text_field( $_POST['brand'] ?? '' ),
+		'slug'        => sanitize_title( $_POST['name'] ?? '' ),
+		'price'       => sanitize_text_field( $_POST['price'] ?? '' ),
+		'sale_price'  => sanitize_text_field( $_POST['sale_price'] ?? '' ),
+		'shopee'      => esc_url_raw( $_POST['shopee'] ?? '' ),
+		'tiktok'      => esc_url_raw( $_POST['tiktok'] ?? '' ),
+		'lazada'      => esc_url_raw( $_POST['lazada'] ?? '' ),
+		'image'       => esc_url_raw( $_POST['image'] ?? '' ),
+		'description' => sanitize_textarea_field( $_POST['description'] ?? '' ),
+		'status'      => sanitize_text_field( $_POST['status'] ?? 'active' ),
+	);
 		$wpdb->update(
 		$table,
-		array(
-			'name'        => sanitize_text_field( $_POST['name'] ?? '' ),
-			'brand'       => sanitize_text_field( $_POST['brand'] ?? '' ),
-			'slug'        => sanitize_title( $_POST['name'] ?? '' ),
-			'price'       => sanitize_text_field( $_POST['price'] ?? '' ),
-			'sale_price'  => sanitize_text_field( $_POST['sale_price'] ?? '' ),
-			'shopee'      => esc_url_raw( $_POST['shopee'] ?? '' ),
-			'tiktok'      => esc_url_raw( $_POST['tiktok'] ?? '' ),
-			'lazada'      => esc_url_raw( $_POST['lazada'] ?? '' ),
-			'image'       => esc_url_raw( $_POST['image'] ?? '' ),
-			'description' => sanitize_textarea_field( $_POST['description'] ?? '' ),
-			'status'      => sanitize_text_field( $_POST['status'] ?? 'active' ),
-		),
+		$data,
 		array(
 			'id' => $id,
 		),
@@ -124,6 +161,21 @@ function k86_update_product() {
 		array(
 			'%d',
 		)
+	);
+
+	/**
+	 * Hook sau khi cập nhật sản phẩm.
+	 *
+	 * Cho phép Shopping Assistant,
+	 * AI Engine,
+	 * Affiliate Engine,
+	 * Analytics Engine...
+	 * xử lý dữ liệu sau khi cập nhật.
+	 */
+	do_action(
+		'k86_product_updated',
+		$id,
+		$data
 	);
 
 	wp_safe_redirect(
