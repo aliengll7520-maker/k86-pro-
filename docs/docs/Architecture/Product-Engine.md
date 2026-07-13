@@ -167,3 +167,15 @@ Không xử lý Shopping Assistant.
 Không xử lý Analytics.
 
 Các Engine khác sẽ sử dụng dữ liệu từ Product Engine.
+# 12. Tương lai
+
+Product Engine sẽ mở rộng:
+
+- Đánh giá sản phẩm.
+- So sánh sản phẩm.
+- Lịch sử giá.
+- Mã giảm giá.
+- Kho hàng.
+- Nhà bán uy tín.
+- Điểm đánh giá AI.
+- Điểm đánh giá cộng đồng.
