@@ -3,7 +3,7 @@
  * --------------------------------------------------------
  * K86 Pro
  * Includes: Helper Functions
- * Version: 1.6.0
+ * Version: 1.6.0.1
  * Status: Development
  * --------------------------------------------------------
  */
@@ -32,7 +32,7 @@ function k86_get_table() {
 }
 
 /**
- * Lấy thông tin sản phẩm theo ID.
+ * Lấy sản phẩm theo ID.
  *
  * @param int $id
  * @return object|null
@@ -66,372 +66,408 @@ function k86_get_products() {
 }
 /*
 |--------------------------------------------------------------------------
-| Settings API
+| Product Query API
 |--------------------------------------------------------------------------
 */
 
 /**
- * Lấy toàn bộ cài đặt K86 Pro.
+ * Lấy sản phẩm theo Slug.
  *
- * @return array
+ * @param string $slug
+ * @return object|null
  */
-function k86_get_settings() {
+function k86_get_product_by_slug( $slug ) {
 
-	return wp_parse_args(
-		get_option( 'k86_settings', array() ),
-		array(
-			'show_shopee'      => 1,
-			'show_tiktok'      => 1,
-			'show_lazada'      => 1,
-			'show_amazon'      => 1,
+	global $wpdb;
 
-			'show_discount'    => 1,
-			'show_save_money'  => 1,
-			'show_description' => 1,
-
-			'open_new_tab'     => 1,
-			'rel_nofollow'     => 1,
-			'rel_sponsored'    => 1,
-			'rel_noopener'     => 1,
+	return $wpdb->get_row(
+		$wpdb->prepare(
+			'SELECT * FROM ' . k86_get_table() . ' WHERE slug = %s LIMIT 1',
+			sanitize_title( $slug )
 		)
 	);
 
 }
 
 /**
- * Lấy một cài đặt theo khóa.
- *
- * @param string $key
- * @param mixed  $default
- * @return mixed
- */
-function k86_get_setting( $key, $default = '' ) {
-
-	$settings = k86_get_settings();
-
-	return isset( $settings[ $key ] )
-		? $settings[ $key ]
-		: $default;
-
-}
-/*
-|--------------------------------------------------------------------------
-| Affiliate Profile API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Lấy toàn bộ thông tin Affiliate Profile.
+ * Lấy toàn bộ sản phẩm đang hoạt động.
  *
  * @return array
  */
-function k86_get_affiliate_profiles() {
+function k86_get_active_products() {
 
-	return array(
+	global $wpdb;
 
-		'shopee' => array(
-			'store'      => k86_get_setting( 'shopee_store' ),
-			'affiliate'  => k86_get_setting( 'shopee_affiliate' ),
-			'partner'    => k86_get_setting( 'shopee_partner' ),
-		),
-
-		'tiktok' => array(
-			'store'      => k86_get_setting( 'tiktok_store' ),
-			'affiliate'  => k86_get_setting( 'tiktok_affiliate' ),
-		),
-
-		'lazada' => array(
-			'store'      => k86_get_setting( 'lazada_store' ),
-			'affiliate'  => k86_get_setting( 'lazada_affiliate' ),
-		),
-
-		'amazon' => array(
-			'store'      => k86_get_setting( 'amazon_store' ),
-			'tracking'   => k86_get_setting( 'amazon_tracking' ),
-		),
-
+	return $wpdb->get_results(
+		"SELECT * FROM " . k86_get_table() . " WHERE status = 'active' ORDER BY id DESC"
 	);
 
 }
 
 /**
- * Lấy hồ sơ Shopee.
+ * Lấy toàn bộ sản phẩm tạm ẩn.
  *
  * @return array
  */
-function k86_get_shopee_profile() {
+function k86_get_inactive_products() {
 
-	$profiles = k86_get_affiliate_profiles();
+	global $wpdb;
 
-	return $profiles['shopee'];
-
-}
-
-/**
- * Lấy hồ sơ TikTok Shop.
- *
- * @return array
- */
-function k86_get_tiktok_profile() {
-
-	$profiles = k86_get_affiliate_profiles();
-
-	return $profiles['tiktok'];
-
-}
-/**
- * Lấy hồ sơ Lazada.
- *
- * @return array
- */
-function k86_get_lazada_profile() {
-
-	$profiles = k86_get_affiliate_profiles();
-
-	return $profiles['lazada'];
-
-}
-
-/**
- * Lấy hồ sơ Amazon.
- *
- * @return array
- */
-function k86_get_amazon_profile() {
-
-	$profiles = k86_get_affiliate_profiles();
-
-	return $profiles['amazon'];
-
-}
-
-/*
-|--------------------------------------------------------------------------
-| Affiliate Behavior API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Kiểm tra có mở liên kết ở tab mới hay không.
- *
- * @return bool
- */
-function k86_open_new_tab() {
-
-	return (bool) k86_get_setting( 'open_new_tab', 1 );
-
-}
-
-/**
- * Lấy thuộc tính rel cho liên kết Affiliate.
- *
- * @return string
- */
-function k86_get_rel_attributes() {
-
-	$rel = array();
-
-	if ( k86_get_setting( 'rel_nofollow', 1 ) ) {
-		$rel[] = 'nofollow';
-	}
-
-	if ( k86_get_setting( 'rel_sponsored', 1 ) ) {
-		$rel[] = 'sponsored';
-	}
-
-	if ( k86_get_setting( 'rel_noopener', 1 ) ) {
-		$rel[] = 'noopener';
-	}
-
-	return implode( ' ', $rel );
-
-}
-/*
-|--------------------------------------------------------------------------
-| Security API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Kiểm tra quyền quản trị.
- *
- * @return bool
- */
-function k86_is_admin() {
-
-	return current_user_can( 'manage_options' );
-
-}
-
-/**
- * Làm sạch dữ liệu văn bản.
- *
- * @param string $value
- * @return string
- */
-function k86_clean( $value ) {
-
-	return sanitize_text_field( $value );
-
-}
-
-/**
- * Làm sạch URL.
- *
- * @param string $url
- * @return string
- */
-function k86_clean_url( $url ) {
-
-	return esc_url_raw( $url );
-
-}
-
-/**
- * Làm sạch nội dung textarea.
- *
- * @param string $value
- * @return string
- */
-function k86_clean_textarea( $value ) {
-
-	return sanitize_textarea_field( $value );
-
-}
-
-/**
- * Chuyển giá trị về số nguyên dương.
- *
- * @param mixed $value
- * @return int
- */
-function k86_clean_int( $value ) {
-
-	return absint( $value );
-
-}
-
-/**
- * Kiểm tra Nonce.
- *
- * @param string $action
- * @param string $name
- * @return void
- */
-function k86_verify_nonce( $action, $name = 'k86_nonce' ) {
-
-	check_admin_referer(
-		$action,
-		$name
+	return $wpdb->get_results(
+		"SELECT * FROM " . k86_get_table() . " WHERE status = 'inactive' ORDER BY id DESC"
 	);
 
 }
 /*
 |--------------------------------------------------------------------------
-| Framework API
+| Product Brand API
 |--------------------------------------------------------------------------
 */
 
 /**
- * Kiểm tra Plugin đã sẵn sàng.
+ * Lấy toàn bộ sản phẩm theo thương hiệu.
  *
+ * @param string $brand
+ * @return array
+ */
+function k86_get_products_by_brand( $brand ) {
+
+	global $wpdb;
+
+	return $wpdb->get_results(
+		$wpdb->prepare(
+			'SELECT * FROM ' . k86_get_table() . ' WHERE brand = %s ORDER BY id DESC',
+			sanitize_text_field( $brand )
+		)
+	);
+
+}
+
+/**
+ * Kiểm tra sản phẩm đang hoạt động.
+ *
+ * @param object $product
  * @return bool
  */
-function k86_is_ready() {
+function k86_is_product_active( $product ) {
 
-	return did_action( 'k86_framework_ready' ) > 0;
+	if ( empty( $product ) || ! is_object( $product ) ) {
+		return false;
+	}
 
-}
-
-/**
- * Lấy phiên bản Plugin.
- *
- * @return string
- */
-function k86_get_version() {
-
-	return K86_PRO_VERSION;
+	return isset( $product->status ) && 'active' === $product->status;
 
 }
 
 /**
- * Lấy đường dẫn Plugin.
+ * Kiểm tra sản phẩm đang tạm ẩn.
  *
- * @return string
+ * @param object $product
+ * @return bool
  */
-function k86_get_plugin_path() {
+function k86_is_product_inactive( $product ) {
 
-	return K86_PRO_PATH;
+	if ( empty( $product ) || ! is_object( $product ) ) {
+		return false;
+	}
 
-}
-
-/**
- * Lấy URL Plugin.
- *
- * @return string
- */
-function k86_get_plugin_url() {
-
-	return K86_PRO_URL;
-
-}
-
-/**
- * Lấy URL thư mục Assets.
- *
- * @return string
- */
-function k86_get_assets_url() {
-
-	return K86_PRO_ASSETS;
+	return isset( $product->status ) && 'inactive' === $product->status;
 
 }
 /*
 |--------------------------------------------------------------------------
-| Framework Hooks
+| Product Format API
 |--------------------------------------------------------------------------
-|
-| Các Module mở rộng nên Hook thông qua các Action
-| và Filter của K86 Pro thay vì sửa trực tiếp Core.
-|
 */
 
 /**
- * Thông báo Framework API đã sẵn sàng.
+ * Chuẩn hóa dữ liệu sản phẩm.
+ *
+ * @param object $product
+ * @return object|null
  */
-do_action( 'k86_functions_loaded' );
+function k86_format_product( $product ) {
+
+	if ( empty( $product ) || ! is_object( $product ) ) {
+		return null;
+	}
+
+	$product->price_number = (float) preg_replace(
+		'/[^0-9]/',
+		'',
+		$product->price
+	);
+
+	$product->sale_price_number = (float) preg_replace(
+		'/[^0-9]/',
+		'',
+		$product->sale_price
+	);
+
+	$product->discount_percent = 0;
+
+	$product->saving_money = 0;
+
+	if (
+		$product->sale_price_number > 0 &&
+		$product->sale_price_number < $product->price_number
+	) {
+
+		$product->discount_percent = round(
+			(
+				(
+					$product->price_number -
+					$product->sale_price_number
+				)
+				/
+				$product->price_number
+			) * 100
+		);
+
+		$product->saving_money =
+			$product->price_number -
+			$product->sale_price_number;
+
+	}
+
+	return $product;
+
+}
+/*
+|--------------------------------------------------------------------------
+| Product Helper API
+|--------------------------------------------------------------------------
+*/
 
 /**
- * Filter toàn bộ cài đặt K86 Pro.
+ * Định dạng giá hiển thị.
+ *
+ * @param float|int|string $price
+ * @return string
  */
-function k86_filter_settings( $settings ) {
+function k86_format_price( $price ) {
+
+	$price = (float) preg_replace(
+		'/[^0-9]/',
+		'',
+		(string) $price
+	);
+
+	return number_format(
+		$price,
+		0,
+		',',
+		'.'
+	) . ' ₫';
+
+}
+
+/**
+ * Kiểm tra sản phẩm có ảnh.
+ *
+ * @param object $product
+ * @return bool
+ */
+function k86_has_product_image( $product ) {
+
+	return ! empty( $product->image );
+
+}
+
+/**
+ * Kiểm tra sản phẩm có thương hiệu.
+ *
+ * @param object $product
+ * @return bool
+ */
+function k86_has_product_brand( $product ) {
+
+	return ! empty( $product->brand );
+
+}
+
+/**
+ * Kiểm tra sản phẩm có giá khuyến mãi.
+ *
+ * @param object $product
+ * @return bool
+ */
+function k86_has_sale_price( $product ) {
+
+	if ( empty( $product ) || ! is_object( $product ) ) {
+		return false;
+	}
+
+	$product = k86_format_product( $product );
+
+	return (
+		$product->sale_price_number > 0 &&
+		$product->sale_price_number < $product->price_number
+	);
+
+}
+/*
+|--------------------------------------------------------------------------
+| Product Filter API
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Lọc dữ liệu một sản phẩm.
+ *
+ * @param object $product
+ * @return object
+ */
+function k86_prepare_product( $product ) {
+
+	$product = k86_format_product( $product );
 
 	return apply_filters(
-		'k86_settings',
-		$settings
-	);
-
-}
-
-/**
- * Filter dữ liệu Product.
- */
-function k86_filter_product( $product ) {
-
-	return apply_filters(
-		'k86_product',
+		'k86_prepare_product',
 		$product
 	);
 
 }
 
 /**
- * Filter danh sách Product.
+ * Lọc danh sách sản phẩm.
+ *
+ * @param array $products
+ * @return array
  */
-function k86_filter_products( $products ) {
+function k86_prepare_products( $products ) {
+
+	if ( empty( $products ) ) {
+		return array();
+	}
+
+	foreach ( $products as $key => $product ) {
+		$products[ $key ] = k86_prepare_product( $product );
+	}
 
 	return apply_filters(
-		'k86_products',
+		'k86_prepare_products',
+		$products
+	);
+
+}
+
+/**
+ * Kiểm tra sản phẩm hợp lệ.
+ *
+ * @param mixed $product
+ * @return bool
+ */
+function k86_is_valid_product( $product ) {
+
+	return is_object( $product ) && ! empty( $product->id );
+
+}
+/*
+|--------------------------------------------------------------------------
+| Product Statistics API
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Đếm tổng số sản phẩm.
+ *
+ * @return int
+ */
+function k86_count_products() {
+
+	global $wpdb;
+
+	return (int) $wpdb->get_var(
+		'SELECT COUNT(*) FROM ' . k86_get_table()
+	);
+
+}
+
+/**
+ * Đếm sản phẩm đang hoạt động.
+ *
+ * @return int
+ */
+function k86_count_active_products() {
+
+	global $wpdb;
+
+	return (int) $wpdb->get_var(
+		"SELECT COUNT(*) FROM " . k86_get_table() . " WHERE status = 'active'"
+	);
+
+}
+
+/**
+ * Đếm sản phẩm tạm ẩn.
+ *
+ * @return int
+ */
+function k86_count_inactive_products() {
+
+	global $wpdb;
+
+	return (int) $wpdb->get_var(
+		"SELECT COUNT(*) FROM " . k86_get_table() . " WHERE status = 'inactive'"
+	);
+
+}
+
+/**
+ * Lấy sản phẩm mới nhất.
+ *
+ * @return object|null
+ */
+function k86_get_latest_product() {
+
+	global $wpdb;
+
+	return $wpdb->get_row(
+		'SELECT * FROM ' . k86_get_table() . ' ORDER BY id DESC LIMIT 1'
+	);
+
+}
+/*
+|--------------------------------------------------------------------------
+| Product Framework Hooks
+|--------------------------------------------------------------------------
+|
+| Các module khác nên sử dụng API và Hook thay vì truy cập
+| trực tiếp vào Database.
+|
+*/
+
+/**
+ * Thông báo Product Engine đã sẵn sàng.
+ */
+do_action( 'k86_product_engine_loaded' );
+
+/**
+ * Filter dữ liệu sản phẩm sau khi chuẩn hóa.
+ *
+ * @param object $product
+ * @return object
+ */
+function k86_product_output( $product ) {
+
+	return apply_filters(
+		'k86_product_output',
+		$product
+	);
+
+}
+
+/**
+ * Filter danh sách sản phẩm sau khi chuẩn hóa.
+ *
+ * @param array $products
+ * @return array
+ */
+function k86_products_output( $products ) {
+
+	return apply_filters(
+		'k86_products_output',
 		$products
 	);
 
