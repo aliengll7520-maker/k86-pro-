@@ -1,20 +1,21 @@
 <?php
+/**
+ * --------------------------------------------------------
+ * K86 Pro
+ * Admin: Menu Manager
+ * Version: 1.5.2
+ * Status: Framework RC1
+ * --------------------------------------------------------
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * --------------------------------------------------------
- * K86 Pro
- * Admin Menu
- * Version: 1.5.0.6
- * Status: Development
- * --------------------------------------------------------
- */
-
-/**
  * Đăng ký Menu K86 Pro
+ *
+ * @return void
  */
 add_action( 'admin_menu', 'k86_admin_menu' );
 
@@ -111,21 +112,51 @@ function k86_admin_menu() {
 		'k86_edit_product_form'
 	);
 
+	/**
+	 * Hook sau khi đăng ký Menu.
+	 *
+	 * Cho phép các Module mở rộng
+	 * thêm Menu hoặc Submenu riêng.
+	 */
+	do_action( 'k86_admin_menu_loaded' );
+
 }
 
 /**
- * Dashboard
+ * Hiển thị Dashboard
+ *
+ * @return void
  */
 function k86_dashboard_page() {
 	?>
 
 	<div class="wrap">
 
-		<h1>K86 Pro Dashboard</h1>
+		<h1>
+			<?php esc_html_e( 'K86 Pro Dashboard', 'k86-pro' ); ?>
+		</h1>
 
-		<p>Chào mừng bạn đến với K86 Pro.</p>
+		<p>
+			<?php esc_html_e( 'Chào mừng bạn đến với K86 Pro.', 'k86-pro' ); ?>
+		</p>
 
-		<p>Plugin Affiliate dành riêng cho K86Shop.</p>
+		<p>
+			<?php esc_html_e( 'Plugin Affiliate dành riêng cho K86Shop.', 'k86-pro' ); ?>
+		</p>
+
+		<?php
+		/**
+		 * Hook mở rộng Dashboard.
+		 *
+		 * Shopping Assistant
+		 * Product Engine
+		 * AI Engine
+		 * Analytics Engine
+		 * Automation Engine
+		 * ...
+		 */
+		do_action( 'k86_dashboard_after' );
+		?>
 
 	</div>
 
