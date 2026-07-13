@@ -1,401 +1,341 @@
-<?php
-/**
- * --------------------------------------------------------
- * K86 Pro
- * Module: Product Shortcode
- * Version: 1.5.2
- * Status: Framework RC1
- * --------------------------------------------------------
- */
+/*
+|--------------------------------------------------------------------------
+| Product Shortcode Configuration
+|--------------------------------------------------------------------------
+*/
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+/**
+ * Lấy cài đặt Product Box.
+ *
+ * @return array
+ */
+function k86_get_product_box_settings() {
+
+	$settings = k86_get_settings();
+
+	return wp_parse_args(
+		$settings,
+		array(
+			'show_product_box' => 1,
+			'show_cta'         => 1,
+			'show_icon_bar'    => 1,
+			'show_engagement'  => 1,
+		)
+	);
+
 }
 
 /**
- * Đăng ký Product Shortcode.
+ * Kiểm tra Product Box có được bật.
+ *
+ * @return bool
  */
-add_shortcode(
-	'k86_product',
-	'k86_product_shortcode'
-);
+function k86_product_box_enabled() {
+
+	$settings = k86_get_product_box_settings();
+
+	return ! empty(
+		$settings['show_product_box']
+	);
+
+}
+/*
+|--------------------------------------------------------------------------
+| Product Renderer
+|--------------------------------------------------------------------------
+*/
 
 /**
- * Hiển thị Product Box.
+ * Chuẩn bị dữ liệu Product trước khi hiển thị.
  *
- * Shortcode:
- * [k86_product id="1"]
+ * @param object $product
+ * @return object|null
+ */
+function k86_prepare_product_box( $product ) {
+
+	if ( empty( $product ) ) {
+		return null;
+	}
+
+	if ( function_exists( 'k86_prepare_product' ) ) {
+		$product = k86_prepare_product( $product );
+	}
+
+	return apply_filters(
+		'k86_prepare_product_box',
+		$product
+	);
+
+}
+
+/**
+ * Kiểm tra Product hợp lệ để hiển thị.
+ *
+ * @param object $product
+ * @return bool
+ */
+function k86_can_render_product_box( $product ) {
+
+	if ( ! k86_product_box_enabled() ) {
+		return false;
+	}
+
+	if ( empty( $product ) ) {
+		return false;
+	}
+
+	if (
+		function_exists( 'k86_is_valid_product' ) &&
+		! k86_is_valid_product( $product )
+	) {
+		return false;
+	}
+
+	return true;
+
+}
+/*
+|--------------------------------------------------------------------------
+| CTA Integration
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Hiển thị CTA của Product Box.
+ *
+ * @param object $product
+ * @return string
+ */
+function k86_render_product_cta_section( $product ) {
+
+	if ( empty( $product ) ) {
+		return '';
+	}
+
+	$settings = k86_get_product_box_settings();
+
+	if ( empty( $settings['show_cta'] ) ) {
+		return '';
+	}
+
+	if ( ! function_exists( 'k86_render_product_cta' ) ) {
+		return '';
+	}
+
+	return apply_filters(
+		'k86_product_cta_section',
+		k86_render_product_cta( $product ),
+		$product
+	);
+
+}
+
+/**
+ * Kiểm tra Product Box có CTA hay không.
+ *
+ * @param object $product
+ * @return bool
+ */
+function k86_has_product_cta( $product ) {
+
+	return '' !== k86_render_product_cta_section( $product );
+
+}
+/*
+|--------------------------------------------------------------------------
+| Icon Bar Integration
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Hiển thị Icon Bar trong Product Box.
+ *
+ * @return string
+ */
+function k86_render_product_icon_bar() {
+
+	$settings = k86_get_product_box_settings();
+
+	if ( empty( $settings['show_icon_bar'] ) ) {
+		return '';
+	}
+
+	if ( ! function_exists( 'k86_display_icon_bar' ) ) {
+		return '';
+	}
+
+	return apply_filters(
+		'k86_product_icon_bar',
+		k86_display_icon_bar()
+	);
+
+}
+
+/**
+ * Kiểm tra Product Box có Icon Bar hay không.
+ *
+ * @return bool
+ */
+function k86_has_product_icon_bar() {
+
+	return '' !== k86_render_product_icon_bar();
+
+}
+/*
+|--------------------------------------------------------------------------
+| Engagement Integration
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Hiển thị Engagement trong Product Box.
+ *
+ * @return string
+ */
+function k86_render_product_engagement() {
+
+	$settings = k86_get_product_box_settings();
+
+	if ( empty( $settings['show_engagement'] ) ) {
+		return '';
+	}
+
+	if ( ! function_exists( 'k86_render_post_engagement' ) ) {
+		return '';
+	}
+
+	return apply_filters(
+		'k86_product_engagement',
+		k86_render_post_engagement()
+	);
+
+}
+
+/**
+ * Kiểm tra Product Box có Engagement hay không.
+ *
+ * @return bool
+ */
+function k86_has_product_engagement() {
+
+	return '' !== k86_render_product_engagement();
+
+}
+/*
+|--------------------------------------------------------------------------
+| Product Box Layout Builder
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Xây dựng bố cục Product Box.
+ *
+ * @param object $product
+ * @return string
+ */
+function k86_build_product_layout( $product ) {
+
+	if ( ! k86_can_render_product_box( $product ) ) {
+		return '';
+	}
+
+	ob_start();
+	?>
+
+	<div class="k86-product-box">
+
+		<?php
+		/**
+		 * Nội dung Product.
+		 * HTML chi tiết sẽ được hoàn thiện ở Template Engine.
+		 */
+		do_action( 'k86_product_box_header', $product );
+
+		echo k86_render_product_cta_section( $product );
+
+		echo k86_render_product_icon_bar();
+
+		echo k86_render_product_engagement();
+
+		do_action( 'k86_product_box_footer', $product );
+		?>
+
+	</div>
+
+	<?php
+
+	return ob_get_clean();
+
+}
+/*
+|--------------------------------------------------------------------------
+| Shortcode Output API
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Hiển thị Product Box thông qua Shortcode.
  *
  * @param array $atts Thuộc tính shortcode.
  * @return string
  */
-function k86_product_shortcode( $atts ) {
+function k86_product_shortcode( $atts = array() ) {
 
 	$atts = shortcode_atts(
 		array(
 			'id' => 0,
 		),
 		$atts,
-		'k86_product'
+		'k86_box'
 	);
 
-	$product_id = absint( $atts['id'] );
+	$product = k86_get_product(
+		absint( $atts['id'] )
+	);
 
-	if ( ! $product_id ) {
+	if ( ! k86_can_render_product_box( $product ) ) {
 		return '';
 	}
 
-	$product = k86_get_product( $product_id );
-
-	if ( ! $product ) {
-		return '';
-	}
-
-	$settings = wp_parse_args(
-		get_option(
-			'k86_settings',
-			array()
-		),
-		array(
-			'show_shopee'      => 1,
-			'show_tiktok'      => 1,
-			'show_lazada'      => 1,
-			'show_discount'    => 1,
-			'show_save_money'  => 1,
-			'show_description' => 1,
-		)
-	);
-
-	$show_shopee      = ! empty( $settings['show_shopee'] );
-	$show_tiktok      = ! empty( $settings['show_tiktok'] );
-	$show_lazada      = ! empty( $settings['show_lazada'] );
-	$show_discount    = ! empty( $settings['show_discount'] );
-	$show_save_money  = ! empty( $settings['show_save_money'] );
-	$show_description = ! empty( $settings['show_description'] );
-
-	$price = (float) preg_replace(
-		'/[^0-9]/',
-		'',
-		$product->price
-	);
-
-	$sale_price = (float) preg_replace(
-		'/[^0-9]/',
-		'',
-		$product->sale_price
-	);
-
-	$discount_percent = 0;
-	$saving_money     = 0;
-
-	if ( $sale_price > 0 && $sale_price < $price ) {
-
-		$discount_percent = round(
-			( ( $price - $sale_price ) / $price ) * 100
-		);
-
-		$saving_money = $price - $sale_price;
-
-	}
-
-	do_action(
-		'k86_product_box_before',
-		$product
-	);
-
-	ob_start();
-
-	?>
-	<div
-	class="k86-product-box"
-	style="
-		border:1px solid #e5e5e5;
-		border-radius:12px;
-		padding:20px;
-		margin:20px 0;
-		background:#ffffff;
-		box-shadow:0 2px 10px rgba(0,0,0,.05);
-	">
-
-	<?php if ( $show_discount && $discount_percent > 0 ) : ?>
-
-		<div
-			style="
-				display:inline-block;
-				background:#e53935;
-				color:#ffffff;
-				padding:6px 12px;
-				border-radius:30px;
-				font-size:14px;
-				font-weight:bold;
-				margin-bottom:15px;
-			">
-
-			<?php
-			printf(
-				esc_html__( '🔥 Giảm %d%%', 'k86-pro' ),
-				$discount_percent
-			);
-			?>
-
-		</div>
-
-	<?php endif; ?>
-
-	<?php if ( ! empty( $product->image ) ) : ?>
-
-		<div
-			style="
-				text-align:center;
-				margin-bottom:20px;
-			">
-
-			<img
-				src="<?php echo esc_url( $product->image ); ?>"
-				alt="<?php echo esc_attr( $product->name ); ?>"
-				style="
-					max-width:260px;
-					width:100%;
-					height:auto;
-					border-radius:10px;
-				">
-
-		</div>
-
-	<?php endif; ?>
-
-	<h2
-		style="
-			margin:0 0 10px;
-			font-size:24px;
-			line-height:1.5;
-		">
-
-		<?php echo esc_html( $product->name ); ?>
-
-	</h2>
-
-	<?php if ( ! empty( $product->brand ) ) : ?>
-
-		<div
-			style="
-				margin-bottom:18px;
-				font-size:15px;
-				color:#666666;
-				font-weight:600;
-			">
-
-			<?php esc_html_e( 'Thương hiệu:', 'k86-pro' ); ?>
-
-			<?php echo esc_html( $product->brand ); ?>
-
-		</div>
-
-	<?php endif; ?>
-		<div style="margin-bottom:20px;">
-
-		<?php if ( $sale_price > 0 && $sale_price < $price ) : ?>
-
-			<div
-				style="
-					font-size:18px;
-					color:#888888;
-					text-decoration:line-through;
-					margin-bottom:5px;
-				">
-
-				<?php echo esc_html( number_format( $price, 0, ',', '.' ) ); ?> ₫
-
-			</div>
-
-			<div
-				style="
-					font-size:32px;
-					font-weight:bold;
-					color:#e53935;
-					margin-bottom:8px;
-				">
-
-				<?php echo esc_html( number_format( $sale_price, 0, ',', '.' ) ); ?> ₫
-
-			</div>
-
-			<?php if ( $show_save_money ) : ?>
-
-				<div
-					style="
-						color:#2e7d32;
-						font-weight:bold;
-					">
-
-					<?php esc_html_e( '💰 Tiết kiệm', 'k86-pro' ); ?>
-
-					<?php
-					echo esc_html(
-						number_format(
-							$saving_money,
-							0,
-							',',
-							'.'
-						)
-					);
-					?>
-
-					₫
-
-				</div>
-
-			<?php endif; ?>
-
-		<?php else : ?>
-
-			<div
-				style="
-					font-size:32px;
-					font-weight:bold;
-					color:#e53935;
-				">
-
-				<?php echo esc_html( number_format( $price, 0, ',', '.' ) ); ?> ₫
-
-			</div>
-
-		<?php endif; ?>
-
-		</div>
-		<?php if ( $show_description && ! empty( $product->description ) ) : ?>
-
-		<div
-			style="
-				line-height:1.8;
-				margin-bottom:20px;
-				font-size:15px;
-				color:#444444;
-			">
-
-			<?php echo wpautop( esc_html( $product->description ) ); ?>
-
-		</div>
-
-	<?php endif; ?>
-
-	<?php if ( $show_shopee && ! empty( $product->shopee ) ) : ?>
-
-		<p style="margin-bottom:12px;">
-
-			<a
-				href="<?php echo esc_url( $product->shopee ); ?>"
-				target="_blank"
-				rel="nofollow sponsored"
-				style="
-					display:block;
-					text-align:center;
-					background:#ee4d2d;
-					color:#ffffff;
-					padding:14px;
-					border-radius:8px;
-					text-decoration:none;
-					font-weight:bold;
-					font-size:16px;
-				">
-
-				<?php esc_html_e( '🛒 Mua trên Shopee', 'k86-pro' ); ?>
-
-			</a>
-
-		</p>
-
-	<?php endif; ?>
-		<?php if ( $show_tiktok && ! empty( $product->tiktok ) ) : ?>
-
-		<p style="margin-bottom:12px;">
-
-			<a
-				href="<?php echo esc_url( $product->tiktok ); ?>"
-				target="_blank"
-				rel="nofollow sponsored"
-				style="
-					display:block;
-					text-align:center;
-					background:#000000;
-					color:#ffffff;
-					padding:14px;
-					border-radius:8px;
-					text-decoration:none;
-					font-weight:bold;
-					font-size:16px;
-				">
-
-				<?php esc_html_e( '🎵 Mua trên TikTok Shop', 'k86-pro' ); ?>
-
-			</a>
-
-		</p>
-
-	<?php endif; ?>
-
-	<?php if ( $show_lazada && ! empty( $product->lazada ) ) : ?>
-
-		<p style="margin-bottom:12px;">
-
-			<a
-				href="<?php echo esc_url( $product->lazada ); ?>"
-				target="_blank"
-				rel="nofollow sponsored"
-				style="
-					display:block;
-					text-align:center;
-					background:#0f6fff;
-					color:#ffffff;
-					padding:14px;
-					border-radius:8px;
-					text-decoration:none;
-					font-weight:bold;
-					font-size:16px;
-				">
-
-				<?php esc_html_e( '🟦 Mua trên Lazada', 'k86-pro' ); ?>
-
-			</a>
-
-		</p>
-
-	<?php endif; ?>
-		<?php
-	/**
-	 * Hook sau khi hiển thị Product Box.
-	 *
-	 * Cho phép các module mở rộng
-	 * bổ sung nội dung mà không cần
-	 * sửa trực tiếp Product Box.
-	 */
-	do_action(
-		'k86_product_box_after',
-		$product
-	);
-	?>
-
-</div>
-
-<?php
-		/**
-	 * --------------------------------------------------------
-	 * Kết thúc Product Box
-	 * --------------------------------------------------------
-	 */
-
-	$output = ob_get_clean();
-
-	/**
-	 * Cho phép các Module khác
-	 * thay đổi HTML trước khi trả về.
-	 */
-	$output = apply_filters(
-		'k86_product_box_output',
-		$output,
+	return apply_filters(
+		'k86_product_shortcode_output',
+		k86_build_product_layout( $product ),
 		$product,
-		$settings
+		$atts
 	);
 
-	return $output;
 }
+
+/**
+ * Đăng ký Shortcode.
+ */
+add_shortcode(
+	'k86_box',
+	'k86_product_shortcode'
+);
+/*
+|--------------------------------------------------------------------------
+| Product Shortcode Final API
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Hiển thị Product Box cuối cùng.
+ *
+ * @param array $atts Thuộc tính shortcode.
+ * @return string
+ */
+function k86_render_product_shortcode( $atts = array() ) {
+
+	return apply_filters(
+		'k86_render_product_shortcode',
+		k86_product_shortcode( $atts ),
+		$atts
+	);
+
+}
+
+/**
+ * Framework Product Shortcode đã sẵn sàng.
+ */
+do_action( 'k86_product_shortcode_ready' );
