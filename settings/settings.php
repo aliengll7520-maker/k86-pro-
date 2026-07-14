@@ -60,4 +60,61 @@ function k86_get_settings() {
 
 	return $options;
 }
+/*
+|--------------------------------------------------------------------------
+| Settings Registry
+|--------------------------------------------------------------------------
+*/
 
+/**
+ * Lấy một giá trị cài đặt.
+ *
+ * @param string $key     Tên cài đặt.
+ * @param mixed  $default Giá trị mặc định.
+ * @return mixed
+ */
+function k86_get_setting( $key, $default = null ) {
+
+	$settings = k86_get_settings();
+
+	if ( array_key_exists( $key, $settings ) ) {
+		return $settings[ $key ];
+	}
+
+	return $default;
+
+}
+
+/**
+ * Kiểm tra cài đặt có tồn tại.
+ *
+ * @param string $key
+ * @return bool
+ */
+function k86_has_setting( $key ) {
+
+	$settings = k86_get_settings();
+
+	return array_key_exists( $key, $settings );
+
+}
+
+/**
+ * Cập nhật một giá trị cài đặt.
+ *
+ * @param string $key
+ * @param mixed  $value
+ * @return bool
+ */
+function k86_update_setting( $key, $value ) {
+
+	$settings = k86_get_settings();
+
+	$settings[ $key ] = $value;
+
+	return update_option(
+		'k86_settings',
+		$settings
+	);
+
+}
