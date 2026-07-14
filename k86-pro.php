@@ -180,7 +180,6 @@ add_action(
  * @param string $hook_suffix Current admin page.
  * @return void
  */
-/**
  * Load Admin Assets.
  *
  * @param string $hook_suffix Current admin page.
