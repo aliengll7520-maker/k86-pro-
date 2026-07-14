@@ -176,11 +176,6 @@ add_action(
  * @param string $hook_suffix Current admin page.
  * @return void
  */
- * Load Admin Assets.
- *
- * @param string $hook_suffix Current admin page.
- * @return void
- */
 function k86_admin_assets( $hook_suffix ) {
 
 	// Chỉ nạp trên trang quản trị của K86 Pro.
