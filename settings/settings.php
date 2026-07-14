@@ -118,3 +118,30 @@ function k86_update_setting( $key, $value ) {
 	);
 
 }
+/*
+|--------------------------------------------------------------------------
+| Register Settings
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Đăng ký cài đặt của K86 Pro.
+ *
+ * @return void
+ */
+function k86_register_settings() {
+
+	register_setting(
+		'k86_settings_group',
+		'k86_settings'
+	);
+
+}
+
+/**
+ * Khởi tạo Settings API.
+ */
+add_action(
+	'admin_init',
+	'k86_register_settings'
+);
