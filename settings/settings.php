@@ -145,3 +145,35 @@ add_action(
 	'admin_init',
 	'k86_register_settings'
 );
+/*
+|--------------------------------------------------------------------------
+| Settings Admin Menu
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Đăng ký trang cài đặt K86 Pro.
+ *
+ * @return void
+ */
+function k86_register_settings_page() {
+
+	add_submenu_page(
+		'k86-pro',
+		__( 'Cài đặt', 'k86-pro' ),
+		__( 'Cài đặt', 'k86-pro' ),
+		'manage_options',
+		'k86-settings',
+		'k86_render_settings_page'
+	);
+
+}
+
+/**
+ * Đăng ký menu Settings.
+ */
+add_action(
+	'admin_menu',
+	'k86_register_settings_page',
+	99
+);
