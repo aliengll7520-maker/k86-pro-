@@ -180,6 +180,12 @@ add_action(
  * @param string $hook_suffix Current admin page.
  * @return void
  */
+/**
+ * Load Admin Assets.
+ *
+ * @param string $hook_suffix Current admin page.
+ * @return void
+ */
 function k86_admin_assets( $hook_suffix ) {
 
 	// Chỉ nạp trên trang quản trị của K86 Pro.
@@ -188,7 +194,15 @@ function k86_admin_assets( $hook_suffix ) {
 	}
 
 	wp_enqueue_media();
-		wp_enqueue_script(
+
+	wp_enqueue_style(
+		'k86-admin-style',
+		K86_PRO_ASSETS . 'style.css',
+		array(),
+		K86_PRO_VERSION
+	);
+
+	wp_enqueue_script(
 		'k86-admin-media',
 		K86_PRO_ASSETS . 'js/media.js',
 		array( 'jquery' ),
@@ -205,7 +219,29 @@ function k86_admin_assets( $hook_suffix ) {
 			'version' => K86_PRO_VERSION,
 			'nonce'   => wp_create_nonce( 'k86_admin_nonce' ),
 		)
-	); }
+	);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Plugin Loaded
+|--------------------------------------------------------------------------
+*/
+
+do_action( 'k86_pro_loaded' );
+
+/*
+|--------------------------------------------------------------------------
+| Framework Ready
+|--------------------------------------------------------------------------
+|
+| Điểm khởi động chung của toàn bộ K86 Pro.
+| Các Module mở rộng trong tương lai chỉ cần
+| Hook vào đây mà không phải sửa file gốc.
+|
+*/
+
+do_action( 'k86_framework_ready' );
 /*
 |--------------------------------------------------------------------------
 | Plugin Loaded
