@@ -177,3 +177,45 @@ add_action(
 	'k86_register_settings_page',
 	99
 );
+/*
+|--------------------------------------------------------------------------
+| Settings Page
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Hiển thị trang cài đặt K86 Pro.
+ *
+ * @return void
+ */
+function k86_render_settings_page() {
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	?>
+
+	<div class="wrap">
+
+		<h1><?php esc_html_e( 'K86 Pro Settings', 'k86-pro' ); ?></h1>
+
+		<p>
+			<?php esc_html_e( 'Trang cài đặt đang được xây dựng.', 'k86-pro' ); ?>
+		</p>
+
+		<form method="post" action="options.php">
+
+			<?php
+			settings_fields( 'k86_settings_group' );
+			do_settings_sections( 'k86-settings' );
+			submit_button();
+			?>
+
+		</form>
+
+	</div>
+
+	<?php
+
+}
