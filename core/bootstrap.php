@@ -1,242 +1,132 @@
-<?
+<?php
 /**
- * Lấy danh sách Engine đã đăng ký.
+ * ------------------------------------------------------------------------
+ * K86 Pro
+ * Bootstrap Engine
+ * ------------------------------------------------------------------------
  *
- * @return array
- */
-function k86_registered_engines() {
-
-	return (array) apply_filters(
-		'k86_registered_engines',
-		k86_bootstrap_engines()
-	);
-
-}
-
-/**
- * Kiểm tra Engine đã được đăng ký.
+ * Bootstrap là Kernel của K86 Pro.
  *
- * @param string $engine
- * @return bool
+ * Nhiệm vụ:
+ * - Khởi tạo Framework.
+ * - Nạp Core Engine.
+ * - Kiểm tra quá trình khởi động.
+ * - Phát tín hiệu Framework Ready.
+ *
+ * Bootstrap không chứa Business Logic.
+ *
+ * @package K86_Pro
+ * @since   1.6.0
  */
-function k86_engine_registered( $engine ) {
 
-	return in_array(
-		strtolower( $engine ),
-		k86_registered_engines(),
-		true
-	);
+defined( 'ABSPATH' ) || exit;
 
-}
 /*
 |--------------------------------------------------------------------------
-| Bootstrap Helper API
+| Bootstrap Constants
 |--------------------------------------------------------------------------
 */
 
 /**
- * Kiểm tra Bootstrap Engine sẵn sàng.
- *
- * @return bool
+ * Phiên bản Bootstrap Engine.
  */
-function k86_bootstrap_ready() {
-
-	return (bool) apply_filters(
-		'k86_bootstrap_ready',
-		true
-	);
-
-}
-
-/**
- * Lấy cấu hình Bootstrap.
- *
- * @return array
- */
-function k86_bootstrap_settings() {
-
-	return (array) apply_filters(
-		'k86_bootstrap_settings',
-		array(
-			'engines' => k86_registered_engines(),
-		)
-	);
-
-}
-
-/**
- * Đồng bộ Bootstrap.
- *
- * @return bool
- */
-function k86_bootstrap_sync() {
-
-	do_action(
-		'k86_bootstrap_sync'
-	);
-
-	return true;
-
+if ( ! defined( 'K86_BOOTSTRAP_VERSION' ) ) {
+	define( 'K86_BOOTSTRAP_VERSION', '1.6.0' );
 }
 /*
 |--------------------------------------------------------------------------
-| Bootstrap Integration API
+| Bootstrap Startup
 |--------------------------------------------------------------------------
 */
 
 /**
- * Điều phối toàn bộ Engine.
- *
- * @return bool
- */
-function k86_bootstrap_integrate() {
-
-	do_action(
-		'k86_bootstrap_integrate'
-	);
-
-	return true;
-
-}
-
-/**
- * Lấy danh sách Engine đang hoạt động.
- *
- * @return array
- */
-function k86_active_engines() {
-
-	return (array) apply_filters(
-		'k86_active_engines',
-		k86_registered_engines()
-	);
-
-}
-
-/**
- * Kiểm tra Bootstrap Integration sẵn sàng.
- *
- * @return bool
- */
-function k86_bootstrap_integration_ready() {
-
-	return (bool) apply_filters(
-		'k86_bootstrap_integration_ready',
-		true
-	);
-
-}
-/*
-|--------------------------------------------------------------------------
-| Bootstrap Loader Helper API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Kiểm tra Bootstrap Loader sẵn sàng.
- *
- * @return bool
- */
-function k86_bootstrap_loader_ready() {
-
-	return (bool) apply_filters(
-		'k86_bootstrap_loader_ready',
-		true
-	);
-
-}
-
-/**
- * Khởi động Bootstrap Loader.
- *
- * @return bool
- */
-function k86_bootstrap_loader_start() {
-
-	do_action(
-		'k86_bootstrap_loader_start'
-	);
-
-	return true;
-
-}
-
-/**
- * Hoàn tất Bootstrap Loader.
- *
- * @return bool
- */
-function k86_bootstrap_loader_finish() {
-
-	do_action(
-		'k86_bootstrap_loader_finish'
-	);
-
-	return true;
-
-}
-/*
-|--------------------------------------------------------------------------
-| Bootstrap Framework Hooks
-|--------------------------------------------------------------------------
-|
-| Các module khác nên Hook vào Bootstrap Engine
-| thay vì sửa trực tiếp Core.
-|
-*/
-
-/**
- * Thông báo Bootstrap Engine đã tải.
- */
-do_action( 'k86_bootstrap_loaded' );
-
-/**
- * Filter dữ liệu Bootstrap.
- *
- * @param array $data
- * @return array
- */
-function k86_bootstrap_filter_data( $data ) {
-
-	return apply_filters(
-		'k86_bootstrap_data',
-		(array) $data
-	);
-
-}
-
-/**
- * Filter kết quả Bootstrap.
- *
- * @param mixed $result
- * @return mixed
- */
-function k86_bootstrap_filter_result( $result ) {
-
-	return apply_filters(
-		'k86_bootstrap_result',
-		$result
-	);
-
-}
-/*
-|--------------------------------------------------------------------------
-| Bootstrap Final API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Khởi tạo Bootstrap Engine.
+ * Khởi động Bootstrap Engine.
  *
  * @return void
  */
-function k86_init_bootstrap() {
+function k86_bootstrap_init() {
 
-	do_action( 'k86_bootstrap_init' );
+	/**
+	 * Bootstrap bắt đầu khởi động.
+	 */
+	do_action( 'k86_bootstrap_before_init' );
+
+	/**
+	 * Tiếp tục quá trình nạp Core Engine.
+	 */
 
 }
+/*
+|--------------------------------------------------------------------------
+| Core Loader
+|--------------------------------------------------------------------------
+*/
 
 /**
- * Framework Bootstrap Engine đã sẵn sàng.
+ * Nạp Core Loader.
+ *
+ * @return void
  */
-do_action( 'k86_bootstrap_ready' );
+function k86_bootstrap_load_core() {
+
+	$core_loader = K86_PRO_PATH . 'core/loader.php';
+
+	if ( file_exists( $core_loader ) ) {
+		require_once $core_loader;
+	}
+
+}
+/*
+|--------------------------------------------------------------------------
+| Bootstrap Startup Sequence
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Thực thi quá trình khởi động Bootstrap.
+ *
+ * @return void
+ */
+function k86_bootstrap_run() {
+
+	/**
+	 * Thông báo Bootstrap bắt đầu khởi động.
+	 */
+	do_action( 'k86_bootstrap_before_init' );
+
+	/**
+	 * Nạp Core Engine.
+	 */
+	k86_bootstrap_load_core();
+
+	/**
+	 * Thông báo Bootstrap đã hoàn tất.
+	 */
+	do_action( 'k86_bootstrap_after_init' );
+
+}
+/*
+|--------------------------------------------------------------------------
+| Bootstrap Execute
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Khởi động Bootstrap Engine.
+ *
+ * Bootstrap chỉ chạy một lần khi plugin được nạp.
+ */
+k86_bootstrap_run();
+/*
+|--------------------------------------------------------------------------
+| Framework Ready
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Thông báo Bootstrap đã hoàn thành.
+ *
+ * Từ thời điểm này các Engine có thể bắt đầu
+ * hoạt động thông qua các Hook của K86 Pro.
+ */
+do_action( 'k86_framework_ready' );
