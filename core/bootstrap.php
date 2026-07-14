@@ -44,18 +44,6 @@ if ( ! defined( 'K86_BOOTSTRAP_VERSION' ) ) {
  *
  * @return void
  */
-function k86_bootstrap_init() {
-
-	/**
-	 * Bootstrap bắt đầu khởi động.
-	 */
-	do_action( 'k86_bootstrap_before_init' );
-
-	/**
-	 * Tiếp tục quá trình nạp Core Engine.
-	 */
-
-}
 /*
 |--------------------------------------------------------------------------
 | Core Loader
