@@ -79,7 +79,7 @@ function k86_admin_menu() {
 		'Cài đặt',
 		'manage_options',
 		'k86-settings',
-		'k86_settings_page'
+	   'k86_render_settings_page'
 	);
 
 	/*
