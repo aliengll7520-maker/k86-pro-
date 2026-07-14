@@ -169,10 +169,6 @@ add_action(
 	'admin_enqueue_scripts',
 	'k86_admin_assets'
 );
-add_action(
-	'admin_enqueue_scripts',
-	'k86_admin_assets'
-);
 
 /**
  * Load Admin Assets.
