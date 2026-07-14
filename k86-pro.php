@@ -233,22 +233,3 @@ do_action( 'k86_pro_loaded' );
 
 do_action( 'k86_framework_ready' );
 /*
-|--------------------------------------------------------------------------
-| Plugin Loaded
-|--------------------------------------------------------------------------
-*/
-
-do_action( 'k86_pro_loaded' );
-
-/*
-|--------------------------------------------------------------------------
-| Framework Ready
-|--------------------------------------------------------------------------
-|
-| Điểm khởi động chung của toàn bộ K86 Pro.
-| Các Module mở rộng trong tương lai chỉ cần
-| Hook vào đây mà không phải sửa file gốc.
-|
-*/
-
-do_action( 'k86_framework_ready' );
