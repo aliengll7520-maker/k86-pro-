@@ -251,7 +251,7 @@ function k86_build_product_layout( $product ) {
 		 * HTML chi tiết sẽ được hoàn thiện ở Template Engine.
 		 */
 		do_action( 'k86_product_box_header', $product );
-	echo k86_render_decision_box( $product );
+	// echo k86_render_decision_box( $product );
 
 		echo k86_render_product_cta_section( $product );
 
