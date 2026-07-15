@@ -43,3 +43,22 @@ function k86_decision_box_enabled() {
 
     return ! empty( $settings['show_decision_box'] );
 }
+/**
+ * Load Decision Box Templates.
+ */
+$k86_decision_box_files = array(
+    'header.php',
+    'content.php',
+    'pros-cons.php',
+    'cta.php',
+    'footer.php',
+);
+
+foreach ( $k86_decision_box_files as $file ) {
+
+    $path = K86_PRO_MODULES . 'decision-box/' . $file;
+
+    if ( file_exists( $path ) ) {
+        require_once $path;
+    }
+}
