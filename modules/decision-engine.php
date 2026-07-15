@@ -32,3 +32,14 @@ function k86_get_decision_settings() {
         )
     );
 }
+/**
+ * Kiểm tra Decision Box có được bật.
+ *
+ * @return bool
+ */
+function k86_decision_box_enabled() {
+
+    $settings = k86_get_decision_settings();
+
+    return ! empty( $settings['show_decision_box'] );
+}
