@@ -1,28 +1,33 @@
 <?php
 /**
- * K86 Smart Decision Box
- * Header Template
+ * Decision Box Header
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+if ( empty( $product ) ) {
+    return;
+}
 ?>
 
-<div class="k86-decision-box">
+<div class="k86-decision-header">
 
-    <div class="k86-decision-header">
+    <h2 class="k86-product-title">
+        <?php echo esc_html( $product->name ?? '' ); ?>
+    </h2>
 
-        <span class="k86-badge">
-            K86 Smart Decision
-        </span>
+    <?php if ( ! empty( $product->brand ) ) : ?>
+        <div class="k86-product-brand">
+            <?php echo esc_html( $product->brand ); ?>
+        </div>
+    <?php endif; ?>
 
-        <h2 class="k86-title">
-            Có nên mua sản phẩm này?
-        </h2>
+    <?php if ( ! empty( $product->price ) ) : ?>
+        <div class="k86-product-price">
+            <?php echo esc_html( $product->price ); ?>
+        </div>
+    <?php endif; ?>
 
-        <p class="k86-subtitle">
-            Phân tích nhanh ưu điểm, nhược điểm và đưa ra gợi ý phù hợp.
-        </p>
-
-    </div>
+</div>
