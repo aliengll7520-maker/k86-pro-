@@ -115,7 +115,7 @@ $modules = array(
 	| Product Engine
 	|--------------------------------------------------------------------------
 	*/
-
+'modules/decision-engine.php',
 	'modules/product-manager.php',
 
 	'modules/product-add.php',
