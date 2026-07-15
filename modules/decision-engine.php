@@ -16,3 +16,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 function k86_decision_engine_ready() {
     return true;
 }
+/**
+ * Lấy cài đặt Decision Engine.
+ *
+ * @return array
+ */
+function k86_get_decision_settings() {
+
+    $settings = k86_get_settings();
+
+    return wp_parse_args(
+        $settings,
+        array(
+            'show_decision_box' => 1,
+        )
+    );
+}
