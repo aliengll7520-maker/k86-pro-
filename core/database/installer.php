@@ -1,187 +1,67 @@
 <?php
-'k86_allow_data_removal',
-		false
-	);
+/**
+ * ------------------------------------------------------------------------
+ * K86 Pro
+ * Database Installer
+ * ------------------------------------------------------------------------
+ *
+ * Điều phối quá trình cài đặt và nâng cấp Database.
+ *
+ * Trách nhiệm:
+ * - Kiểm tra Database đã tồn tại hay chưa.
+ * - Gọi Install Engine.
+ * - Gọi Upgrade Engine.
+ *
+ * Không chứa:
+ * - SQL
+ * - dbDelta()
+ * - CRUD
+ *
+ * @package K86_Pro
+ * @since   2.0.0
+ */
 
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Thực hiện xóa dữ liệu Plugin.
+ * Kiểm tra Database đã cài chưa.
  *
  * @return bool
  */
-function k86_remove_plugin_data() {
+function k86_database_installed() {
 
-	do_action(
-		'k86_remove_plugin_data'
-	);
+	$current = get_option( 'k86_db_version', '' );
 
-	return true;
-
-}
-/*
-|--------------------------------------------------------------------------
-| Cleanup API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Dọn dẹp dữ liệu tạm.
- *
- * @return bool
- */
-function k86_cleanup_temp() {
-
-	do_action(
-		'k86_cleanup_temp'
-	);
-
-	return true;
+	return ! empty( $current );
 
 }
 
 /**
- * Dọn dẹp bộ nhớ đệm.
- *
- * @return bool
- */
-function k86_cleanup_cache() {
-
-	do_action(
-		'k86_cleanup_cache'
-	);
-
-	return true;
-
-}
-
-/**
- * Dọn dẹp toàn bộ tài nguyên.
- *
- * @return bool
- */
-function k86_cleanup_all() {
-
-	do_action(
-		'k86_cleanup_all'
-	);
-
-	return true;
-
-}
-/*
-|--------------------------------------------------------------------------
-| Installer Helper API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Kiểm tra Installer Engine sẵn sàng.
- *
- * @return bool
- */
-function k86_installer_ready() {
-
-	return apply_filters(
-		'k86_installer_ready',
-		true
-	);
-
-}
-
-/**
- * Lấy cấu hình Installer.
- *
- * @return array
- */
-function k86_installer_settings() {
-
-	return apply_filters(
-		'k86_installer_settings',
-		array(
-			'database_version' => k86_database_version(),
-			'option_name'      => k86_database_version_option(),
-		)
-	);
-
-}
-
-/**
- * Đồng bộ Installer.
- *
- * @return bool
- */
-function k86_installer_sync() {
-
-	do_action(
-		'k86_installer_sync'
-	);
-
-	return true;
-
-}
-/*
-|--------------------------------------------------------------------------
-| Installer Framework Hooks
-|--------------------------------------------------------------------------
-|
-| Các module khác nên Hook vào Installer Engine
-| thay vì sửa trực tiếp Core.
-|
-*/
-
-/**
- * Thông báo Installer Engine đã tải.
- */
-do_action( 'k86_installer_loaded' );
-
-/**
- * Filter dữ liệu Installer.
- *
- * @param array $data
- * @return array
- */
-function k86_installer_filter_data( $data ) {
-
-	return apply_filters(
-		'k86_installer_data',
-		(array) $data
-	);
-
-}
-
-/**
- * Filter kết quả Installer.
- *
- * @param mixed $result
- * @return mixed
- */
-function k86_installer_filter_result( $result ) {
-
-	return apply_filters(
-		'k86_installer_result',
-		$result
-	);
-
-}
-/*
-|--------------------------------------------------------------------------
-| Installer Final API
-|--------------------------------------------------------------------------
-*/
-
-/**
- * Khởi tạo Installer Engine.
+ * Khởi tạo Database Installer.
  *
  * @return void
  */
-function k86_init_installer() {
+function k86_run_database_installer() {
 
-	do_action( 'k86_installer_init' );
+	if ( ! k86_database_installed() ) {
+
+		if ( function_exists( 'k86_install_database' ) ) {
+			k86_install_database();
+		}
+
+	} else {
+
+		if ( function_exists( 'k86_upgrade_database' ) ) {
+			k86_upgrade_database();
+		}
+
+	}
+
+	do_action( 'k86_database_installer_complete' );
 
 }
 
 /**
- * Framework Installer Engine đã sẵn sàng.
+ * Framework Ready
  */
-do_action( 'k86_installer_ready' );
+do_action( 'k86_database_installer_ready' );
