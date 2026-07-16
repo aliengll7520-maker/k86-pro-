@@ -19,16 +19,35 @@
   },
 
   "core-loader": {
-    "id": "core-loader",
-    "file": "core/loader.php",
-    "parent": "bootstrap",
-    "children": []
-  },
+  "id": "core-loader",
+  "file": "core/loader.php",
+  "parent": "bootstrap",
+  "children": [
+    "version",
+    "database",
+    "logger",
+    "security",
+    "cache",
+    "notification",
+    "scheduler",
+    "statistics",
+    "ajax",
+    "rest-api",
+    "assets",
+    "dashboard"
+  ]
+  }
 
   "business-loader": {
     "id": "business-loader",
     "file": "business/loader.php",
     "parent": "bootstrap",
     "children": []
-  }
+  },
+  "database": {
+  "id": "database",
+  "file": "core/database.php",
+  "parent": "core-loader",
+  "children": []
+}
 }
