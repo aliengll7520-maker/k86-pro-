@@ -111,23 +111,28 @@ $modules = array(
 	'modules/affiliate-box.php',
 
 	/*
-	|--------------------------------------------------------------------------
-	| Product Engine
-	|--------------------------------------------------------------------------
-	*/
+|--------------------------------------------------------------------------
+| Product Engine
+|--------------------------------------------------------------------------
+*/
+
 'modules/decision-engine.php',
-	'modules/product-manager.php',
 
-	'modules/product-add.php',
+'modules/decision-render.php',
 
-	'modules/product-edit.php',
+'modules/decision-hooks.php',
 
-	'modules/product-save.php',
+'modules/product-manager.php',
 
-	'modules/product-delete.php',
+'modules/product-add.php',
 
-	'modules/product-shortcode.php',
+'modules/product-edit.php',
 
+'modules/product-save.php',
+
+'modules/product-delete.php',
+
+'modules/product-shortcode.php',
 );
 foreach ( $modules as $module ) {
 
