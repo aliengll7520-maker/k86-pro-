@@ -1,0 +1,26 @@
+{
+  "actions": [
+    "k86_loader_ready",
+    "k86_database_init",
+    "k86_database_ready",
+    "k86_logger_loaded",
+    "k86_logger_init",
+    "k86_logger_ready",
+    "k86_write_log",
+    "k86_clear_logs",
+    "k86_clear_logs_by_level",
+    "k86_clear_old_logs",
+    "k86_store_log",
+    "k86_sync_logs"
+  ],
+
+  "filters": [
+    "k86_database_data",
+    "k86_database_result",
+    "k86_logs",
+    "k86_store_log_data",
+    "k86_logger_storage_ready",
+    "k86_logger_data",
+    "k86_logger_result"
+  ]
+}
