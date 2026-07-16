@@ -62,11 +62,14 @@ $core_components = array(
 
 foreach ( $core_components as $component ) {
 
-	$file = K86_PRO_PATH . 'core/' . $component;
+$lifecycle_file = K86_PRO_PATH . 'core/lifecycle/' . $component;
+$core_file      = K86_PRO_PATH . 'core/' . $component;
 
-	if ( file_exists( $file ) ) {
-		require_once $file;
-	}
+if ( file_exists( $lifecycle_file ) ) {
+	require_once $lifecycle_file;
+} elseif ( file_exists( $core_file ) ) {
+	require_once $core_file;
+}
 
 }
 
