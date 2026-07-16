@@ -73,18 +73,13 @@ function k86_write_log( $message, $level = '', $context = array() ) {
 		'context' => $context,
 	);
 
-	do_action( 'k86_write_log',
-            /*
-|--------------------------------------------------------------------------
-| Logger Read API
-|--------------------------------------------------------------------------
-*/
+	do_action(
+    'k86_write_log',
+    $log
+);
 
-/**
- * Đọc danh sách Log.
- *
- * @return array
- */
+return $log;
+}
 function k86_get_logs() {
 
 	$logs = apply_filters(
