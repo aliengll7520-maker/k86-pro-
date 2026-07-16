@@ -1,0 +1,95 @@
+{
+  "rules": [
+    {
+      "module": "bootstrap",
+      "can_load": [
+        "core-loader",
+        "business-loader"
+      ]
+    },
+    {
+      "module": "core-loader",
+      "can_load": [
+        "version",
+        "database",
+        "logger",
+        "security",
+        "cache",
+        "notification",
+        "scheduler",
+        "statistics",
+        "ajax",
+        "rest-api",
+        "assets",
+        "dashboard"
+      ]
+    },
+    {
+      "module": "database",
+      "allow_call": [
+        "logger"
+      ]
+    },
+    {
+      "module": "logger",
+      "allow_call": [
+        "database"
+      ]
+    },
+    {
+      "module": "ajax",
+      "allow_call": [
+        "database",
+        "logger",
+        "security"
+      ]
+    },
+    {
+      "module": "rest-api",
+      "allow_call": [
+        "database",
+        "logger",
+        "security"
+      ]
+    },
+    {
+      "module": "dashboard",
+      "allow_call": [
+        "database",
+        "logger",
+        "statistics",
+        "notification"
+      ]
+    },
+    {
+      "module": "business-loader",
+      "allow_call": [
+        "database",
+        "logger"
+      ]
+    }
+  ],
+
+  "forbidden": [
+    {
+      "from": "business",
+      "to": "bootstrap"
+    },
+    {
+      "from": "database",
+      "to": "bootstrap"
+    },
+    {
+      "from": "logger",
+      "to": "bootstrap"
+    },
+    {
+      "from": "database",
+      "to": "core-loader"
+    },
+    {
+      "from": "logger",
+      "to": "core-loader"
+    }
+  ]
+}
