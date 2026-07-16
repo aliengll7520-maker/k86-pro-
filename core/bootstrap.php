@@ -44,13 +44,18 @@ if ( ! defined( 'K86_BOOTSTRAP_VERSION' ) ) {
  *
  * @return void
  */
-function k86_bootstrap_load_core() {
-
+function k86_bootstrap_load_engines() {
 	$core_loader = K86_PRO_PATH . 'core/loader.php';
 
-	if ( file_exists( $core_loader ) ) {
-		require_once $core_loader;
-	}
+if ( file_exists( $core_loader ) ) {
+	require_once $core_loader;
+}
+
+$business_loader = K86_PRO_PATH . 'business/loader.php';
+
+if ( file_exists( $business_loader ) ) {
+	require_once $business_loader;
+}
 
 }
 /*
@@ -74,7 +79,7 @@ function k86_bootstrap_run() {
 	/**
 	 * Nạp Core Engine.
 	 */
-	k86_bootstrap_load_core();
+	k86_bootstrap_load_engines();
 
 	/**
 	 * Thông báo Bootstrap đã hoàn tất.
