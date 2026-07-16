@@ -44,8 +44,6 @@
     "parent": "bootstrap",
     "children": []
   },
-  "database": {
-  "id": "database",
   "file": "core/database.php",
   "parent": "core-loader",
   "role": "Database API",
@@ -66,5 +64,11 @@
   "file": "core/database.php",
   "parent": "core-loader",
   "children": []
-}
+},
+"upgrade": {
+  "id": "upgrade",
+  "file": "core/upgrade.php",
+  "parent": "database",
+  "role": "Database Upgrade",
+  "children": []
 }
