@@ -80,3 +80,14 @@ if ( file_exists( $lifecycle_file ) ) {
 */
 
 do_action( 'k86_loader_ready' );
+/*
+|--------------------------------------------------------------------------
+| Load Business Engine
+|--------------------------------------------------------------------------
+*/
+
+$business_loader = K86_PRO_PATH . 'business/loader.php';
+
+if ( file_exists( $business_loader ) ) {
+	require_once $business_loader;
+}
