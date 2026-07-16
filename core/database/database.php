@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
 
 /*
 |--------------------------------------------------------------------------
-| Database CRUD Helper API
+| Database CRUD API
 |--------------------------------------------------------------------------
 */
 
 /**
- * Thêm một bản ghi.
+ * Thêm bản ghi.
  */
 function k86_db_insert( $table, $data ) {
 
@@ -41,7 +41,7 @@ function k86_db_insert( $table, $data ) {
 }
 
 /**
- * Cập nhật một bản ghi.
+ * Cập nhật bản ghi.
  */
 function k86_db_update( $table, $data, $where ) {
 
@@ -52,11 +52,10 @@ function k86_db_update( $table, $data, $where ) {
 		(array) $data,
 		(array) $where
 	);
-
 }
 
 /**
- * Xóa một bản ghi.
+ * Xóa bản ghi.
  */
 function k86_db_delete( $table, $where ) {
 
@@ -66,20 +65,14 @@ function k86_db_delete( $table, $where ) {
 		k86_table( $table ),
 		(array) $where
 	);
-
 }
 
 /*
 |--------------------------------------------------------------------------
-| Database Framework Hooks
+| Filter API
 |--------------------------------------------------------------------------
 */
 
-do_action( 'k86_database_loaded' );
-
-/**
- * Filter dữ liệu trước khi lưu Database.
- */
 function k86_database_filter_data( $data, $table ) {
 
 	return apply_filters(
@@ -87,36 +80,25 @@ function k86_database_filter_data( $data, $table ) {
 		(array) $data,
 		$table
 	);
-
 }
 
-/**
- * Filter kết quả Database.
- */
 function k86_database_filter_result( $result ) {
 
 	return apply_filters(
 		'k86_database_result',
 		$result
 	);
-
 }
 
 /*
 |--------------------------------------------------------------------------
-| Database Final API
+| Database Bootstrap
 |--------------------------------------------------------------------------
 */
 
-/**
- * Khởi tạo Database Engine.
- */
 function k86_init_database() {
 
-	if ( function_exists( 'k86_database_installed' ) &&
-		! k86_database_installed() &&
-		function_exists( 'k86_install_database' ) ) {
-
+	if ( function_exists( 'k86_install_database' ) && ! k86_database_installed() ) {
 		k86_install_database();
 	}
 
@@ -125,10 +107,7 @@ function k86_init_database() {
 	}
 
 	do_action( 'k86_database_init' );
-
 }
 
-/**
- * Framework Database Engine đã sẵn sàng.
- */
+do_action( 'k86_database_loaded' );
 do_action( 'k86_database_ready' );
