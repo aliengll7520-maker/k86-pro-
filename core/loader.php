@@ -27,12 +27,9 @@ defined( 'ABSPATH' ) || exit;
 $core_components = array(
 
 	'version.php',
-	'install.php',
-	'installer.php',
-	'update.php',
-	'upgrade.php',
 
-	'database.php',
+	'database/loader.php',
+
 	'backup.php',
 	'export.php',
 	'import.php',
@@ -62,14 +59,11 @@ $core_components = array(
 
 foreach ( $core_components as $component ) {
 
-$lifecycle_file = K86_PRO_PATH . 'core/lifecycle/' . $component;
-$core_file      = K86_PRO_PATH . 'core/' . $component;
+	$core_file = K86_PRO_PATH . 'core/' . $component;
 
-if ( file_exists( $lifecycle_file ) ) {
-	require_once $lifecycle_file;
-} elseif ( file_exists( $core_file ) ) {
-	require_once $core_file;
-}
+	if ( file_exists( $core_file ) ) {
+		require_once $core_file;
+	}
 
 }
 
@@ -80,4 +74,3 @@ if ( file_exists( $lifecycle_file ) ) {
 */
 
 do_action( 'k86_loader_ready' );
-
