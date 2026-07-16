@@ -72,3 +72,10 @@
   "role": "Database Upgrade",
   "children": []
 }
+"version": {
+  "id": "version",
+  "file": "core/version.php",
+  "parent": "database",
+  "role": "Database Version",
+  "children": []
+}
