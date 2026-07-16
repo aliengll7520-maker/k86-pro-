@@ -1,47 +1,49 @@
 <?php
 /**
- * --------------------------------------------------------
+ * ------------------------------------------------------------------------
  * K86 Pro
- * Core: Version Manager
- * Version: 1.5.2
- * Status: Framework RC1
- * --------------------------------------------------------
+ * Core Version Manager
+ * ------------------------------------------------------------------------
+ *
+ * Quản lý toàn bộ phiên bản của Framework.
+ *
+ * - Plugin Version
+ * - Database Version
+ *
+ * @package K86_Pro
+ * @since   1.6.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+defined( 'ABSPATH' ) || exit;
+
+/*
+|--------------------------------------------------------------------------
+| Plugin Version
+|--------------------------------------------------------------------------
+*/
+
+if ( ! defined( 'K86_VERSION' ) ) {
+	define( 'K86_VERSION', '1.6.0' );
 }
 
-/**
- * --------------------------------------------------------
- * Database Version
- * --------------------------------------------------------
- *
- * Plugin Version được quản lý trong:
- * k86-pro.php
- *
- * Database Version chỉ tăng khi có thay đổi
- * cấu trúc Cơ sở dữ liệu.
- *
- * Ví dụ:
- * - Thêm bảng mới.
- * - Xóa bảng.
- * - Thêm cột.
- * - Xóa cột.
- * - Đổi kiểu dữ liệu.
- *
- * Không tăng Database Version khi:
- * - Chỉnh sửa giao diện.
- * - Sửa lỗi PHP.
- * - Thay đổi CSS hoặc JavaScript.
- * - Thêm chức năng không liên quan Database.
- */
+/*
+|--------------------------------------------------------------------------
+| Database Version
+|--------------------------------------------------------------------------
+|
+| Chỉ tăng khi thay đổi cấu trúc Database:
+| - Thêm/Xóa bảng
+| - Thêm/Xóa cột
+| - Thay đổi kiểu dữ liệu
+|
+| Không tăng khi:
+| - Sửa giao diện
+| - Sửa PHP
+| - CSS / JavaScript
+| - Business Logic
+|
+*/
 
-/**
- * Database Version
- */
 if ( ! defined( 'K86_DB_VERSION' ) ) {
-
 	define( 'K86_DB_VERSION', '1.1.0' );
-
 }
