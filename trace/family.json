@@ -1,0 +1,34 @@
+{
+  "root": {
+    "id": "k86-pro",
+    "name": "K86 Pro",
+    "file": "k86-pro.php",
+    "children": [
+      "bootstrap"
+    ]
+  },
+
+  "bootstrap": {
+    "id": "bootstrap",
+    "file": "core/bootstrap.php",
+    "parent": "root",
+    "children": [
+      "core-loader",
+      "business-loader"
+    ]
+  },
+
+  "core-loader": {
+    "id": "core-loader",
+    "file": "core/loader.php",
+    "parent": "bootstrap",
+    "children": []
+  },
+
+  "business-loader": {
+    "id": "business-loader",
+    "file": "business/loader.php",
+    "parent": "bootstrap",
+    "children": []
+  }
+}
