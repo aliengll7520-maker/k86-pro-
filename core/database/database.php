@@ -1,44 +1,20 @@
+<?php
 /**
- * Nâng cấp Database nếu cần.
+ * ------------------------------------------------------------------------
+ * K86 Pro
+ * Database Repository
+ * ------------------------------------------------------------------------
  *
- * @return void
- */
-function k86_upgrade_database() {
-
-	$current_version = get_option( 'k86_database_version', '0.0.0' );
-
-	if ( version_compare( $current_version, k86_database_version(), '<' ) ) {
-
-		k86_create_database_tables();
-
-		update_option(
-			'k86_database_version',
-			k86_database_version()
-		);
-
-		do_action(
-			'k86_database_upgraded',
-			$current_version,
-			k86_database_version()
-		);
-
-	}
-
-}
-
-/**
- * Lấy phiên bản Database hiện tại.
+ * Chỉ quản lý Database API và CRUD.
+ * Không chứa Install.
+ * Không chứa Upgrade.
  *
- * @return string
+ * @package K86_Pro
+ * @since   2.0.0
  */
-function k86_get_database_version() {
 
-	return get_option(
-		'k86_database_version',
-		'0.0.0'
-	);
+defined( 'ABSPATH' ) || exit;
 
-}
 /*
 |--------------------------------------------------------------------------
 | Database CRUD Helper API
@@ -47,10 +23,6 @@ function k86_get_database_version() {
 
 /**
  * Thêm một bản ghi.
- *
- * @param string $table
- * @param array  $data
- * @return int|false
  */
 function k86_db_insert( $table, $data ) {
 
@@ -58,7 +30,7 @@ function k86_db_insert( $table, $data ) {
 
 	$result = $wpdb->insert(
 		k86_table( $table ),
-		$data
+		(array) $data
 	);
 
 	if ( false === $result ) {
@@ -66,16 +38,10 @@ function k86_db_insert( $table, $data ) {
 	}
 
 	return (int) $wpdb->insert_id;
-
 }
 
 /**
  * Cập nhật một bản ghi.
- *
- * @param string $table
- * @param array  $data
- * @param array  $where
- * @return int|false
  */
 function k86_db_update( $table, $data, $where ) {
 
@@ -83,18 +49,14 @@ function k86_db_update( $table, $data, $where ) {
 
 	return $wpdb->update(
 		k86_table( $table ),
-		$data,
-		$where
+		(array) $data,
+		(array) $where
 	);
 
 }
 
 /**
  * Xóa một bản ghi.
- *
- * @param string $table
- * @param array  $where
- * @return int|false
  */
 function k86_db_delete( $table, $where ) {
 
@@ -102,37 +64,27 @@ function k86_db_delete( $table, $where ) {
 
 	return $wpdb->delete(
 		k86_table( $table ),
-		$where
+		(array) $where
 	);
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Database Framework Hooks
 |--------------------------------------------------------------------------
-|
-| Các module khác nên Hook vào Database Engine
-| thay vì sửa trực tiếp Core.
-|
 */
 
-/**
- * Thông báo Database Engine đã tải.
- */
 do_action( 'k86_database_loaded' );
 
 /**
  * Filter dữ liệu trước khi lưu Database.
- *
- * @param array  $data
- * @param string $table
- * @return array
  */
 function k86_database_filter_data( $data, $table ) {
 
 	return apply_filters(
 		'k86_database_data',
-		$data,
+		(array) $data,
 		$table
 	);
 
@@ -140,9 +92,6 @@ function k86_database_filter_data( $data, $table ) {
 
 /**
  * Filter kết quả Database.
- *
- * @param mixed $result
- * @return mixed
  */
 function k86_database_filter_result( $result ) {
 
@@ -152,6 +101,7 @@ function k86_database_filter_result( $result ) {
 	);
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Database Final API
@@ -160,16 +110,19 @@ function k86_database_filter_result( $result ) {
 
 /**
  * Khởi tạo Database Engine.
- *
- * @return void
  */
 function k86_init_database() {
 
-	if ( ! k86_database_installed() ) {
+	if ( function_exists( 'k86_database_installed' ) &&
+		! k86_database_installed() &&
+		function_exists( 'k86_install_database' ) ) {
+
 		k86_install_database();
 	}
 
-	k86_upgrade_database();
+	if ( function_exists( 'k86_upgrade_database' ) ) {
+		k86_upgrade_database();
+	}
 
 	do_action( 'k86_database_init' );
 
