@@ -49,11 +49,7 @@ do_action( 'k86_before_core' );
 |--------------------------------------------------------------------------
 */
 
-require_once K86_PRO_PATH . 'core/version.php';
-
-require_once K86_PRO_PATH . 'core/install.php';
-
-require_once K86_PRO_PATH . 'core/upgrade.php';
+require_once K86_PRO_PATH . 'core/bootstrap.php';
 
 /*
 |--------------------------------------------------------------------------
