@@ -19,63 +19,167 @@
   },
 
   "core-loader": {
-  "id": "core-loader",
-  "file": "core/loader.php",
-  "parent": "bootstrap",
-  "children": [
-    "version",
-    "database",
-    "logger",
-    "security",
-    "cache",
-    "notification",
-    "scheduler",
-    "statistics",
-    "ajax",
-    "rest-api",
-    "assets",
-    "dashboard"
-  ]
-  }
+    "id": "core-loader",
+    "file": "core/loader.php",
+    "parent": "bootstrap",
+    "children": [
+      "version",
+      "database",
+      "logger",
+      "security",
+      "cache",
+      "notification",
+      "scheduler",
+      "statistics",
+      "ajax",
+      "rest-api",
+      "assets",
+      "dashboard"
+    ]
+  },
 
   "business-loader": {
     "id": "business-loader",
     "file": "business/loader.php",
     "parent": "bootstrap",
+    "children": [
+      "product",
+      "affiliate",
+      "engagement",
+      "decision"
+    ]
+  },
+
+  "version": {
+    "id": "version",
+    "file": "core/version.php",
+    "parent": "core-loader",
+    "role": "Framework Version",
     "children": []
   },
-  "file": "core/database.php",
-  "parent": "core-loader",
-  "role": "Database API",
-  "children": [
-    "install",
-    "upgrade",
-    "version"
-  ]
-  }
-  "id": "database",
+
+  "database": {
+    "id": "database",
+    "file": "core/database.php",
+    "parent": "core-loader",
+    "role": "Database API",
+    "children": [
+      "install",
+      "installer",
+      "update",
+      "upgrade"
+    ]
+  },
+
   "install": {
-  "id": "install",
-  "file": "core/install.php",
-  "parent": "database",
-  "role": "Database Installer",
-  "children": []
+    "id": "install",
+    "file": "core/install.php",
+    "parent": "database",
+    "role": "Database Installer",
+    "children": []
+  },
+
+  "installer": {
+    "id": "installer",
+    "file": "core/installer.php",
+    "parent": "database",
+    "role": "Database Coordinator",
+    "children": []
+  },
+
+  "update": {
+    "id": "update",
+    "file": "core/update.php",
+    "parent": "database",
+    "role": "Database Update",
+    "children": []
+  },
+
+  "upgrade": {
+    "id": "upgrade",
+    "file": "core/upgrade.php",
+    "parent": "database",
+    "role": "Database Upgrade",
+    "children": []
+  },
+
+  "logger": {
+    "id": "logger",
+    "file": "core/logger.php",
+    "parent": "core-loader",
+    "role": "Logger Engine",
+    "children": []
+  },
+
+  "security": {
+    "id": "security",
+    "file": "core/security.php",
+    "parent": "core-loader",
+    "role": "Security Engine",
+    "children": []
+  },
+
+  "cache": {
+    "id": "cache",
+    "file": "core/cache.php",
+    "parent": "core-loader",
+    "role": "Cache Engine",
+    "children": []
+  },
+
+  "notification": {
+    "id": "notification",
+    "file": "core/notification.php",
+    "parent": "core-loader",
+    "role": "Notification Engine",
+    "children": []
+  },
+
+  "scheduler": {
+    "id": "scheduler",
+    "file": "core/scheduler.php",
+    "parent": "core-loader",
+    "role": "Scheduler Engine",
+    "children": []
+  },
+
+  "statistics": {
+    "id": "statistics",
+    "file": "core/statistics.php",
+    "parent": "core-loader",
+    "role": "Statistics Engine",
+    "children": []
+  },
+
+  "ajax": {
+    "id": "ajax",
+    "file": "core/ajax.php",
+    "parent": "core-loader",
+    "role": "Ajax Engine",
+    "children": []
+  },
+
+  "rest-api": {
+    "id": "rest-api",
+    "file": "core/rest-api.php",
+    "parent": "core-loader",
+    "role": "REST API",
+    "children": []
+  },
+
+  "assets": {
+    "id": "assets",
+    "file": "core/assets.php",
+    "parent": "core-loader",
+    "role": "Assets Manager",
+    "children": []
+  },
+
+  "dashboard": {
+    "id": "dashboard",
+    "file": "core/dashboard.php",
+    "parent": "core-loader",
+    "role": "Dashboard",
+    "children": []
   }
-  "file": "core/database.php",
-  "parent": "core-loader",
-  "children": []
-},
-"upgrade": {
-  "id": "upgrade",
-  "file": "core/upgrade.php",
-  "parent": "database",
-  "role": "Database Upgrade",
-  "children": []
-}
-"version": {
-  "id": "version",
-  "file": "core/version.php",
-  "parent": "database",
-  "role": "Database Version",
-  "children": []
 }
