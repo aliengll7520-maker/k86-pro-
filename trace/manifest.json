@@ -1,0 +1,27 @@
+{
+  "name": "K86 Pro Trace System",
+  "version": "1.0.0",
+
+  "entry": "k86-pro.php",
+
+  "trace_order": [
+    "family.json",
+    "routes.json",
+    "hooks.json",
+    "permissions.json"
+  ],
+
+  "start_node": "root",
+
+  "rules": {
+    "follow_family": true,
+    "follow_routes": true,
+    "follow_hooks": true,
+    "check_permissions": true,
+    "stop_on_missing_file": true,
+    "stop_on_missing_function": true,
+    "stop_on_php_fatal": true
+  },
+
+  "description": "Trace plugin from root to child modules. Always trace parent before child."
+}
