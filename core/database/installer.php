@@ -1,4 +1,5 @@
-		'k86_allow_data_removal',
+<?php
+'k86_allow_data_removal',
 		false
 	);
 
