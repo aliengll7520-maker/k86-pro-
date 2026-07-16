@@ -1,0 +1,32 @@
+{
+  "k86-pro": [
+    "bootstrap"
+  ],
+
+  "bootstrap": [
+    "core-loader",
+    "business-loader"
+  ],
+
+  "core-loader": [
+    "version",
+    "database",
+    "logger",
+    "security",
+    "cache",
+    "notification",
+    "scheduler",
+    "statistics",
+    "ajax",
+    "rest-api",
+    "assets",
+    "dashboard"
+  ],
+
+  "business-loader": [
+    "affiliate",
+    "decision",
+    "engagement",
+    "product"
+  ]
+}
