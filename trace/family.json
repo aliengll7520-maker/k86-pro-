@@ -48,6 +48,16 @@
   "id": "database",
   "file": "core/database.php",
   "parent": "core-loader",
+  "role": "Database API",
+  "children": [
+    "install",
+    "upgrade",
+    "version"
+  ]
+  }
+  "id": "database",
+  "file": "core/database.php",
+  "parent": "core-loader",
   "children": []
 }
 }
