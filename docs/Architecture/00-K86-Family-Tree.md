@@ -45,6 +45,25 @@ K86 Pro
   - Event Manager
   - Dependency Manager
   - Lifecycle Manager
+  - ### Kernel Engine
+
+Status: Planning
+
+Parent: K86 Pro
+
+Mission:
+- Khởi động hệ thống.
+- Điều phối Engine.
+- Quản lý vòng đời Framework.
+
+Authority:
+- Được gọi Foundation Engine.
+- Được kiểm tra trạng thái hệ thống.
+
+Forbidden:
+- Không truy cập Database.
+- Không Render HTML.
+- Không xử lý nghiệp vụ.
 
 ---
 
@@ -57,7 +76,22 @@ K86 Pro
   - Service Manager
   - Communication Manager
   - Resource Manager
+### Foundation Engine
 
+Mission:
+- Cung cấp dịch vụ nền.
+
+Authority:
+- Database
+- Security
+- Cache
+- Logger
+- REST API
+
+Forbidden:
+- Không Render giao diện.
+- Không xử lý Product.
+- Không xử lý Decision.
 ---
 
 ### Business Engine
@@ -68,7 +102,20 @@ K86 Pro
   - Decision Engine
   - Affiliate Engine
   - Engagement Engine
+### Business Engine
 
+Mission:
+- Xử lý toàn bộ nghiệp vụ.
+
+Authority:
+- Product Engine
+- Decision Engine
+- Affiliate Engine
+- Engagement Engine
+
+Forbidden:
+- Không truy cập Template.
+- Không nạp CSS.
 ---
 
 ### Presentation Engine
@@ -78,7 +125,19 @@ K86 Pro
   - Template Manager
   - Component Manager
   - Theme Manager
+### Presentation Engine
 
+Mission:
+- Hiển thị giao diện.
+
+Authority:
+- Templates
+- Components
+- Assets
+
+Forbidden:
+- Không lưu Database.
+- Không xử lý nghiệp vụ.
 ---
 
 ### Administration Engine
