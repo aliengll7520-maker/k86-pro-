@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once K86_PRO_PATH . 'business/affiliate/link-manager.php';
 /**
  * Đăng ký Shortcode Affiliate Box.
  */
