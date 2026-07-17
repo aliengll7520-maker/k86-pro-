@@ -9,3 +9,7 @@
  */
 
 defined( 'ABSPATH' ) || exit;
+/**
+ * Product Model
+ */
+require_once __DIR__ . '/model.php';
