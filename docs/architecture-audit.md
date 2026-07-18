@@ -17,17 +17,11 @@ Tài liệu này dùng để:
 
 ## 1. Loader Audit
 
+### Checklist
+
 - [ ] Tất cả require_once đều hợp lệ.
 - [ ] Không require file đã xóa.
 - [ ] Không nạp trùng.
-- [ ] ### Audit Result
-### Kết luận
-
-- Không phát hiện thiếu file trong chuỗi khởi động.
-- Không phát hiện lỗi require/include ở tầng Loader.
-- Chuỗi khởi động của K86 Pro đạt yêu cầu.
-
-Kết quả: 🟢 PASS
 
 ### Audit Result
 
@@ -38,9 +32,19 @@ Kết quả: 🟢 PASS
 | core/loader.php | 🟡 In Review | Core Loader |
 | core/database/loader.php | 🟡 In Review | Database Loader |
 
+### Kết luận
+
+- Không phát hiện thiếu file trong chuỗi khởi động.
+- Không phát hiện lỗi require/include ở tầng Loader.
+- Chuỗi khởi động của K86 Pro đạt yêu cầu.
+
+**Kết quả:** 🟢 PASS
+
 ---
 
 ## 2. Engine Audit
+
+### Checklist
 
 - [ ] Core
 - [ ] Database
@@ -56,83 +60,139 @@ Kết quả: 🟢 PASS
 - [ ] Backup
 - [ ] Import
 - [ ] Export
-- [ ] ### Audit Result
 
-| Engine | Trạng thái | Ghi chú |
-|---------|------------|----------|
-| Core | ⏳ | |
-| Database | ⏳ | |
-| Admin | ⏳ | |
-| Settings | ⏳ | |
-| Product | ⏳ | |
-| Affiliate | ⏳ | |
-| Dashboard | ⏳ | |
-| Logger | ⏳ | |
-| REST API | ⏳ | |
-| Cache | ⏳ | |
-| Security | ⏳ | |
-| Backup | ⏳ | |
-| Import | ⏳ | |
-| Export | ⏳ | |
+### Audit Result
+
+| Engine | Status | Ghi chú |
+|--------|--------|----------|
+| Core | ⏳ In Review | |
+| Database | ⏳ In Review | |
+| Admin | ⏳ In Review | |
+| Settings | ⏳ In Review | |
+| Product | ⏳ In Review | |
+| Affiliate | ⏳ In Review | |
+| Dashboard | ⏳ In Review | |
+| Logger | ⏳ In Review | |
+| REST API | ⏳ In Review | |
+| Cache | ⏳ In Review | |
+| Security | ⏳ In Review | |
+| Backup | ⏳ In Review | |
+| Import | ⏳ In Review | |
+| Export | ⏳ In Review | |
+
+### Kết luận
+
+- Chưa bắt đầu kiểm toán Engine.
+- Trạng thái sẽ được cập nhật sau khi kiểm tra từng Engine.
+
+**Kết quả:** ⏳ In Review
 
 ---
 
 ## 3. Hook Audit
+
+### Checklist
 
 - [ ] add_action
 - [ ] add_filter
 - [ ] do_action
 - [ ] apply_filters
 
+### Kết luận
+
+**Kết quả:** ⏳ In Review
+
 ---
 
 ## 4. Callback Audit
 
+### Checklist
+
 - [ ] Callback tồn tại.
 - [ ] Không callback mồ côi.
+
+### Kết luận
+
+**Kết quả:** ⏳ In Review
 
 ---
 
 ## 5. Shortcode Audit
 
+### Checklist
+
 - [ ] Shortcode hoạt động.
 - [ ] Callback shortcode tồn tại.
+
+### Kết luận
+
+**Kết quả:** ⏳ In Review
 
 ---
 
 ## 6. REST API Audit
 
+### Checklist
+
 - [ ] Route hợp lệ.
 - [ ] Callback tồn tại.
+
+### Kết luận
+
+**Kết quả:** ⏳ In Review
 
 ---
 
 ## 7. Database Audit
 
-- [ ] install
-- [ ] upgrade
-- [ ] version
+### Checklist
+
+- [ ] Install
+- [ ] Upgrade
+- [ ] Version
+
+### Kết luận
+
+**Kết quả:** ⏳ In Review
 
 ---
 
 ## 8. Template Audit
 
+### Checklist
+
 - [ ] Template tồn tại.
 - [ ] Không template dư.
+
+### Kết luận
+
+**Kết quả:** ⏳ In Review
 
 ---
 
 ## 9. Dependency Audit
 
+### Checklist
+
 - [ ] Không phụ thuộc vòng.
 - [ ] Không phụ thuộc chết.
 - [ ] Không phụ thuộc thừa.
+
+### Kết luận
+
+**Kết quả:** ⏳ In Review
 
 ---
 
 ## 10. Cleanup Audit
 
+### Checklist
+
 - [ ] File không dùng.
 - [ ] Hàm không dùng.
 - [ ] Class không dùng.
 - [ ] Hook không dùng.
+
+### Kết luận
+
+**Kết quả:** ⏳ In Review
