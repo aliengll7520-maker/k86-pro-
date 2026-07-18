@@ -1,4 +1,7 @@
 # K86 Pro Vision
+Version: 1.0.0
+
+Status: Stable
 
 ## Sứ mệnh
 
@@ -18,3 +21,12 @@ Phát triển K86 Pro thành hệ sinh thái mở kết nối Website, AI, Affil
 - Người làm Affiliate tạo nội dung dễ dàng hơn.
 - Người bán có thêm đơn hàng chất lượng.
 - Các bên cùng phát triển theo mô hình cộng sinh.
+## Scope
+
+Vision chỉ mô tả định hướng dài hạn.
+
+Vision không mô tả kiến trúc.
+
+Vision không mô tả mã nguồn.
+
+Các nội dung kỹ thuật được quản lý tại Blueprint và Architecture.
