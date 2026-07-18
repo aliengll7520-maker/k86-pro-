@@ -105,6 +105,9 @@ $modules = array(
 	*/
 
 	'modules/affiliate-box.php',
+	'modules/engagement-engine.php',
+
+'modules/engagement-ajax.php',
 
 	/*
 |--------------------------------------------------------------------------
