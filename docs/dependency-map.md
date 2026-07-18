@@ -322,6 +322,40 @@ core/dashboard.php
 ## Trạng thái
 
 🟢 Stable
+---
+
+# Logger Engine
+
+## Vai trò
+
+Ghi nhật ký hoạt động của K86 Pro để phục vụ theo dõi lỗi và hỗ trợ gỡ lỗi.
+
+## File chính
+
+core/logger.php
+
+## Phụ thuộc
+
+- Core Engine
+
+## Có thể được sử dụng bởi
+
+- Dashboard Engine
+- Product Engine
+- Security Engine
+- Backup Engine
+- Import Engine
+- Export Engine
+
+## Trạng thái
+
+🟢 Stable
+
+## Ghi chú
+
+Logger Engine chỉ ghi và đọc nhật ký.
+
+Không xử lý nghiệp vụ hoặc thay đổi dữ liệu.
 
 ## Ghi chú
 
