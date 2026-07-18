@@ -3,7 +3,7 @@
  * --------------------------------------------------------
  * K86 Pro
  * Module: Affiliate Box
- * Version: 1.5.2
+ * Version: 1.5.3
  * Status: Framework RC1
  * --------------------------------------------------------
  */
@@ -11,8 +11,6 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
-require_once K86_PRO_PATH . 'business/affiliate/link-manager.php';
 
 /**
  * Lưu ý:
@@ -42,10 +40,15 @@ function k86_affiliate_box( $atts ) {
 	do_action( 'k86_affiliate_box_before', $atts );
 
 	/**
+	 * Nếu Product Shortcode chưa được nạp
+	 * thì không gây Fatal Error.
+	 */
+	if ( ! function_exists( 'k86_product_shortcode' ) ) {
+		return '<div class="k86-error">K86 Product Shortcode chưa được khởi tạo.</div>';
+	}
+
+	/**
 	 * Chuyển tiếp sang Product Shortcode.
-	 *
-	 * Điều này giúp chỉ còn một nơi duy nhất
-	 * quản lý giao diện Product Box.
 	 */
 	$output = k86_product_shortcode( $atts );
 
