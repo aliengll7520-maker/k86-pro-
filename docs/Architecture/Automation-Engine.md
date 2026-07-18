@@ -8,11 +8,13 @@ Status: Development
 
 # Mục tiêu
 
-Automation Engine chịu trách nhiệm tự động hóa các quy trình trong K86 Pro nhằm giảm thao tác thủ công và tăng hiệu quả vận hành.
+Automation Engine là trung tâm điều phối và tự động hóa các quy trình trong K86 Pro.
+
+Engine này chịu trách nhiệm lập lịch, kích hoạt workflow, xử lý tác vụ nền và phối hợp giữa các Engine nhằm giảm thao tác thủ công, tăng hiệu quả vận hành và đảm bảo hệ thống hoạt động ổn định.
 
 ---
 
-# Chức năng
+# Trách nhiệm
 
 - Tự động tạo tác vụ.
 - Lập lịch công việc.
@@ -20,70 +22,181 @@ Automation Engine chịu trách nhiệm tự động hóa các quy trình trong 
 - Gửi thông báo.
 - Đồng bộ dữ liệu.
 - Xử lý tác vụ nền.
+- Quản lý hàng đợi tác vụ.
+- Theo dõi trạng thái Workflow.
+- Ghi nhật ký thực thi.
+- Hỗ trợ AI Automation.
 
 ---
 
-# Đầu vào
+# Module
+
+Automation Engine gồm:
+
+- Task Manager
+- Scheduler Manager
+- Workflow Manager
+- Event Manager
+- Queue Manager
+- Notification Manager
+- Background Worker
+- Automation Logger
+- Automation API
+- Trigger Manager
+
+---
+
+# Dữ liệu quản lý
+
+- Task
+- Workflow
+- Event
+- Schedule
+- Queue
+- Notification
+- Job Status
+- Execution History
+- Automation Configuration
+
+---
+
+# Input
+
+Automation Engine nhận dữ liệu từ:
 
 - Người dùng.
 - AI Engine.
 - Product Engine.
-- WordPress Hook.
-- API.
+- Analytics Engine.
+- Foundation Engine.
+- WordPress Hooks.
+- OpenAPI Engine.
 
 ---
 
-# Đầu ra
+# Output
+
+Automation Engine cung cấp dữ liệu cho:
 
 - Workflow.
 - Thông báo.
 - Đồng bộ dữ liệu.
 - Nhật ký tác vụ.
+- Dashboard.
+- OpenAPI Engine.
 
 ---
 
-# Kết nối
+# Dependencies
 
-Automation Engine làm việc với:
+## Requires
 
 - Foundation Engine
 - AI Engine
-- Product Engine
 - Analytics Engine
-- OpenAPI Engine
+
+## Uses
+
+- Database
+- Settings
+- Hooks
+- Logger
+- REST API
+
+## Provides
+
+- Task Scheduler
+- Workflow Automation
+- Event Trigger
+- Background Processing
+- Notification Service
 
 ---
 
-# Nguyên tắc
+# Quan hệ
 
-- Không chặn hiệu năng.
-- Có thể chạy nền.
-- Có thể mở rộng.
-- Có cơ chế ghi log.
-- Có thể lập lịch.
+Foundation Engine
+
+↓
+
+Shopping Assistant Engine
+
+↓
+
+Product Engine
+
+↓
+
+Knowledge Engine
+
+↓
+
+AI Engine
+
+↓
+
+Engagement Engine
+
+↓
+
+Affiliate Engine
+
+↓
+
+Analytics Engine
+
+↓
+
+Automation Engine
+
+↓
+
+OpenAPI Engine
+
+---
+
+# Quy tắc
+
+- Không làm giảm hiệu năng hệ thống.
+- Hỗ trợ xử lý nền.
+- Có khả năng mở rộng.
+- Ghi đầy đủ nhật ký thực thi.
+- Hỗ trợ lập lịch linh hoạt.
+- Không chứa Business Logic của Engine khác.
 
 ---
 
 # Roadmap
 
-Version 1.5
+## Version 1.5
 
 - Task Scheduler.
+- Background Worker.
+- Queue Manager.
 
-Version 1.6
+## Version 1.6
 
 - Workflow Builder.
+- Notification Manager.
+- Automation Dashboard.
 
-Version 1.7
+## Version 1.7
 
 - Event Trigger.
+- Rule Engine.
+- Smart Workflow.
 
-Version 2.0
+## Version 2.0
 
 - AI Automation.
+- Intelligent Workflow.
+- Self-Healing Task.
+- Autonomous Process Management.
 
 ---
 
 # Kết luận
 
 Automation Engine là trung tâm điều phối các quy trình tự động của K86 Pro.
+
+Engine này phối hợp với Foundation Engine, AI Engine, Analytics Engine và các Engine khác để tự động hóa tác vụ, lập lịch, xử lý nền và điều phối Workflow, giúp hệ thống vận hành ổn định, linh hoạt và sẵn sàng mở rộng trong tương lai.
