@@ -30,6 +30,7 @@ function k86_get_assets_config() {
 	);
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | CSS Loader
@@ -77,6 +78,7 @@ add_action(
 	'k86_enqueue_styles',
 	20
 );
+
 /*
 |--------------------------------------------------------------------------
 | JavaScript Loader
@@ -119,12 +121,80 @@ add_action(
 	'wp_enqueue_scripts',
 	'k86_register_scripts'
 );
+/*
+|--------------------------------------------------------------------------
+| Module Asset Registry API
+|--------------------------------------------------------------------------
+*/
 
+/**
+ * Danh sách Assets của các Module.
+ *
+ * @return array
+ */
+function k86_get_module_assets() {
+
+	$modules = array();
+
+	return apply_filters(
+		'k86_module_assets',
+		$modules
+	);
+
+}
+
+/**
+ * Đăng ký Assets của từng Module.
+ *
+ * @return void
+ */
+function k86_register_module_assets() {
+
+	$config = k86_get_assets_config();
+
+	foreach ( k86_get_module_assets() as $module => $assets ) {
+
+		if ( ! empty( $assets['css'] ) ) {
+
+			wp_register_style(
+				'k86-' . $module,
+				$config['url'] . 'css/' . ltrim( $assets['css'], '/' ),
+				array( 'k86-pro' ),
+				$config['version']
+			);
+
+		}
+
+		if ( ! empty( $assets['js'] ) ) {
+
+			wp_register_script(
+				'k86-' . $module,
+				$config['url'] . 'js/' . ltrim( $assets['js'], '/' ),
+				array(
+					'jquery',
+					'k86-pro',
+				),
+				$config['version'],
+				true
+			);
+
+		}
+
+	}
+
+}
+
+add_action(
+	'wp_enqueue_scripts',
+	'k86_register_module_assets',
+	15
+);
 add_action(
 	'wp_enqueue_scripts',
 	'k86_enqueue_scripts',
 	20
 );
+
 /*
 |--------------------------------------------------------------------------
 | Asset Helper API
@@ -168,7 +238,7 @@ function k86_get_images_url() {
  * Lấy URL một Asset.
  *
  * @param string $file Tên file.
- * @param string $type Loại asset (css|js|images).
+ * @param string $type Loại asset.
  * @return string
  */
 function k86_get_asset_url( $file, $type = 'images' ) {
@@ -187,6 +257,7 @@ function k86_get_asset_url( $file, $type = 'images' ) {
 	}
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Asset Condition API
@@ -194,7 +265,7 @@ function k86_get_asset_url( $file, $type = 'images' ) {
 */
 
 /**
- * Kiểm tra có nên tải Assets ở Frontend.
+ * Kiểm tra có nên tải Assets.
  *
  * @return bool
  */
@@ -212,7 +283,7 @@ function k86_should_load_assets() {
 }
 
 /**
- * Kiểm tra có nên tải Assets trong Admin.
+ * Kiểm tra có nên tải Assets Admin.
  *
  * @return bool
  */
@@ -226,7 +297,7 @@ function k86_should_load_admin_assets() {
 }
 
 /**
- * Kiểm tra Assets của Plugin đã sẵn sàng.
+ * Assets đã sẵn sàng.
  *
  * @return bool
  */
@@ -237,35 +308,29 @@ function k86_assets_ready() {
 	) > 0;
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Asset Hook API
 |--------------------------------------------------------------------------
 */
 
-/**
- * Thông báo trước khi tải Assets.
- */
 function k86_before_enqueue_assets() {
 
-	do_action( 'k86_before_enqueue_assets' );
+	do_action(
+		'k86_before_enqueue_assets'
+	);
 
 }
 
-/**
- * Thông báo sau khi tải Assets.
- */
 function k86_after_enqueue_assets() {
 
-	do_action( 'k86_after_enqueue_assets' );
+	do_action(
+		'k86_after_enqueue_assets'
+	);
 
 }
 
-/**
- * Nạp Assets thông qua Hook.
- *
- * @return void
- */
 function k86_enqueue_all_assets() {
 
 	if ( ! k86_should_load_assets() ) {
@@ -281,39 +346,25 @@ function k86_enqueue_all_assets() {
 	k86_after_enqueue_assets();
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Assets Framework API
 |--------------------------------------------------------------------------
 */
 
-/**
- * Lấy phiên bản Assets.
- *
- * @return string
- */
 function k86_assets_version() {
 
 	return K86_PRO_VERSION;
 
 }
 
-/**
- * Lấy URL Assets.
- *
- * @return string
- */
 function k86_assets_url() {
 
 	return K86_PRO_URL . 'assets/';
 
 }
 
-/**
- * Kiểm tra Assets Manager đã sẵn sàng.
- *
- * @return bool
- */
 function k86_is_assets_ready() {
 
 	return did_action(
@@ -322,23 +373,16 @@ function k86_is_assets_ready() {
 
 }
 
-/**
- * Thông báo Assets Manager đã sẵn sàng.
- */
 do_action(
 	'k86_assets_manager_ready'
 );
+
 /*
 |--------------------------------------------------------------------------
 | Assets Final API
 |--------------------------------------------------------------------------
 */
 
-/**
- * Khởi tạo Assets Manager.
- *
- * @return void
- */
 function k86_init_assets() {
 
 	if ( ! k86_should_load_assets() ) {
@@ -349,7 +393,6 @@ function k86_init_assets() {
 
 }
 
-/**
- * Framework Assets đã khởi tạo hoàn tất.
- */
-do_action( 'k86_assets_ready' );
+do_action(
+	'k86_assets_ready'
+);
