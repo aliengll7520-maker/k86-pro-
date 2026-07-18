@@ -259,6 +259,41 @@ templates/product-box-classic.php
 ## Trạng thái
 
 🟢 Stable
+---
+
+# Affiliate Engine
+
+## Vai trò
+
+Quản lý toàn bộ chức năng Affiliate và hiển thị nút mua.
+
+## File chính
+
+modules/affiliate-box.php
+
+## Phụ thuộc
+
+- Product Engine
+- Settings Engine
+
+## Được sử dụng bởi
+
+- Product Shortcode
+- Product Template
+
+## Hook
+
+Chưa có Hook độc lập.
+
+## Trạng thái
+
+🟢 Stable
+
+## Ghi chú
+
+Affiliate Engine không truy cập Database trực tiếp.
+
+Mọi dữ liệu sản phẩm đều được Product Engine truyền vào.
 
 ## Ghi chú
 Settings Engine chỉ quản lý cấu hình.
