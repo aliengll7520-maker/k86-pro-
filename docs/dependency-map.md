@@ -38,3 +38,46 @@ Tài liệu này dùng để:
 | Backup Engine | 🟢 |
 | Import Engine | 🟢 |
 | Export Engine | 🟢 |
+---
+
+# Core Engine
+
+## Vai trò
+
+Core Engine là trung tâm của K86 Pro.
+
+Nhiệm vụ:
+
+- Khởi động Plugin
+- Nạp các Engine khác
+- Khởi tạo hệ thống
+
+## File chính
+
+k86-pro.php
+
+core/bootstrap.php
+
+core/loader.php
+
+core/version.php
+
+## Engine phụ thuộc
+
+Không có
+
+## Engine được Core nạp
+
+- Database Engine
+- Logger Engine
+- Cache Engine
+- Security Engine
+- Dashboard Engine
+- REST API Engine
+- Backup Engine
+- Import Engine
+- Export Engine
+
+## Trạng thái
+
+🟢 Stable
