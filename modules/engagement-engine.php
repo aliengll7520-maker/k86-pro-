@@ -454,5 +454,42 @@ function k86_render_post_engagement() {
 	return k86_render_engagement();
 
 }
+/*
+|--------------------------------------------------------------------------
+| Assets
+|--------------------------------------------------------------------------
+*/
 
+function k86_engagement_enqueue_assets() {
+
+	wp_enqueue_style(
+		'k86-engagement',
+		K86_PRO_URL . 'assets/css/engagement.css',
+		array(),
+		K86_PRO_VERSION
+	);
+
+	wp_enqueue_script(
+		'k86-engagement',
+		K86_PRO_URL . 'assets/js/engagement.js',
+		array( 'jquery' ),
+		K86_PRO_VERSION,
+		true
+	);
+
+	wp_localize_script(
+		'k86-engagement',
+		'k86_ajax',
+		array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'nonce'    => wp_create_nonce( 'k86_engagement_nonce' ),
+		)
+	);
+
+}
+
+add_action(
+	'wp_enqueue_scripts',
+	'k86_engagement_enqueue_assets'
+);
 do_action( 'k86_engagement_engine_ready' );
