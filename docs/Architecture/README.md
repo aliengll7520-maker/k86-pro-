@@ -4,56 +4,48 @@ Version: 1.0.0
 
 Status: Development
 
----
+## Mục đích
 
-# Giới thiệu
+Thư mục này mô tả toàn bộ kiến trúc của K86 Pro theo mô hình Engine.
 
-Architecture là tài liệu mô tả toàn bộ kiến trúc của nền tảng K86 Pro.
-
-Mỗi Engine trong hệ thống đều có tài liệu riêng, mô tả nhiệm vụ, đầu vào, đầu ra và mối quan hệ với các Engine khác.
+Mỗi Engine có một tài liệu riêng, chịu trách nhiệm cho một nhóm chức năng cụ thể.
 
 ---
 
-# Kiến trúc tổng thể
+# Core
 
-K86 Pro Platform
-│
-├── Foundation Engine
-├── Shopping Assistant Engine
-├── Product Engine
-├── Knowledge Engine
-├── AI Engine
-├── Affiliate Engine
-├── Automation Engine
-├── Analytics Engine
-└── OpenAPI Engine
-
----
-
-# Nguyên tắc
-
-- Mỗi Engine chỉ đảm nhiệm một vai trò chính.
-- Các Engine giao tiếp thông qua API hoặc Service.
-- Không phụ thuộc vòng tròn giữa các Engine.
-- Có thể phát triển độc lập.
-- Có thể mở rộng trong tương lai.
-
----
-
-# Danh sách tài liệu
-
+- 00-K86-Family-Tree.md
+- Foundation-Structure.md
 - Foundation-Engine.md
+
+---
+
+# Business Engines
+
 - Shopping-Assistant-Engine.md
 - Product-Engine.md
+- Engagement-Engine.md
+- Affiliate-Engine.md
+
+---
+
+# AI Engines
+
 - Knowledge-Engine.md
 - AI-Engine.md
-- Affiliate-Engine.md
-- Automation-Engine.md
-- Analytics-Engine.md
 - OpenAPI-Engine.md
 
 ---
 
-# Mục tiêu
+# Future Engines
 
-Xây dựng K86 Pro thành nền tảng Trợ lý Mua sắm AI với kiến trúc rõ ràng, dễ mở rộng, dễ bảo trì và phát triển lâu dài.
+- Analytics-Engine.md
+- Automation-Engine.md
+
+---
+
+## Quy tắc
+
+- Không thêm Engine mới khi chưa cập nhật tài liệu.
+- Mỗi Engine phải có tài liệu riêng.
+- Mọi thay đổi kiến trúc phải cập nhật tại thư mục này.
