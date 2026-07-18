@@ -3,8 +3,9 @@
  * --------------------------------------------------------
  * K86 Pro
  * Module: Engagement Engine
- * Version: 1.6.0
+ * Version: 2.0.0
  * Status: Development
+ * Priority: #1
  * --------------------------------------------------------
  */
 
@@ -19,9 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 
 /**
- * Kiểm tra chức năng Engagement có bật hay không.
- *
- * @return bool
+ * Kiểm tra chức năng Engagement.
  */
 function k86_engagement_enabled() {
 
@@ -32,9 +31,7 @@ function k86_engagement_enabled() {
 }
 
 /**
- * Kiểm tra hiển thị nút Like.
- *
- * @return bool
+ * Hiển thị Reaction.
  */
 function k86_show_like_button() {
 
@@ -45,9 +42,7 @@ function k86_show_like_button() {
 }
 
 /**
- * Kiểm tra hiển thị nút Share.
- *
- * @return bool
+ * Hiển thị Share.
  */
 function k86_show_share_button() {
 
@@ -56,6 +51,22 @@ function k86_show_share_button() {
 	return ! empty( $settings['show_share'] );
 
 }
+
+/**
+ * Hiển thị Copy Link.
+ */
+function k86_show_copy_button() {
+
+	$settings = k86_get_settings();
+
+	if ( isset( $settings['show_copy_link'] ) ) {
+		return ! empty( $settings['show_copy_link'] );
+	}
+
+	return true;
+
+}
+
 /*
 |--------------------------------------------------------------------------
 | Reaction API
@@ -63,18 +74,42 @@ function k86_show_share_button() {
 */
 
 /**
- * Danh sách các loại tương tác.
- *
- * @return array
+ * Danh sách Reaction.
  */
 function k86_get_reactions() {
 
 	$reactions = array(
-		'like'     => '👍 Hữu ích',
-		'love'     => '❤️ Yêu thích',
-		'thanks'   => '👏 Cảm ơn',
-		'wow'      => '🔥 Quá hay',
-		'dislike'  => '👎 Không thích',
+
+		'like' => array(
+			'icon'  => '👍',
+			'label' => 'Hữu ích',
+		),
+
+		'heart' => array(
+			'icon'  => '❤️',
+			'label' => 'Tim',
+		),
+
+		'haha' => array(
+			'icon'  => '😂',
+			'label' => 'Haha',
+		),
+
+		'wow' => array(
+			'icon'  => '😮',
+			'label' => 'Wow',
+		),
+
+		'sad' => array(
+			'icon'  => '😢',
+			'label' => 'Buồn',
+		),
+
+		'angry' => array(
+			'icon'  => '😡',
+			'label' => 'Không thích',
+		),
+
 	);
 
 	return apply_filters(
@@ -85,54 +120,44 @@ function k86_get_reactions() {
 }
 
 /**
- * Kiểm tra Reaction có hợp lệ.
- *
- * @param string $reaction
- * @return bool
+ * Kiểm tra Reaction.
  */
 function k86_is_valid_reaction( $reaction ) {
 
-	return array_key_exists(
-		$reaction,
-		k86_get_reactions()
+	return isset(
+		k86_get_reactions()[ $reaction ]
 	);
 
 }
 
 /**
- * Lấy tên hiển thị của Reaction.
- *
- * @param string $reaction
- * @return string
+ * Lấy thông tin Reaction.
  */
-function k86_get_reaction_label( $reaction ) {
+function k86_get_reaction( $reaction ) {
 
 	$reactions = k86_get_reactions();
 
-	return isset( $reactions[ $reaction ] )
-		? $reactions[ $reaction ]
-		: '';
+	if ( isset( $reactions[ $reaction ] ) ) {
+		return $reactions[ $reaction ];
+	}
+
+	return array();
 
 }
+
 /*
 |--------------------------------------------------------------------------
-| Reaction Button Renderer
+| Reaction Renderer
 |--------------------------------------------------------------------------
 */
 
-/**
- * Tạo một nút Reaction.
- *
- * @param string $reaction
- * @return string
- */
 function k86_render_reaction_button( $reaction ) {
 
 	if ( ! k86_is_valid_reaction( $reaction ) ) {
 		return '';
 	}
 
-	$label = k86_get_reaction_label( $reaction );
+	$item = k86_get_reaction( $reaction );
 
 	ob_start();
 	?>
@@ -142,7 +167,13 @@ function k86_render_reaction_button( $reaction ) {
 		class="k86-reaction-button k86-reaction-<?php echo esc_attr( $reaction ); ?>"
 		data-reaction="<?php echo esc_attr( $reaction ); ?>">
 
-		<?php echo esc_html( $label ); ?>
+		<span class="k86-reaction-icon">
+			<?php echo esc_html( $item['icon'] ); ?>
+		</span>
+
+		<span class="k86-reaction-label">
+			<?php echo esc_html( $item['label'] ); ?>
+		</span>
 
 	</button>
 
@@ -152,16 +183,11 @@ function k86_render_reaction_button( $reaction ) {
 
 }
 
-/**
- * Hiển thị toàn bộ nhóm Reaction.
- *
- * @return string
- */
 function k86_render_reaction_buttons() {
 
 	$html = '';
 
-	foreach ( k86_get_reactions() as $reaction => $label ) {
+	foreach ( k86_get_reactions() as $reaction => $data ) {
 		$html .= k86_render_reaction_button( $reaction );
 	}
 
@@ -183,25 +209,24 @@ function k86_render_reaction_buttons() {
 	return ob_get_clean();
 
 }
+
 /*
 |--------------------------------------------------------------------------
-| Share Engine
+| Share Manager
 |--------------------------------------------------------------------------
 */
 
-/**
- * Danh sách nền tảng chia sẻ.
- *
- * @return array
- */
 function k86_get_share_platforms() {
 
 	$platforms = array(
-		'facebook' => 'Facebook',
-		'zalo'     => 'Zalo',
-		'x'        => 'X',
-		'telegram' => 'Telegram',
-		'copy'     => 'Copy Link',
+
+		'facebook'  => 'Facebook',
+		'zalo'      => 'Zalo',
+		'x'         => 'X',
+		'telegram'  => 'Telegram',
+		'messenger' => 'Messenger',
+		'email'     => 'Email',
+
 	);
 
 	return apply_filters(
@@ -210,6 +235,11 @@ function k86_get_share_platforms() {
 	);
 
 }
+/*
+|--------------------------------------------------------------------------
+| Share Button Renderer
+|--------------------------------------------------------------------------
+*/
 
 /**
  * Tạo một nút Share.
@@ -242,14 +272,9 @@ function k86_render_share_button( $platform ) {
 	return ob_get_clean();
 
 }
-/*
-|--------------------------------------------------------------------------
-| Share Group Renderer
-|--------------------------------------------------------------------------
-*/
 
 /**
- * Hiển thị toàn bộ nhóm nút chia sẻ.
+ * Hiển thị toàn bộ nhóm Share.
  *
  * @return string
  */
@@ -258,11 +283,7 @@ function k86_render_share_buttons() {
 	$html = '';
 
 	foreach ( k86_get_share_platforms() as $platform => $label ) {
-
-		$html .= k86_render_share_button(
-			$platform
-		);
-
+		$html .= k86_render_share_button( $platform );
 	}
 
 	if ( empty( $html ) ) {
@@ -284,43 +305,81 @@ function k86_render_share_buttons() {
 
 }
 
-/**
- * Kiểm tra có nút Share hay không.
- *
- * @return bool
- */
-function k86_has_share_buttons() {
+/*
+|--------------------------------------------------------------------------
+| Copy Link Manager
+|--------------------------------------------------------------------------
+*/
 
-	return ! empty(
-		k86_get_share_platforms()
+/**
+ * Hiển thị nút Copy Link.
+ *
+ * @return string
+ */
+function k86_render_copy_button() {
+
+	if ( ! k86_show_copy_button() ) {
+		return '';
+	}
+
+	ob_start();
+	?>
+
+	<button
+		type="button"
+		class="k86-copy-button"
+		data-action="copy-link">
+
+		📋 <?php esc_html_e( 'Copy Link', 'k86-pro' ); ?>
+
+	</button>
+
+	<?php
+
+	return ob_get_clean();
+
+}
+
+/*
+|--------------------------------------------------------------------------
+| Statistics API
+|--------------------------------------------------------------------------
+*/
+
+/**
+ * Giá trị thống kê mặc định.
+ *
+ * @return array
+ */
+function k86_get_engagement_statistics() {
+
+	return apply_filters(
+		'k86_engagement_statistics',
+		array(
+			'reactions' => 0,
+			'shares'    => 0,
+			'copies'    => 0,
+		)
 	);
 
 }
+
 /*
 |--------------------------------------------------------------------------
 | Engagement Output API
 |--------------------------------------------------------------------------
 */
 
-/**
- * Kiểm tra có hiển thị Engagement hay không.
- *
- * @return bool
- */
 function k86_has_engagement() {
 
 	return (
 		k86_show_like_button() ||
-		k86_show_share_button()
+		k86_show_share_button() ||
+		k86_show_copy_button()
 	);
 
 }
 
-/**
- * Hiển thị toàn bộ khu vực Engagement.
- *
- * @return string
- */
 function k86_engagement_output() {
 
 	if ( ! k86_engagement_enabled() ) {
@@ -328,6 +387,7 @@ function k86_engagement_output() {
 	}
 
 	ob_start();
+
 	?>
 
 	<div class="k86-engagement">
@@ -342,6 +402,8 @@ function k86_engagement_output() {
 			echo k86_render_share_buttons();
 		}
 
+		echo k86_render_copy_button();
+
 		?>
 
 	</div>
@@ -351,27 +413,15 @@ function k86_engagement_output() {
 	return ob_get_clean();
 
 }
+
 /*
 |--------------------------------------------------------------------------
-| Engagement Framework Hooks
+| Hooks
 |--------------------------------------------------------------------------
-|
-| Các module khác nên Hook vào Engagement Engine thay vì
-| sửa trực tiếp Core.
-|
 */
 
-/**
- * Thông báo Engagement Engine đã sẵn sàng.
- */
 do_action( 'k86_engagement_engine_loaded' );
 
-/**
- * Filter HTML của khu vực Engagement.
- *
- * @param string $html
- * @return string
- */
 function k86_engagement_filter( $html ) {
 
 	return apply_filters(
@@ -381,11 +431,6 @@ function k86_engagement_filter( $html ) {
 
 }
 
-/**
- * Hiển thị Engagement sau khi áp dụng Filter.
- *
- * @return string
- */
 function k86_render_engagement() {
 
 	return k86_engagement_filter(
@@ -393,17 +438,13 @@ function k86_render_engagement() {
 	);
 
 }
+
 /*
 |--------------------------------------------------------------------------
-| Engagement Final API
+| Final API
 |--------------------------------------------------------------------------
 */
 
-/**
- * Hiển thị Engagement cuối cùng.
- *
- * @return string
- */
 function k86_render_post_engagement() {
 
 	if ( ! k86_has_engagement() ) {
@@ -414,7 +455,4 @@ function k86_render_post_engagement() {
 
 }
 
-/**
- * Thông báo Engagement Engine khởi tạo hoàn tất.
- */
 do_action( 'k86_engagement_engine_ready' );
