@@ -79,5 +79,48 @@ Không có
 - Export Engine
 
 ## Trạng thái
+---
+
+# Database Engine
+
+## Vai trò
+
+Database Engine chịu trách nhiệm quản lý toàn bộ dữ liệu của K86 Pro.
+
+Nhiệm vụ:
+
+- Tạo bảng dữ liệu khi kích hoạt plugin.
+- Nâng cấp cấu trúc cơ sở dữ liệu.
+- Quản lý phiên bản Database.
+- Cung cấp nền tảng lưu trữ cho các Engine khác.
+
+## File chính
+
+core/database/loader.php
+
+core/database/install.php
+
+core/database/upgrade.php
+
+## Phụ thuộc
+
+Core Engine
+
+## Các Engine sử dụng Database
+
+- Product Engine
+- Settings Engine
+- Dashboard Engine
+- Logger Engine
+- Statistics Engine
+
+## Trạng thái
+
+🟢 Stable
+
+## Ghi chú
+
+Mọi Engine cần lưu dữ liệu đều phải sử dụng Database Engine.
+Không được tạo bảng dữ liệu trực tiếp bên ngoài Database Engine.
 
 🟢 Stable
