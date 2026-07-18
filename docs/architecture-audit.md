@@ -143,15 +143,24 @@ Tài liệu này dùng để:
 
 ### Checklist
 
-- [ ] Shortcode hoạt động.
-- [ ] Callback shortcode tồn tại.
+- [x] Đã kiểm tra shortcode được đăng ký.
+- [x] Đã kiểm tra callback của shortcode.
+- [ ] Không phát hiện shortcode bị trùng.
+- [x] Callback của shortcode tồn tại.
+
+### Audit Result
+
+| Shortcode | Status | Ghi chú |
+|-----------|--------|----------|
+| k86_box | 🟡 Review | Phát hiện đăng ký ở 2 file, cần xác minh chỉ còn một nơi đăng ký chính thức. |
 
 ### Kết luận
 
-**Kết quả:** ⏳ In Review
+- Callback của shortcode tồn tại.
+- Phát hiện khả năng đăng ký trùng shortcode `k86_box`.
+- Cần xác định file nào sẽ là nơi đăng ký chính thức và loại bỏ đăng ký còn lại nếu đúng là trùng.
 
----
-
+**Kết quả:** 🟡 PASS WITH REVIEW
 ## 6. REST API Audit
 
 ### Checklist
