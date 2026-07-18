@@ -211,8 +211,55 @@ settings/settings.php
 ## Trạng thái
 
 🟢 Stable
+---
+
+# Product Engine
+
+## Vai trò
+
+Quản lý toàn bộ dữ liệu sản phẩm và hiển thị Product Box.
+
+## File chính
+
+modules/product-manager.php
+
+modules/product-add.php
+
+modules/product-edit.php
+
+modules/product-save.php
+
+modules/product-delete.php
+
+modules/product-shortcode.php
+
+## Template
+
+templates/product-box.php
+
+templates/product-box-classic.php
+
+## Phụ thuộc
+
+- Core Engine
+- Admin Engine
+- Database Engine
+- Settings Engine
+
+## Hook
+
+- admin_post_k86_save_product
+- admin_post_k86_update_product
+- admin_post_k86_delete_product
+
+## Shortcode
+
+- k86_box
+
+## Trạng thái
+
+🟢 Stable
 
 ## Ghi chú
-
 Settings Engine chỉ quản lý cấu hình.
 Không xử lý dữ liệu sản phẩm hoặc logic nghiệp vụ.
