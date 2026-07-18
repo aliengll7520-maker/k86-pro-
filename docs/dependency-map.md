@@ -171,3 +171,48 @@ Mọi Engine cần lưu dữ liệu đều phải sử dụng Database Engine.
 Không được tạo bảng dữ liệu trực tiếp bên ngoài Database Engine.
 
 🟢 Stable
+---
+
+# Settings Engine
+
+## Vai trò
+
+Settings Engine quản lý toàn bộ cấu hình của K86 Pro.
+
+## Nhiệm vụ
+
+- Đăng ký các thiết lập (Settings API).
+- Lưu và đọc cấu hình plugin.
+- Cung cấp cấu hình cho các Engine khác.
+- Kiểm tra và xác thực dữ liệu cấu hình.
+
+## File chính
+
+settings/settings.php
+
+## Phụ thuộc
+
+- Core Engine
+- Admin Engine
+
+## Các Engine sử dụng Settings
+
+- Product Engine
+- Affiliate Engine
+- Dashboard Engine
+- REST API Engine
+- Cache Engine
+- Security Engine
+
+## Hook chính
+
+- admin_init
+
+## Trạng thái
+
+🟢 Stable
+
+## Ghi chú
+
+Settings Engine chỉ quản lý cấu hình.
+Không xử lý dữ liệu sản phẩm hoặc logic nghiệp vụ.
