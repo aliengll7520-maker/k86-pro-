@@ -294,7 +294,40 @@ Chưa có Hook độc lập.
 Affiliate Engine không truy cập Database trực tiếp.
 
 Mọi dữ liệu sản phẩm đều được Product Engine truyền vào.
+---
 
+# Dashboard Engine
+
+## Vai trò
+
+Hiển thị trang tổng quan của K86 Pro.
+
+## File chính
+
+core/dashboard.php
+
+## Phụ thuộc
+
+- Core Engine
+- Logger Engine
+- Statistics Engine
+- Product Engine
+- Settings Engine
+
+## Hook
+
+- admin_menu
+- admin_init
+
+## Trạng thái
+
+🟢 Stable
+
+## Ghi chú
+
+Dashboard Engine chỉ hiển thị dữ liệu.
+
+Không xử lý trực tiếp Database hoặc nghiệp vụ của Product.
 ## Ghi chú
 Settings Engine chỉ quản lý cấu hình.
 Không xử lý dữ liệu sản phẩm hoặc logic nghiệp vụ.
