@@ -119,6 +119,53 @@ Core Engine
 🟢 Stable
 
 ## Ghi chú
+---
+
+# Admin Engine
+
+## Vai trò
+
+Admin Engine quản lý toàn bộ giao diện quản trị của K86 Pro trong WordPress Admin.
+
+## Nhiệm vụ
+
+- Tạo menu K86 Pro.
+- Đăng ký các trang quản trị.
+- Điều hướng giữa các module.
+- Kiểm tra quyền truy cập.
+- Kết nối Dashboard và Settings.
+
+## File chính
+
+admin/admin.php
+
+## Phụ thuộc
+
+- Core Engine
+- Settings Engine
+- Dashboard Engine
+
+## Các Engine sử dụng Admin
+
+- Product Engine
+- Affiliate Engine
+- Backup Engine
+- Import Engine
+- Export Engine
+
+## Hook chính
+
+- admin_menu
+- admin_init
+
+## Trạng thái
+
+🟢 Stable
+
+## Ghi chú
+
+Admin Engine chỉ chịu trách nhiệm giao diện quản trị.
+Không xử lý trực tiếp nghiệp vụ của Product, Database hay Affiliate.
 
 Mọi Engine cần lưu dữ liệu đều phải sử dụng Database Engine.
 Không được tạo bảng dữ liệu trực tiếp bên ngoài Database Engine.
