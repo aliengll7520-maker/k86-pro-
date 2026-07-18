@@ -13,10 +13,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once K86_PRO_PATH . 'business/affiliate/link-manager.php';
+
 /**
- * Đăng ký Shortcode Affiliate Box.
+ * Lưu ý:
+ * Shortcode "k86_box" được đăng ký trong:
+ * modules/product-shortcode.php
+ *
+ * File này chỉ giữ vai trò Wrapper để tương thích
+ * với các phiên bản cũ.
  */
-add_shortcode( 'k86_box', 'k86_affiliate_box' );
 
 /**
  * Hiển thị Affiliate Box.
