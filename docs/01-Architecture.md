@@ -12,30 +12,46 @@ Owner: K86 Pro Team
 
 Tài liệu này mô tả kiến trúc tổng thể của nền tảng K86 Pro.
 
-Mục tiêu là xây dựng K86 Pro trở thành nền tảng Trợ lý Mua sắm AI (AI Shopping Assistant Platform), trong đó mỗi Engine đảm nhiệm một chức năng riêng nhưng hoạt động thống nhất.
+Mục tiêu là xây dựng K86 Pro trở thành một nền tảng **AI Shopping Assistant Platform**, trong đó mỗi Engine đảm nhận một vai trò riêng, hoạt động độc lập nhưng phối hợp thống nhất để tạo thành một hệ sinh thái hoàn chỉnh.
 
 ---
 
 # Kiến trúc tổng thể
 
 ```
-                     K86 Pro Platform
-                            │
-                            ▼
-                    Shopping Assistant
-                     (Trợ lý mua sắm)
-                            │
-        ┌───────────────────┼───────────────────┐
-        ▼                   ▼                   ▼
- Product Engine     Knowledge Engine      AI Engine
-        │                   │                   │
-        └───────────────────┼───────────────────┘
-                            ▼
-                   Affiliate Engine
-                            │
-        ┌───────────────────┼───────────────────┐
-        ▼                   ▼                   ▼
-       Shopee          TikTok Shop          Lazada
+                          K86 Pro Platform
+                                 │
+                                 ▼
+                    Foundation Engine
+                 (Core Infrastructure)
+                                 │
+                                 ▼
+                 Shopping Assistant Engine
+                       (Điều phối trung tâm)
+                                 │
+        ┌────────────────────────┼────────────────────────┐
+        ▼                        ▼                        ▼
+ Product Engine        Knowledge Engine           AI Engine
+        │                        │                        │
+        └────────────────────────┼────────────────────────┘
+                                 ▼
+                     Engagement Engine
+                                 │
+                                 ▼
+                      Affiliate Engine
+                                 │
+                                 ▼
+                      Analytics Engine
+                                 │
+                  ┌──────────────┴──────────────┐
+                  ▼                             ▼
+        Automation Engine              OpenAPI Engine
+                                 │
+                                 ▼
+                Shopee • TikTok Shop • Lazada
+                                 │
+                                 ▼
+                            Người dùng
 ```
 
 ---
@@ -44,7 +60,7 @@ Mục tiêu là xây dựng K86 Pro trở thành nền tảng Trợ lý Mua sắ
 
 ## Foundation Engine
 
-Nền tảng chung của toàn hệ thống.
+Nền tảng kỹ thuật của toàn bộ hệ thống.
 
 Bao gồm:
 
@@ -54,6 +70,9 @@ Bao gồm:
 - Settings
 - Assets
 - Security
+- Logger
+- Installer
+- Upgrader
 
 ---
 
@@ -67,22 +86,24 @@ Nhiệm vụ:
 - Phân tích yêu cầu.
 - Kết hợp dữ liệu từ các Engine.
 - Đưa ra gợi ý mua sắm.
+- Điều hướng người dùng đến sản phẩm phù hợp.
 
 ---
 
 ## Product Engine
 
-Quản lý dữ liệu sản phẩm.
+Quản lý toàn bộ dữ liệu sản phẩm.
 
 Bao gồm:
 
 - Product Manager
 - Product Box
-- Shortcode
-- Danh mục
-- Giá
-- Hình ảnh
-- Thuộc tính
+- Product Shortcode
+- Category Manager
+- Brand Manager
+- Price Manager
+- Image Manager
+- Attribute Manager
 
 ---
 
@@ -114,17 +135,33 @@ Bao gồm:
 
 ---
 
+## Engagement Engine
+
+Quản lý toàn bộ chức năng tương tác.
+
+Bao gồm:
+
+- Reactions
+- Rating
+- Share
+- Copy Link
+- Statistics
+- Display Rules
+
+---
+
 ## Affiliate Engine
 
 Kết nối hệ thống Affiliate.
 
 Bao gồm:
 
-- Shopee
-- TikTok Shop
-- Lazada
+- Shopee Affiliate
+- TikTok Shop Affiliate
+- Lazada Affiliate
+- Merchant Manager
 - Affiliate Tracking
-- Click Analytics
+- Commission Manager
 
 ---
 
@@ -139,6 +176,7 @@ Bao gồm:
 - Conversion
 - CTR
 - Revenue
+- Dashboard
 
 ---
 
@@ -150,9 +188,9 @@ Bao gồm:
 
 - Cron Jobs
 - Đồng bộ dữ liệu
-- Làm mới giá
 - Backup
 - Cache
+- Scheduled Tasks
 
 ---
 
@@ -174,8 +212,10 @@ Bao gồm:
 - Module độc lập.
 - Dễ mở rộng.
 - Dễ bảo trì.
-- Không phụ thuộc lẫn nhau.
+- Không phụ thuộc trực tiếp vào Business Logic của Engine khác.
 - Có thể thay thế từng Engine.
+- Tuân thủ kiến trúc hướng Module.
+- Foundation Engine là nền tảng chung của toàn hệ thống.
 
 ---
 
@@ -185,7 +225,7 @@ Người dùng
 
 ↓
 
-Shopping Assistant
+Shopping Assistant Engine
 
 ↓
 
@@ -201,7 +241,15 @@ AI Engine
 
 ↓
 
+Engagement Engine
+
+↓
+
 Affiliate Engine
+
+↓
+
+Analytics Engine
 
 ↓
 
@@ -221,16 +269,24 @@ Kiến trúc này giúp:
 - Dễ bảo trì.
 - Dễ nâng cấp.
 - Dễ tích hợp AI.
+- Dễ tích hợp nhiều nền tảng Affiliate.
 - Dễ tích hợp nhiều sàn thương mại điện tử.
+- Hỗ trợ phát triển Plugin theo từng Engine độc lập.
 
 ---
 
 # Trạng thái
 
-Version:
+Version: 1.0.0
 
-1.0.0
+Status: Development
 
-Status:
+---
 
-Development
+# Kết luận
+
+K86 Pro được xây dựng theo kiến trúc nhiều Engine độc lập.
+
+Mỗi Engine đảm nhiệm một chức năng riêng nhưng phối hợp chặt chẽ thông qua Foundation Engine và Shopping Assistant Engine để hình thành một hệ sinh thái thống nhất, linh hoạt và dễ mở rộng.
+
+Kiến trúc này là nền tảng cho việc phát triển lâu dài của K86 Pro, cho phép bổ sung tính năng mới, tích hợp AI, mở rộng Affiliate và kết nối các nền tảng bên ngoài mà không làm ảnh hưởng đến các Engine hiện có.
