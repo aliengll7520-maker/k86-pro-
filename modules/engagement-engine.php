@@ -492,4 +492,21 @@ add_action(
 	'wp_enqueue_scripts',
 	'k86_engagement_enqueue_assets'
 );
+/**
+ * Chèn Engagement vào cuối nội dung bài viết.
+ */
+function k86_append_engagement_to_content( $content ) {
+
+	if ( ! is_singular( 'post' ) || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+
+	return $content . k86_render_post_engagement();
+
+}
+
+add_filter(
+	'the_content',
+	'k86_append_engagement_to_content'
+);
 do_action( 'k86_engagement_engine_ready' );
