@@ -54,15 +54,14 @@
 
 				button.addClass('is-active');
 
-				K86Engagement.sendReaction(
-					button
-				);
+				K86Engagement.sendReaction(button);
 
 			}
 		);
 
 	};
-		K86Engagement.sendReaction = function (button) {
+
+	K86Engagement.sendReaction = function (button) {
 
 		const reaction = button.data('reaction');
 
@@ -83,7 +82,7 @@
 				reaction: reaction
 			}
 		)
-		.done(function (response) {
+				.done(function (response) {
 
 			console.log(response);
 
@@ -94,26 +93,27 @@
 				return;
 
 			}
-			
-				if (
-    response.data &&
-    response.data.statistics &&
-    response.data.statistics.reactions
-) {
 
-    $.each(
-        response.data.statistics.reactions,
-        function (key, value) {
+			if (
+				response.data &&
+				response.data.statistics &&
+				response.data.statistics.reactions
+			) {
 
-            $('.k86-reaction-count[data-reaction="' + key + '"]')
-                .text(value);
+				$.each(
+					response.data.statistics.reactions,
+					function (key, value) {
 
-        }
-    );
+						$(
+							'.k86-reaction-count[data-reaction="' +
+							key +
+							'"]'
+						).text(value);
 
-			}
+					}
 				);
 
+			}
 
 		})
 		.fail(function (xhr) {
@@ -131,7 +131,8 @@
 	| Share
 	|--------------------------------------------------------------------------
 	*/
- 	K86Engagement.bindShare = function () {
+
+	K86Engagement.bindShare = function () {
 
 		$(document).on(
 			'click',
@@ -174,8 +175,7 @@
 				);
 
 				break;
-
-			case 'telegram':
+							case 'telegram':
 
 				window.open(
 					'https://t.me/share/url?url=' + url,
@@ -241,7 +241,8 @@
 	| Copy Link
 	|--------------------------------------------------------------------------
 	*/
- 	K86Engagement.bindCopy = function () {
+
+	K86Engagement.bindCopy = function () {
 
 		$(document).on(
 			'click',
@@ -303,3 +304,5 @@
 	});
 
 })(jQuery);
+				
+		
