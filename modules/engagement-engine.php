@@ -165,8 +165,8 @@ function k86_render_reaction_button( $reaction ) {
 	<button
 		type="button"
 		class="k86-reaction-button k86-reaction-<?php echo esc_attr( $reaction ); ?>"
-		data-reaction="<?php echo esc_attr( $reaction ); ?>">
-data-post-id="<?php echo esc_attr( get_the_ID() ); ?>" 
+		data-reaction="<?php echo esc_attr( $reaction ); ?>"
+data-post-id="<?php echo esc_attr( get_the_ID() ); ?>">
 		<span class="k86-reaction-icon">
 			<?php echo esc_html( $item['icon'] ); ?>
 		</span>
