@@ -482,7 +482,7 @@ function k86_engagement_enqueue_assets() {
 		'k86_ajax',
 		array(
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'nonce'    => wp_create_nonce( 'k86_engagement_nonce' ),
+			'nonce' => wp_create_nonce( 'k86_ajax_nonce' ),
 		)
 	);
 
