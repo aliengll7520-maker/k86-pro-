@@ -83,7 +83,6 @@ function k86_register_engagement_ajax() {
 */
 
 function k86_ajax_save_reaction() {
-wp_die( 'K86_REACTION_CALLBACK_OK' );
 	k86_verify_ajax_nonce();
 
 	$post_id = k86_ajax_object_id();
