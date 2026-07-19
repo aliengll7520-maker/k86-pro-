@@ -14,6 +14,12 @@
 
 	K86Engagement.version = '1.0.0';
 
+	/*
+	|--------------------------------------------------------------------------
+	| Initialize
+	|--------------------------------------------------------------------------
+	*/
+
 	K86Engagement.init = function () {
 
 		this.bindReactions();
@@ -43,61 +49,86 @@
 
 				const button = $(this);
 
-				const reaction = button.data('reaction');
-
 				$('.k86-reaction-button')
 					.removeClass('is-active');
 
 				button.addClass('is-active');
 
 				K86Engagement.sendReaction(
-					reaction
+					button
 				);
 
 			}
 		);
 
 	};
+		K86Engagement.sendReaction = function (button) {
 
-	K86Engagement.sendReaction = function (reaction) {
+		const reaction = button.data('reaction');
 
-    K86Engagement.ajax(
-        'k86_save_reaction',
-        {
-            reaction: reaction
-        }
-    )
-    .done(function (response) {
+		const postId = button.data('post-id');
 
-        console.log(response);
+		if (!reaction || !postId) {
 
-        if (response.success) {
+			console.error('K86: Missing reaction or post ID.');
 
-            // Bước tiếp theo sẽ cập nhật số liệu trên giao diện.
+			return;
 
-        } else {
+		}
 
-            alert('Không lưu được Reaction.');
+		K86Engagement.ajax(
+			'k86_save_reaction',
+			{
+				id: postId,
+				reaction: reaction
+			}
+		)
+		.done(function (response) {
 
-        }
+			console.log(response);
 
-    })
-    .fail(function (xhr) {
+			if (!response.success) {
 
-        console.error(xhr);
+				alert('Không lưu được Reaction.');
 
-        alert('Lỗi kết nối tới máy chủ.');
+				return;
 
-    });
+			}
 
-};
-		/*
+			if (
+				response.data &&
+				response.data.reactions
+			) {
+
+				$.each(
+					response.data.reactions,
+					function (key, value) {
+
+						$('.k86-reaction-count[data-reaction="' + key + '"]')
+							.text(value);
+
+					}
+				);
+
+			}
+
+		})
+		.fail(function (xhr) {
+
+			console.error(xhr);
+
+			alert('Lỗi kết nối tới máy chủ.');
+
+		});
+
+	};
+
+	/*
 	|--------------------------------------------------------------------------
 	| Share
 	|--------------------------------------------------------------------------
 	*/
-
-	K86Engagement.bindShare = function () {
+ 	K86Engagement.bindShare = function () {
 
 		$(document).on(
 			'click',
@@ -121,7 +152,7 @@
 			window.location.href
 		);
 
-		switch ( platform ) {
+		switch (platform) {
 
 			case 'facebook':
 
@@ -152,12 +183,10 @@
 
 			default:
 
-				if ( navigator.share ) {
+				if (navigator.share) {
 
 					navigator.share({
-
 						url: window.location.href
-
 					});
 
 				}
@@ -172,12 +201,14 @@
 	|--------------------------------------------------------------------------
 	*/
 
-	K86Engagement.ajax = function ( action, data ) {
+	K86Engagement.ajax = function (action, data) {
 
-		if (
-			typeof k86_ajax === 'undefined'
-		) {
-			return;
+		if (typeof k86_ajax === 'undefined') {
+
+			console.error('K86 AJAX object not found.');
+
+			return $.Deferred().reject().promise();
+
 		}
 
 		return $.ajax({
@@ -186,13 +217,17 @@
 
 			type: 'POST',
 
-			data: $.extend({
+			dataType: 'json',
 
-				action: action,
+			cache: false,
 
-				nonce: k86_ajax.nonce
-
-			}, data )
+			data: $.extend(
+				{
+					action: action,
+					nonce: k86_ajax.nonce
+				},
+				data || {}
+			)
 
 		});
 
@@ -200,25 +235,10 @@
 
 	/*
 	|--------------------------------------------------------------------------
-	| Boot Engine
-	|--------------------------------------------------------------------------
-	*/
-
-	$(function () {
-
-		K86Engagement.init();
-
-	});
-
-})(jQuery);
-
-	/*
-	|--------------------------------------------------------------------------
 	| Copy Link
 	|--------------------------------------------------------------------------
 	*/
-
-	K86Engagement.bindCopy = function () {
+ 	K86Engagement.bindCopy = function () {
 
 		$(document).on(
 			'click',
@@ -266,3 +286,17 @@
 		alert('Đã sao chép liên kết.');
 
 	};
+
+	/*
+	|--------------------------------------------------------------------------
+	| Boot Engine
+	|--------------------------------------------------------------------------
+	*/
+
+	$(function () {
+
+		K86Engagement.init();
+
+	});
+
+})(jQuery);
