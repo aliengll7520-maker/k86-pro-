@@ -61,17 +61,36 @@
 
 	K86Engagement.sendReaction = function (reaction) {
 
-		console.log(
-			'Reaction:',
-			reaction
-		);
+    K86Engagement.ajax(
+        'k86_save_reaction',
+        {
+            reaction: reaction
+        }
+    )
+    .done(function (response) {
 
-		/*
-		 * AJAX sẽ bổ sung
-		 * ở bước includes/ajax.php
-		 */
+        console.log(response);
 
-	};
+        if (response.success) {
+
+            // Bước tiếp theo sẽ cập nhật số liệu trên giao diện.
+
+        } else {
+
+            alert('Không lưu được Reaction.');
+
+        }
+
+    })
+    .fail(function (xhr) {
+
+        console.error(xhr);
+
+        alert('Lỗi kết nối tới máy chủ.');
+
+    });
+
+};
 		/*
 	|--------------------------------------------------------------------------
 	| Share
