@@ -94,23 +94,26 @@
 				return;
 
 			}
+			
+				if (
+    response.data &&
+    response.data.statistics &&
+    response.data.statistics.reactions
+) {
 
-			if (
-				response.data &&
-				response.data.reactions
-			) {
+    $.each(
+        response.data.statistics.reactions,
+        function (key, value) {
 
-				$.each(
-					response.data.reactions,
-					function (key, value) {
+            $('.k86-reaction-count[data-reaction="' + key + '"]')
+                .text(value);
 
-						$('.k86-reaction-count[data-reaction="' + key + '"]')
-							.text(value);
-
-					}
-				);
+        }
+    );
 
 			}
+				);
+
 
 		})
 		.fail(function (xhr) {
