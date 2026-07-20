@@ -89,6 +89,20 @@ if (!class_exists('K86_Loader')) {
             foreach (glob($this->base_path . '/support/*.php') as $file) {
                 $this->require_file($file);
             }
+
+            /*
+             * Render
+             */
+            foreach (glob($this->base_path . '/render/*.php') as $file) {
+                $this->require_file($file);
+            }
+
+            /*
+             * Modules
+             */
+            foreach (glob($this->base_path . '/modules/*.php') as $file) {
+                $this->require_file($file);
+            }
         }
     }
 
