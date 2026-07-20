@@ -103,6 +103,13 @@ if (!class_exists('K86_Loader')) {
             foreach (glob($this->base_path . '/modules/*.php') as $file) {
                 $this->require_file($file);
             }
+
+            /*
+             * Frontend
+             */
+            foreach (glob($this->base_path . '/frontend/*.php') as $file) {
+                $this->require_file($file);
+            }
         }
     }
 
