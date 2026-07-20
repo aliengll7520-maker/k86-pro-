@@ -88,6 +88,13 @@ if (!class_exists('K86_Bootstrap')) {
             });
 
             /*
+             * Event Dispatcher
+             */
+            $container->singleton('event_dispatcher', function () {
+                return new K86_Event_Dispatcher();
+            });
+
+            /*
              * Register engines.
              */
             $manager->register('product', $container->get('product'));
@@ -109,6 +116,7 @@ if (!class_exists('K86_Bootstrap')) {
             $registry->set('health_check', $container->get('health_check'));
             $registry->set('module_registry', $container->get('module_registry'));
             $registry->set('wordpress_hooks', $container->get('wordpress_hooks'));
+            $registry->set('event_dispatcher', $container->get('event_dispatcher'));
         }
     }
 
