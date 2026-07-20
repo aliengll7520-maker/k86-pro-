@@ -1,7 +1,7 @@
 <?php
 /**
  * K86 Pro Next Core
- * Container
+ * Service Container
  *
  * @package K86Pro
  */
@@ -13,51 +13,61 @@ if (!class_exists('K86_Container')) {
     class K86_Container {
 
         /**
-         * Danh sách factory.
+         * Registered services.
          *
          * @var array
          */
         protected $bindings = array();
 
         /**
-         * Danh sách instance.
+         * Shared instances.
          *
          * @var array
          */
         protected $instances = array();
 
         /**
-         * Đăng ký factory.
+         * Register a factory.
          *
          * @param string   $key
          * @param callable $factory
-         * @return $this
          */
         public function bind($key, callable $factory) {
-
             $this->bindings[$key] = $factory;
-
-            return $this;
         }
 
         /**
-         * Đăng ký instance có sẵn.
+         * Register a singleton.
+         *
+         * @param string   $key
+         * @param callable $factory
+         */
+        public function singleton($key, callable $factory) {
+            $this->bindings[$key] = function ($container) use ($key, $factory) {
+
+                if (!isset($this->instances[$key])) {
+                    $this->instances[$key] = $factory($container);
+                }
+
+                return $this->instances[$key];
+            };
+        }
+
+        /**
+         * Register an existing instance.
          *
          * @param string $key
          * @param mixed  $instance
-         * @return $this
          */
         public function instance($key, $instance) {
-
             $this->instances[$key] = $instance;
-
-            return $this;
         }
 
         /**
-         * Lấy đối tượng.
+         * Resolve a service.
          *
          * @param string $key
+         *
          * @return mixed|null
          */
         public function get($key) {
@@ -70,51 +80,49 @@ if (!class_exists('K86_Container')) {
                 return null;
             }
 
-            $this->instances[$key] = call_user_func(
-                $this->bindings[$key],
-                $this
-            );
-
-            return $this->instances[$key];
+            return call_user_func($this->bindings[$key], $this);
         }
 
         /**
-         * Kiểm tra tồn tại.
+         * Check if a service exists.
          *
          * @param string $key
+         *
          * @return bool
          */
         public function has($key) {
-
-            return isset($this->bindings[$key])
-                || isset($this->instances[$key]);
+            return isset($this->bindings[$key]) || isset($this->instances[$key]);
         }
 
         /**
-         * Xóa binding và instance.
+         * Remove a service.
          *
          * @param string $key
-         * @return bool
          */
         public function remove($key) {
-
-            unset($this->bindings[$key]);
-            unset($this->instances[$key]);
-
-            return true;
+            unset($this->bindings[$key], $this->instances[$key]);
         }
 
         /**
-         * Xóa toàn bộ.
-         *
-         * @return $this
+         * Remove all services.
          */
         public function clear() {
-
             $this->bindings = array();
             $this->instances = array();
+        }
 
-            return $this;
+        /**
+         * Get all registered keys.
+         *
+         * @return array
+         */
+        public function keys() {
+            return array_unique(
+                array_merge(
+                    array_keys($this->bindings),
+                    array_keys($this->instances)
+                )
+            );
         }
     }
 
