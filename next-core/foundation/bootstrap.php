@@ -81,6 +81,13 @@ if (!class_exists('K86_Bootstrap')) {
             });
 
             /*
+             * WordPress Compatibility
+             */
+            $container->singleton('wordpress_hooks', function () {
+                return new K86_WordPress_Hooks();
+            });
+
+            /*
              * Register engines.
              */
             $manager->register('product', $container->get('product'));
@@ -101,6 +108,7 @@ if (!class_exists('K86_Bootstrap')) {
             $registry->set('product_service', $container->get('product_service'));
             $registry->set('health_check', $container->get('health_check'));
             $registry->set('module_registry', $container->get('module_registry'));
+            $registry->set('wordpress_hooks', $container->get('wordpress_hooks'));
         }
     }
 
