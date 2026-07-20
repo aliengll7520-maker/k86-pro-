@@ -31,3 +31,49 @@ Base Engine hỗ trợ:
 - Status
 - Version
 - Health Check
+- ## Public API
+
+Mọi Engine kế thừa Base Engine sẽ có các phương thức sau:
+
+register()
+
+boot()
+
+initialize()
+
+shutdown()
+
+enable()
+
+disable()
+
+isEnabled()
+
+getName()
+
+getVersion()
+
+getStatus()
+
+healthCheck()
+
+reset()
+## Engine State
+
+Mỗi Engine có các trạng thái:
+
+- Registered
+- Booting
+- Initialized
+- Ready
+- Disabled
+- Error
+- Shutdown
+- ## Design Principles
+
+- Một Engine chỉ có một nhiệm vụ chính.
+- Không truy cập Database trực tiếp.
+- Không Render HTML.
+- Không phụ thuộc vào Engine khác.
+- Giao tiếp thông qua Service hoặc Event.
+- Có thể bật hoặc tắt độc lập.
