@@ -50,6 +50,8 @@ if ( ! class_exists( 'K86_Layout_Manager' ) ) {
 		 */
 		public function register( $key, $layout ) {
 
+			$this->layouts[ $key ] = $layout;
+
 		}
 
 		/**
@@ -59,6 +61,12 @@ if ( ! class_exists( 'K86_Layout_Manager' ) ) {
 		 * @return array|null
 		 */
 		public function get( $key ) {
+
+			if ( array_key_exists( $key, $this->layouts ) ) {
+				return $this->layouts[ $key ];
+			}
+
+			return null;
 
 		}
 
@@ -70,6 +78,10 @@ if ( ! class_exists( 'K86_Layout_Manager' ) ) {
 		 */
 		public function set_default( $key ) {
 
+			if ( array_key_exists( $key, $this->layouts ) ) {
+				$this->default_layout = $key;
+			}
+
 		}
 
 		/**
@@ -78,6 +90,8 @@ if ( ! class_exists( 'K86_Layout_Manager' ) ) {
 		 * @return string
 		 */
 		public function get_default() {
+
+			return $this->default_layout;
 
 		}
 
