@@ -10,3 +10,20 @@
  */
 
 defined('ABSPATH') || exit;
+
+if ( ! class_exists( 'K86_Error_Handler' ) ) {
+
+	class K86_Error_Handler {
+
+		/**
+		 * Khởi tạo Error Handler.
+		 *
+		 * @return void
+		 */
+		public function init() {
+
+		}
+
+	}
+
+}
