@@ -13,84 +13,88 @@ if (!class_exists('K86_Loader')) {
     class K86_Loader {
 
         /**
-         * Danh sách file cần nạp.
+         * Thư mục gốc của Next Core.
+         *
+         * @var string
+         */
+        protected $base_path;
+
+        /**
+         * Các thư mục cần nạp.
          *
          * @var array
          */
-        protected $files = array();
+        protected $directories = array();
 
         /**
-         * Khởi tạo danh sách file.
+         * Khởi tạo.
          */
         public function __construct() {
 
-            $base = dirname(__DIR__);
+            $this->base_path = dirname(__DIR__);
 
-            $this->files = array(
-
-                // Foundation
-                $base . '/foundation/registry.php',
-                $base . '/foundation/container.php',
-
-                // Data
-                $base . '/data/database.php',
-                $base . '/data/model.php',
-                $base . '/data/repository.php',
-                $base . '/data/options.php',
-                $base . '/data/metadata.php',
-                $base . '/data/cache.php',
-                $base . '/data/migration.php',
-
-                // Engine
-                $base . '/engine/engine-base.php',
-                $base . '/engine/engine-manager.php',
-                $base . '/engine/product-engine.php',
-                $base . '/engine/media-engine.php',
-                $base . '/engine/pricing-engine.php',
-                $base . '/engine/review-engine.php',
-                $base . '/engine/inventory-engine.php',
-                $base . '/engine/voucher-engine.php',
+            $this->directories = array(
+                'foundation',
+                'data',
+                'engine',
             );
         }
 
         /**
-         * Nạp tất cả file.
+         * Nạp toàn bộ class.
          *
          * @return void
          */
         public function load() {
 
-            foreach ($this->files as $file) {
+            foreach ($this->directories as $directory) {
 
-                if (file_exists($file)) {
-                    require_once $file;
+                $path = $this->base_path . '/' . $directory;
+
+                if (!is_dir($path)) {
+                    continue;
+                }
+
+                $files = glob($path . '/*.php');
+
+                if (empty($files)) {
+                    continue;
+                }
+
+                sort($files, SORT_NATURAL);
+
+                foreach ($files as $file) {
+
+                    if (is_file($file)) {
+                        require_once $file;
+                    }
                 }
             }
         }
 
         /**
-         * Thêm file mới.
+         * Thêm thư mục cần nạp.
          *
-         * @param string $file
+         * @param string $directory
          * @return $this
          */
-        public function add($file) {
+        public function add_directory($directory) {
 
-            if (!in_array($file, $this->files, true)) {
-                $this->files[] = $file;
+            if (!in_array($directory, $this->directories, true)) {
+                $this->directories[] = $directory;
             }
 
             return $this;
         }
 
         /**
-         * Lấy danh sách file.
+         * Lấy danh sách thư mục.
          *
          * @return array
          */
-        public function files() {
+        public function directories() {
 
-            return $this->files;
+            return $this->directories;
         }
     }
 
