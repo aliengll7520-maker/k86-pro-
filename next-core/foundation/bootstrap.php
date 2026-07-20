@@ -22,9 +22,9 @@ if (!class_exists('K86_Bootstrap')) {
             $loader->load();
 
             // Core services.
-            $registry = new K86_Registry();
+            $registry  = new K86_Registry();
             $container = new K86_Container();
-            $manager = new K86_Engine_Manager();
+            $manager   = new K86_Engine_Manager();
 
             /*
              * Register services.
@@ -69,6 +69,10 @@ if (!class_exists('K86_Bootstrap')) {
                 return new K86_Product_Service($manager);
             });
 
+            $container->singleton('health_check', function () {
+                return new K86_Health_Check();
+            });
+
             /*
              * Register engines.
              */
@@ -88,6 +92,7 @@ if (!class_exists('K86_Bootstrap')) {
             $registry->set('container', $container);
             $registry->set('engine_manager', $manager);
             $registry->set('product_service', $container->get('product_service'));
+            $registry->set('health_check', $container->get('health_check'));
         }
     }
 
