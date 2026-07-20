@@ -2,52 +2,52 @@
 /**
  * K86 Pro Next Core
  *
- * AI Engine
+ * API Engine
  *
- * Engine quản lý các dịch vụ AI.
+ * Engine quản lý REST API và API nội bộ.
  *
  * @package K86Pro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'K86_AI_Engine' ) ) {
+if ( ! class_exists( 'K86_API_Engine' ) ) {
 
-	class K86_AI_Engine {
+	class K86_API_Engine {
 
 		/**
-		 * Danh sách dịch vụ AI.
+		 * Danh sách API handlers.
 		 *
 		 * @var array
 		 */
-		protected $services = array();
+		protected $handlers = array();
 
 		/**
-		 * Khởi tạo AI Engine.
+		 * Khởi tạo Engine.
 		 *
 		 * @return void
 		 */
 		public function init() {
 
-			$this->services = array();
+			$this->handlers = array();
 
 		}
 
 		/**
-		 * Đăng ký dịch vụ AI.
+		 * Đăng ký handler.
 		 *
 		 * @param string $key
-		 * @param mixed  $service
+		 * @param mixed  $handler
 		 * @return void
 		 */
-		public function register( $key, $service ) {
+		public function register( $key, $handler ) {
 
-			$this->services[ $key ] = $service;
+			$this->handlers[ $key ] = $handler;
 
 		}
 
 		/**
-		 * Lấy dịch vụ AI.
+		 * Lấy handler.
 		 *
 		 * @param string $key
 		 * @param mixed  $default
@@ -55,8 +55,8 @@ if ( ! class_exists( 'K86_AI_Engine' ) ) {
 		 */
 		public function get( $key, $default = null ) {
 
-			if ( array_key_exists( $key, $this->services ) ) {
-				return $this->services[ $key ];
+			if ( array_key_exists( $key, $this->handlers ) ) {
+				return $this->handlers[ $key ];
 			}
 
 			return $default;
