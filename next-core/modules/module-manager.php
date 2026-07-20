@@ -24,9 +24,14 @@ if (!class_exists('K86_Module_Registry')) {
          *
          * @param string $name
          * @param object $module
+         *
+         * @return $this
          */
         public function register($name, $module) {
+
             $this->modules[$name] = $module;
+
+            return $this;
         }
 
         /**
@@ -37,17 +42,19 @@ if (!class_exists('K86_Module_Registry')) {
          * @return object|null
          */
         public function get($name) {
+
             return $this->modules[$name] ?? null;
         }
 
         /**
-         * Check module.
+         * Check module exists.
          *
          * @param string $name
          *
          * @return bool
          */
         public function has($name) {
+
             return isset($this->modules[$name]);
         }
 
@@ -57,23 +64,48 @@ if (!class_exists('K86_Module_Registry')) {
          * @return array
          */
         public function all() {
+
             return $this->modules;
+        }
+
+        /**
+         * Get registered module names.
+         *
+         * @return array
+         */
+        public function names() {
+
+            return array_keys($this->modules);
         }
 
         /**
          * Remove module.
          *
          * @param string $name
+         *
+         * @return bool
          */
         public function remove($name) {
+
+            if (!$this->has($name)) {
+                return false;
+            }
+
             unset($this->modules[$name]);
+
+            return true;
         }
 
         /**
-         * Clear modules.
+         * Clear registry.
+         *
+         * @return $this
          */
         public function clear() {
+
             $this->modules = array();
+
+            return $this;
         }
 
         /**
@@ -82,7 +114,18 @@ if (!class_exists('K86_Module_Registry')) {
          * @return int
          */
         public function count() {
+
             return count($this->modules);
+        }
+
+        /**
+         * Check registry is empty.
+         *
+         * @return bool
+         */
+        public function is_empty() {
+
+            return empty($this->modules);
         }
 
     }
