@@ -75,6 +75,13 @@ if (!class_exists('K86_Loader')) {
 
                 $this->require_file($file);
             }
+
+            /*
+             * Services
+             */
+            foreach (glob($this->base_path . '/services/*.php') as $file) {
+                $this->require_file($file);
+            }
         }
     }
 
