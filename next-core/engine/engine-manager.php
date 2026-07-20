@@ -13,79 +13,87 @@ if (!class_exists('K86_Engine_Manager')) {
     class K86_Engine_Manager {
 
         /**
-         * Danh sách Engine.
+         * Registered engines.
          *
          * @var array
          */
         protected $engines = array();
 
         /**
-         * Đăng ký Engine.
+         * Register an engine.
+         *
+         * @param string $name
+         * @param object $engine
          */
         public function register($name, $engine) {
-
             $this->engines[$name] = $engine;
-
-            return $this;
         }
 
         /**
-         * Lấy Engine.
+         * Get an engine.
+         *
+         * @param string $name
+         *
+         * @return object|null
          */
         public function get($name) {
-
-            return isset($this->engines[$name])
-                ? $this->engines[$name]
-                : null;
+            return $this->engines[$name] ?? null;
         }
 
         /**
-         * Kiểm tra Engine.
+         * Check if an engine exists.
+         *
+         * @param string $name
+         *
+         * @return bool
          */
         public function has($name) {
-
             return isset($this->engines[$name]);
         }
 
         /**
-         * Lấy toàn bộ Engine.
+         * Get all engines.
+         *
+         * @return array
          */
         public function all() {
-
             return $this->engines;
         }
 
         /**
-         * Xóa Engine.
+         * Remove an engine.
+         *
+         * @param string $name
          */
         public function remove($name) {
-
-            if ($this->has($name)) {
-
-                unset($this->engines[$name]);
-
-                return true;
-            }
-
-            return false;
+            unset($this->engines[$name]);
         }
 
         /**
-         * Xóa toàn bộ Engine.
+         * Remove all engines.
          */
         public function clear() {
-
             $this->engines = array();
-
-            return $this;
         }
 
         /**
-         * Đếm số Engine.
+         * Number of registered engines.
+         *
+         * @return int
          */
         public function count() {
-
             return count($this->engines);
+        }
+
+        /**
+         * Initialize all engines that implement init().
+         */
+        public function init() {
+            foreach ($this->engines as $engine) {
+                if (method_exists($engine, 'init')) {
+                    $engine->init();
+                }
+            }
         }
     }
 
