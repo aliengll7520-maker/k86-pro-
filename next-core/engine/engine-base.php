@@ -20,10 +20,102 @@ if (!class_exists('K86_Engine_Base')) {
         protected $items = array();
 
         /**
+         * Tên Engine.
+         *
+         * @var string
+         */
+        protected $name = '';
+
+        /**
+         * Phiên bản Engine.
+         *
+         * @var string
+         */
+        protected $version = '1.0.0';
+
+        /**
+         * Trạng thái Engine.
+         *
+         * @var string
+         */
+        protected $status = 'registered';
+
+        /**
+         * Engine có được bật hay không.
+         *
+         * @var bool
+         */
+        protected $enabled = true;
+
+        /**
          * Khởi tạo Engine.
          */
         public function init() {
             $this->items = array();
+            $this->status = 'initialized';
+        }
+
+        /**
+         * Khởi động Engine.
+         *
+         * @return void
+         */
+        public function boot() {
+            $this->status = 'booted';
+        }
+
+        /**
+         * Bật Engine.
+         *
+         * @return void
+         */
+        public function enable() {
+            $this->enabled = true;
+        }
+
+        /**
+         * Tắt Engine.
+         *
+         * @return void
+         */
+        public function disable() {
+            $this->enabled = false;
+        }
+
+        /**
+         * Kiểm tra Engine có được bật không.
+         *
+         * @return bool
+         */
+        public function is_enabled() {
+            return $this->enabled;
+        }
+
+        /**
+         * Lấy tên Engine.
+         *
+         * @return string
+         */
+        public function get_name() {
+            return $this->name;
+        }
+
+        /**
+         * Lấy phiên bản Engine.
+         *
+         * @return string
+         */
+        public function get_version() {
+            return $this->version;
+        }
+
+        /**
+         * Lấy trạng thái Engine.
+         *
+         * @return string
+         */
+        public function get_status() {
+            return $this->status;
         }
 
         /**
