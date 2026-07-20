@@ -22,6 +22,9 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 		 */
 		public function init() {
 
+			set_error_handler( array( $this, 'handle_error' ) );
+			set_exception_handler( array( $this, 'handle_exception' ) );
+
 		}
 
 		/**
