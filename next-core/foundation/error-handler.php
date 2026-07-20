@@ -24,6 +24,7 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 
 			set_error_handler( array( $this, 'handle_error' ) );
 			set_exception_handler( array( $this, 'handle_exception' ) );
+			register_shutdown_function( array( $this, 'handle_shutdown' ) );
 
 		}
 
@@ -34,6 +35,8 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 		 * @return void
 		 */
 		public function handle_exception( $exception ) {
+
+			$this->write_log( $exception );
 
 		}
 
@@ -48,6 +51,30 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 		 */
 		public function handle_error( $errno, $errstr, $errfile, $errline ) {
 
+			$this->write_log(
+				array(
+					'errno'   => $errno,
+					'message' => $errstr,
+					'file'    => $errfile,
+					'line'    => $errline,
+				)
+			);
+
+		}
+
+		/**
+		 * Xử lý Fatal Error khi PHP shutdown.
+		 *
+		 * @return void
+		 */
+		public function handle_shutdown() {
+
+			$error = error_get_last();
+
+			if ( ! empty( $error ) ) {
+				$this->write_log( $error );
+			}
+
 		}
 
 		/**
@@ -57,6 +84,8 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 		 * @return void
 		 */
 		protected function write_log( $data ) {
+
+			// Sẽ kết nối với Logger ở giai đoạn sau.
 
 		}
 
