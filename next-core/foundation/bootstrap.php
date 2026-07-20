@@ -53,6 +53,18 @@ if (!class_exists('K86_Bootstrap')) {
                 return new K86_Voucher_Engine();
             });
 
+            $container->singleton('shipping', function () {
+                return new K86_Shipping_Engine();
+            });
+
+            $container->singleton('warranty', function () {
+                return new K86_Warranty_Engine();
+            });
+
+            $container->singleton('return_policy', function () {
+                return new K86_Return_Policy_Engine();
+            });
+
             /*
              * Register engines.
              */
@@ -62,6 +74,9 @@ if (!class_exists('K86_Bootstrap')) {
             $manager->register('review', $container->get('review'));
             $manager->register('inventory', $container->get('inventory'));
             $manager->register('voucher', $container->get('voucher'));
+            $manager->register('shipping', $container->get('shipping'));
+            $manager->register('warranty', $container->get('warranty'));
+            $manager->register('return_policy', $container->get('return_policy'));
 
             /*
              * Store services.
