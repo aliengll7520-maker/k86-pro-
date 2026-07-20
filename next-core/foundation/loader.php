@@ -105,6 +105,13 @@ if (!class_exists('K86_Loader')) {
             }
 
             /*
+             * Compatibility
+             */
+            foreach (glob($this->base_path . '/compatibility/*.php') as $file) {
+                $this->require_file($file);
+            }
+
+            /*
              * Frontend
              */
             foreach (glob($this->base_path . '/frontend/*.php') as $file) {
