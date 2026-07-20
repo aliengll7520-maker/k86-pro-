@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'K86_Product_Engine' ) ) {
 
-	class K86_Product_Engine {
+	class K86_Product_Engine extends K86_Engine_Base {
 
 		/**
 		 * Danh sách sản phẩm.
