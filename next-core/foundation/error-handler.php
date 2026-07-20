@@ -1,8 +1,12 @@
 <?php
 /**
- * Error Handler
+ * K86 Pro Next Core
  *
- * Quản lý lỗi của Foundation.
+ * Foundation Error Handler
+ *
+ * Chịu trách nhiệm xử lý lỗi của toàn bộ Framework.
+ *
+ * @package K86Pro
  */
 
 defined('ABSPATH') || exit;
