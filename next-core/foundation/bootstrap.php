@@ -74,6 +74,13 @@ if (!class_exists('K86_Bootstrap')) {
             });
 
             /*
+             * Module Registry
+             */
+            $container->singleton('module_registry', function () {
+                return new K86_Module_Registry();
+            });
+
+            /*
              * Register engines.
              */
             $manager->register('product', $container->get('product'));
@@ -93,6 +100,7 @@ if (!class_exists('K86_Bootstrap')) {
             $registry->set('engine_manager', $manager);
             $registry->set('product_service', $container->get('product_service'));
             $registry->set('health_check', $container->get('health_check'));
+            $registry->set('module_registry', $container->get('module_registry'));
         }
     }
 
