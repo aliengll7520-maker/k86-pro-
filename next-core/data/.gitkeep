@@ -1,0 +1,8 @@
+<?php
+/**
+ * Database
+ *
+ * Quản lý dữ liệu.
+ */
+
+defined('ABSPATH') || exit;
