@@ -14,70 +14,10 @@ if ( ! class_exists( 'K86_Product_Engine' ) ) {
 	class K86_Product_Engine extends K86_Engine_Base {
 
 		/**
-		 * Danh sách sản phẩm.
-		 *
-		 * @var array
-		 */
-		protected $products = array();
-
-		/**
-		 * Khởi tạo.
+		 * Khởi tạo Product Engine.
 		 */
 		public function init() {
-			$this->products = array();
-		}
-
-		/**
-		 * Đăng ký sản phẩm.
-		 */
-		public function register( $key, $product ) {
-			$this->products[ $key ] = $product;
-		}
-
-		/**
-		 * Kiểm tra tồn tại.
-		 */
-		public function has( $key ) {
-			return array_key_exists( $key, $this->products );
-		}
-
-		/**
-		 * Lấy sản phẩm.
-		 */
-		public function get( $key, $default = null ) {
-
-			if ( $this->has( $key ) ) {
-				return $this->products[ $key ];
-			}
-
-			return $default;
-		}
-
-		/**
-		 * Lấy toàn bộ sản phẩm.
-		 */
-		public function all() {
-			return $this->products;
-		}
-
-		/**
-		 * Xóa một sản phẩm.
-		 */
-		public function remove( $key ) {
-
-			if ( $this->has( $key ) ) {
-				unset( $this->products[ $key ] );
-				return true;
-			}
-
-			return false;
-		}
-
-		/**
-		 * Xóa toàn bộ.
-		 */
-		public function clear() {
-			$this->products = array();
+			parent::init();
 		}
 
 		/**
