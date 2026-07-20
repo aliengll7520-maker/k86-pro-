@@ -22,6 +22,9 @@ if ( ! class_exists( 'K86_Logger' ) ) {
 		 */
 		public function init() {
 
+			// Khởi tạo Logger.
+			return;
+
 		}
 
 		/**
@@ -33,14 +36,26 @@ if ( ! class_exists( 'K86_Logger' ) ) {
 		 */
 		public function log( $data, $level = 'info' ) {
 
+			$record = array(
+				'time'  => current_time( 'mysql' ),
+				'level' => $level,
+				'data'  => $data,
+			);
+
+			// Sẽ ghi $record vào hệ thống log ở giai đoạn sau.
+
 		}
 
 		/**
-		 * Xóa log.
+		 * Xóa toàn bộ log.
 		 *
 		 * @return void
 		 */
 		public function clear() {
+
+			// Sẽ xóa log ở giai đoạn sau.
+
+			return;
 
 		}
 
