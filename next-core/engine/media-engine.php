@@ -6,84 +6,109 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Media_Engine')) {
+if ( ! class_exists( 'K86_Media_Engine' ) ) {
 
-    class K86_Media_Engine extends K86_Engine_Base {
+	class K86_Media_Engine extends K86_Engine_Base {
 
-        /**
-         * Thêm media.
-         */
-        public function attach($type, $item) {
+		/**
+		 * Thêm Media.
+		 *
+		 * @param string $type
+		 * @param mixed  $item
+		 * @return $this
+		 */
+		public function attach( $type, $item ) {
 
-            if (!isset($this->items[$type])) {
-                $this->items[$type] = array();
-            }
+			if ( ! isset( $this->items[ $type ] ) ) {
+				$this->items[ $type ] = array();
+			}
 
-            $this->items[$type][] = $item;
+			$this->items[ $type ][] = $item;
 
-            return $this;
-        }
+			return $this;
+		}
 
-        /**
-         * Xóa media.
-         */
-        public function detach($type, $index) {
+		/**
+		 * Xóa Media.
+		 *
+		 * @param string $type
+		 * @param int    $index
+		 * @return bool
+		 */
+		public function detach( $type, $index ) {
 
-            if (isset($this->items[$type][$index])) {
-                unset($this->items[$type][$index]);
-                $this->items[$type] = array_values($this->items[$type]);
-                return true;
-            }
+			if ( isset( $this->items[ $type ][ $index ] ) ) {
 
-            return false;
-        }
+				unset( $this->items[ $type ][ $index ] );
 
-        /**
-         * Lấy thư viện ảnh.
-         */
-        public function gallery() {
-            return $this->get('gallery', array());
-        }
+				$this->items[ $type ] = array_values(
+					$this->items[ $type ]
+				);
 
-        /**
-         * Lấy danh sách video.
-         */
-        public function videos() {
-            return $this->get('videos', array());
-        }
+				return true;
+			}
 
-        /**
-         * Lấy tài liệu.
-         */
-        public function documents() {
-            return $this->get('documents', array());
-        }
+			return false;
+		}
 
-        /**
-         * Lấy audio.
-         */
-        public function audio() {
-            return $this->get('audio', array());
-        }
+		/**
+		 * Lấy thư viện ảnh.
+		 *
+		 * @return array
+		 */
+		public function get_gallery() {
+			return $this->get( 'gallery', array() );
+		}
 
-        /**
-         * Lấy ảnh đại diện.
-         */
-        public function featured() {
-            return $this->get('featured');
-        }
+		/**
+		 * Lấy video.
+		 *
+		 * @return array
+		 */
+		public function get_videos() {
+			return $this->get( 'videos', array() );
+		}
 
-        /**
-         * Đặt ảnh đại diện.
-         */
-        public function set_featured($image) {
+		/**
+		 * Lấy tài liệu.
+		 *
+		 * @return array
+		 */
+		public function get_documents() {
+			return $this->get( 'documents', array() );
+		}
 
-            $this->register('featured', $image);
+		/**
+		 * Lấy audio.
+		 *
+		 * @return array
+		 */
+		public function get_audio() {
+			return $this->get( 'audio', array() );
+		}
 
-            return $this;
-        }
-    }
+		/**
+		 * Lấy ảnh đại diện.
+		 *
+		 * @return mixed
+		 */
+		public function get_featured() {
+			return $this->get( 'featured' );
+		}
 
+		/**
+		 * Đặt ảnh đại diện.
+		 *
+		 * @param mixed $image
+		 * @return $this
+		 */
+		public function set_featured( $image ) {
+
+			$this->register( 'featured', $image );
+
+			return $this;
+		}
+	}
 }
