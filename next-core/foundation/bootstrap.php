@@ -65,6 +65,10 @@ if (!class_exists('K86_Bootstrap')) {
                 return new K86_Return_Policy_Engine();
             });
 
+            $container->singleton('product_service', function () use ($manager) {
+                return new K86_Product_Service($manager);
+            });
+
             /*
              * Register engines.
              */
@@ -83,6 +87,7 @@ if (!class_exists('K86_Bootstrap')) {
              */
             $registry->set('container', $container);
             $registry->set('engine_manager', $manager);
+            $registry->set('product_service', $container->get('product_service'));
         }
     }
 
