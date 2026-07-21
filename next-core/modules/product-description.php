@@ -4,8 +4,6 @@
  *
  * Product Description Module
  *
- * Module hiển thị mô tả sản phẩm.
- *
  * @package K86Pro
  */
 
@@ -16,34 +14,29 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 	class K86_Product_Description_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 60;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
 			$description = '';
 
-			if ( isset( $this->data['description'] ) ) {
-				$description = wp_kses_post( $this->data['description'] );
+			if ( ! empty( $product['description'] ) ) {
+				$description = wp_kses_post( $product['description'] );
 			}
 
 			ob_start();
@@ -51,7 +44,19 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 
 			<div class="k86-product-description">
 
-				<?php echo $description; ?>
+				<?php if ( ! empty( $description ) ) : ?>
+
+					<div class="k86-description-content">
+						<?php echo $description; // Nội dung đã được wp_kses_post() lọc ?>
+					</div>
+
+				<?php else : ?>
+
+					<div class="k86-description-placeholder">
+						No product description.
+					</div>
+
+				<?php endif; ?>
 
 			</div>
 
