@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Comparison Table Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Comparison_Table_Module' ) ) {
 	class K86_Comparison_Table_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Comparison_Table_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render comparison table.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -53,21 +52,21 @@ if ( ! class_exists( 'K86_Comparison_Table_Module' ) ) {
 
 						<tbody>
 
-						<?php foreach ( $rows as $label => $value ) : ?>
+							<?php foreach ( $rows as $label => $value ) : ?>
 
-							<tr>
+								<tr>
 
-								<th>
-									<?php echo esc_html( $label ); ?>
-								</th>
+									<th scope="row">
+										<?php echo esc_html( $label ); ?>
+									</th>
 
-								<td>
-									<?php echo esc_html( $value ); ?>
-								</td>
+									<td>
+										<?php echo esc_html( $value ); ?>
+									</td>
 
-							</tr>
+								</tr>
 
-						<?php endforeach; ?>
+							<?php endforeach; ?>
 
 						</tbody>
 
@@ -76,7 +75,9 @@ if ( ! class_exists( 'K86_Comparison_Table_Module' ) ) {
 				<?php else : ?>
 
 					<div class="k86-comparison-placeholder">
-						No comparison data.
+
+						<?php esc_html_e( 'Chưa có thông tin so sánh.', 'k86-pro' ); ?>
+
 					</div>
 
 				<?php endif; ?>
