@@ -34,21 +34,31 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		protected $pipeline;
 
 		/**
+		 * Render Manager.
+		 *
+		 * @var K86_Render_Manager|null
+		 */
+		protected $render_manager;
+
+		/**
 		 * Constructor.
 		 *
-		 * @param K86_Product_Service        $service  Product service.
-		 * @param K86_Module_Registry|null   $registry Module registry.
-		 * @param K86_Render_Pipeline|null   $pipeline Render pipeline.
+		 * @param K86_Product_Service      $service        Product service.
+		 * @param K86_Module_Registry|null $registry       Module registry.
+		 * @param K86_Render_Pipeline|null $pipeline       Render pipeline.
+		 * @param K86_Render_Manager|null  $render_manager Render manager.
 		 */
 		public function __construct(
 			K86_Product_Service $service,
 			K86_Module_Registry $registry = null,
-			K86_Render_Pipeline $pipeline = null
+			K86_Render_Pipeline $pipeline = null,
+			K86_Render_Manager $render_manager = null
 		) {
 
-			$this->service  = $service;
-			$this->registry = $registry;
-			$this->pipeline = $pipeline;
+			$this->service        = $service;
+			$this->registry       = $registry;
+			$this->pipeline       = $pipeline;
+			$this->render_manager = $render_manager;
 
 		}
 
@@ -84,8 +94,7 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			if ( ! is_array( $product ) ) {
 				$product = array();
 			}
-
-			/*
+						/*
 			 * Xây dựng Render Pipeline.
 			 */
 			$pipeline = null;
@@ -94,11 +103,29 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 				$this->pipeline instanceof K86_Render_Pipeline &&
 				method_exists( $this->pipeline, 'build' )
 			) {
+
 				$pipeline = $this->pipeline->build();
+
 			}
 
 			/*
-			 * Registry V2 (tương lai).
+			 * Ưu tiên Render Manager (Next Core).
+			 */
+			if ( $this->render_manager instanceof K86_Render_Manager ) {
+
+				$this->render_manager->set_data(
+					array(
+						'product'  => $product,
+						'pipeline' => $pipeline,
+					)
+				);
+
+				return $this->render_manager->render();
+
+			}
+
+			/*
+			 * Registry V2 (tương thích ngược).
 			 */
 			if (
 				$this->registry instanceof K86_Module_Registry &&
@@ -112,9 +139,8 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 				);
 
 			}
-
-			/*
-			 * Registry hiện tại.
+						/*
+			 * Registry hiện tại (tương thích ngược).
 			 */
 			if (
 				$this->registry instanceof K86_Module_Registry &&
@@ -154,8 +180,7 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			<?php
 
 			return ob_get_clean();
-
-		}
+					}
 
 	}
 
