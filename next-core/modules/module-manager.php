@@ -6,172 +6,191 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Module_Registry')) {
+if ( ! class_exists( 'K86_Module_Registry' ) ) {
 
-    class K86_Module_Registry {
+	class K86_Module_Registry {
 
-        /**
-         * Registered modules.
-         *
-         * @var array
-         */
-        protected $modules = array();
+		/**
+		 * Registered modules.
+		 *
+		 * @var array
+		 */
+		protected $modules = array();
 
-        /**
-         * Register a module.
-         *
-         * @param string $name
-         * @param object $module
-         *
-         * @return $this
-         */
-        public function register($name, $module) {
+		/**
+		 * Register a module.
+		 *
+		 * @param string $name   Module name.
+		 * @param object $module Module instance.
+		 *
+		 * @return $this
+		 */
+		public function register( $name, $module ) {
 
-            $this->modules[$name] = $module;
+			$this->modules[ $name ] = $module;
 
-            return $this;
-        }
+			return $this;
 
-        /**
-         * Get module.
-         *
-         * @param string $name
-         *
-         * @return object|null
-         */
-        public function get($name) {
+		}
 
-            return $this->modules[$name] ?? null;
-        }
+		/**
+		 * Get a module.
+		 *
+		 * @param string $name Module name.
+		 *
+		 * @return object|null
+		 */
+		public function get( $name ) {
 
-        /**
-         * Check module exists.
-         *
-         * @param string $name
-         *
-         * @return bool
-         */
-        public function has($name) {
+			return $this->modules[ $name ] ?? null;
 
-            return isset($this->modules[$name]);
-        }
+		}
 
-        /**
-         * Get all modules.
-         *
-         * @return array
-         */
-        public function all() {
+		/**
+		 * Check whether a module exists.
+		 *
+		 * @param string $name Module name.
+		 *
+		 * @return bool
+		 */
+		public function has( $name ) {
 
-            return $this->modules;
-        }
+			return isset( $this->modules[ $name ] );
 
-        /**
-         * Get registered module names.
-         *
-         * @return array
-         */
-        public function names() {
+		}
 
-            return array_keys($this->modules);
-        }
+		/**
+		 * Get all modules.
+		 *
+		 * @return array
+		 */
+		public function all() {
 
-        /**
-         * Remove module.
-         *
-         * @param string $name
-         *
-         * @return bool
-         */
-        public function remove($name) {
+			return $this->modules;
 
-            if (!$this->has($name)) {
-                return false;
-            }
+		}
 
-            unset($this->modules[$name]);
+		/**
+		 * Get registered module names.
+		 *
+		 * @return array
+		 */
+		public function names() {
 
-            return true;
-        }
+			return array_keys( $this->modules );
 
-        /**
-         * Clear registry.
-         *
-         * @return $this
-         */
-        public function clear() {
+		}
 
-            $this->modules = array();
+		/**
+		 * Remove a module.
+		 *
+		 * @param string $name Module name.
+		 *
+		 * @return bool
+		 */
+		public function remove( $name ) {
 
-            return $this;
-        }
+			if ( ! $this->has( $name ) ) {
+				return false;
+			}
 
-        /**
-         * Count modules.
-         *
-         * @return int
-         */
-        public function count() {
+			unset( $this->modules[ $name ] );
 
-            return count($this->modules);
-        }
+			return true;
 
-        /**
-         * Check registry is empty.
-         *
-         * @return bool
-         */
-        public function is_empty() {
+		}
 
-            return empty($this->modules);
-        }
+		/**
+		 * Remove all modules.
+		 *
+		 * @return $this
+		 */
+		public function clear() {
 
-        /**
-         * Get modules in render order.
-         *
-         * @return array
-         */
-        public function ordered() {
+			$this->modules = array();
 
-            $modules = $this->all();
+			return $this;
 
-            uasort(
-                $modules,
-                function ($a, $b) {
+		}
 
-                    $a_priority = method_exists($a, 'priority') ? (int) $a->priority() : 100;
-                    $b_priority = method_exists($b, 'priority') ? (int) $b->priority() : 100;
+		/**
+		 * Count registered modules.
+		 *
+		 * @return int
+		 */
+		public function count() {
 
-                    return $a_priority <=> $b_priority;
-                }
-            );
+			return count( $this->modules );
 
-            return $modules;
-        }
+		}
 
-        /**
-         * Render all registered modules.
-         *
-         * @param array $product
-         *
-         * @return string
-         */
-        public function render_all(array $product) {
+		/**
+		 * Check whether registry is empty.
+		 *
+		 * @return bool
+		 */
+		public function is_empty() {
 
-            $output = '';
+			return empty( $this->modules );
 
-            foreach ($this->ordered() as $module) {
+		}
 
-                if (method_exists($module, 'render')) {
-                    $output .= $module->render($product);
-                }
-            }
+		/**
+		 * Get modules sorted by priority.
+		 *
+		 * Modules without priority() are placed last.
+		 *
+		 * @return array
+		 */
+		public function ordered() {
 
-            return $output;
-        }
+			$modules = $this->modules;
 
-    }
+			uasort(
+				$modules,
+				function ( $a, $b ) {
+
+					$a_priority = method_exists( $a, 'priority' )
+						? (int) $a->priority()
+						: PHP_INT_MAX;
+
+					$b_priority = method_exists( $b, 'priority' )
+						? (int) $b->priority()
+						: PHP_INT_MAX;
+
+					return $a_priority <=> $b_priority;
+
+				}
+			);
+
+			return $modules;
+
+		}
+
+		/**
+		 * Render all registered modules.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return string
+		 */
+		public function render_all( array $product = array() ) {
+
+			$output = '';
+
+			foreach ( $this->ordered() as $module ) {
+
+				if ( method_exists( $module, 'render' ) ) {
+					$output .= $module->render( $product );
+				}
+			}
+
+			return $output;
+
+		}
+
+	}
 
 }
