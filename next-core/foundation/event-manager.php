@@ -1,10 +1,9 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Foundation Event Manager
  *
- * Quản lý sự kiện nội bộ của Framework.
+ * Manage internal framework events.
  *
  * @package K86Pro
  */
@@ -16,14 +15,14 @@ if ( ! class_exists( 'K86_Event_Manager' ) ) {
 	class K86_Event_Manager {
 
 		/**
-		 * Danh sách sự kiện.
+		 * Registered events.
 		 *
 		 * @var array
 		 */
 		protected $events = array();
 
 		/**
-		 * Khởi tạo Event Manager.
+		 * Initialize event manager.
 		 *
 		 * @return void
 		 */
@@ -34,11 +33,12 @@ if ( ! class_exists( 'K86_Event_Manager' ) ) {
 		}
 
 		/**
-		 * Đăng ký sự kiện.
+		 * Register an event listener.
 		 *
-		 * @param string   $event
-		 * @param callable $callback
-		 * @return void
+		 * @param string   $event    Event name.
+		 * @param callable $callback Event callback.
+		 *
+		 * @return $this
 		 */
 		public function add_listener( $event, $callback ) {
 
@@ -48,13 +48,16 @@ if ( ! class_exists( 'K86_Event_Manager' ) ) {
 
 			$this->events[ $event ][] = $callback;
 
+			return $this;
+
 		}
 
 		/**
-		 * Kích hoạt sự kiện.
+		 * Dispatch an event.
 		 *
-		 * @param string $event
-		 * @param array  $arguments
+		 * @param string $event     Event name.
+		 * @param array  $arguments Event arguments.
+		 *
 		 * @return void
 		 */
 		public function dispatch( $event, array $arguments = array() ) {
@@ -70,6 +73,62 @@ if ( ! class_exists( 'K86_Event_Manager' ) ) {
 				}
 
 			}
+
+		}
+
+		/**
+		 * Check whether an event has listeners.
+		 *
+		 * @param string $event Event name.
+		 *
+		 * @return bool
+		 */
+		public function has( $event ) {
+
+			return ! empty( $this->events[ $event ] );
+
+		}
+
+		/**
+		 * Remove an event.
+		 *
+		 * @param string $event Event name.
+		 *
+		 * @return bool
+		 */
+		public function remove( $event ) {
+
+			if ( ! $this->has( $event ) ) {
+				return false;
+			}
+
+			unset( $this->events[ $event ] );
+
+			return true;
+
+		}
+
+		/**
+		 * Get all registered events.
+		 *
+		 * @return array
+		 */
+		public function all() {
+
+			return $this->events;
+
+		}
+
+		/**
+		 * Clear all events.
+		 *
+		 * @return $this
+		 */
+		public function clear() {
+
+			$this->events = array();
+
+			return $this;
 
 		}
 
