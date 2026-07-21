@@ -13,75 +13,96 @@ if ( ! class_exists( 'K86_Pricing_Engine' ) ) {
 	class K86_Pricing_Engine extends K86_Engine_Base {
 
 		/**
-		 * Đặt giá gốc.
+		 * Set regular price.
 		 *
-		 * @param float $price
+		 * @param float $price Regular price.
+		 *
 		 * @return $this
 		 */
 		public function set_regular_price( $price ) {
+
 			return $this->register( 'regular_price', (float) $price );
+
 		}
 
 		/**
-		 * Lấy giá gốc.
+		 * Get regular price.
 		 *
 		 * @return float
 		 */
 		public function get_regular_price() {
-			return $this->get( 'regular_price', 0 );
+
+			return (float) $this->get( 'regular_price', 0 );
+
 		}
 
 		/**
-		 * Đặt giá khuyến mãi.
+		 * Set sale price.
 		 *
-		 * @param float $price
+		 * @param float $price Sale price.
+		 *
 		 * @return $this
 		 */
 		public function set_sale_price( $price ) {
+
 			return $this->register( 'sale_price', (float) $price );
+
 		}
 
 		/**
-		 * Lấy giá khuyến mãi.
+		 * Get sale price.
 		 *
 		 * @return float
 		 */
 		public function get_sale_price() {
-			return $this->get( 'sale_price', 0 );
+
+			return (float) $this->get( 'sale_price', 0 );
+
 		}
 
 		/**
-		 * Đặt tiền tệ.
+		 * Set currency.
 		 *
-		 * @param string $currency
+		 * @param string $currency Currency code.
+		 *
 		 * @return $this
 		 */
 		public function set_currency( $currency ) {
-			return $this->register( 'currency', strtoupper( $currency ) );
+
+			return $this->register(
+				'currency',
+				strtoupper( (string) $currency )
+			);
+
 		}
 
 		/**
-		 * Lấy tiền tệ.
+		 * Get currency.
 		 *
 		 * @return string
 		 */
 		public function get_currency() {
-			return $this->get( 'currency', 'VND' );
+
+			return (string) $this->get( 'currency', 'VND' );
+
 		}
 
 		/**
-		 * Kiểm tra có đang giảm giá không.
+		 * Check whether product is on sale.
 		 *
 		 * @return bool
 		 */
 		public function is_on_sale() {
 
-			return $this->get_sale_price() > 0
-				&& $this->get_sale_price() < $this->get_regular_price();
+			$regular = $this->get_regular_price();
+			$sale    = $this->get_sale_price();
+
+			return $sale > 0 && $sale < $regular;
+
 		}
 
 		/**
-		 * Lấy giá hiện tại.
+		 * Get current price.
 		 *
 		 * @return float
 		 */
@@ -92,10 +113,11 @@ if ( ! class_exists( 'K86_Pricing_Engine' ) ) {
 			}
 
 			return $this->get_regular_price();
+
 		}
 
 		/**
-		 * Tính phần trăm giảm giá.
+		 * Get discount percent.
 		 *
 		 * @return int
 		 */
@@ -105,16 +127,23 @@ if ( ! class_exists( 'K86_Pricing_Engine' ) ) {
 				return 0;
 			}
 
-			return round(
+			$regular = $this->get_regular_price();
+
+			if ( $regular <= 0 ) {
+				return 0;
+			}
+
+			return (int) round(
 				(
-					( $this->get_regular_price() - $this->get_sale_price() )
-					/ $this->get_regular_price()
+					( $regular - $this->get_sale_price() )
+					/ $regular
 				) * 100
 			);
+
 		}
 
 		/**
-		 * Tính số tiền giảm.
+		 * Get discount amount.
 		 *
 		 * @return float
 		 */
@@ -125,6 +154,9 @@ if ( ! class_exists( 'K86_Pricing_Engine' ) ) {
 			}
 
 			return $this->get_regular_price() - $this->get_sale_price();
+
 		}
+
 	}
+
 }
