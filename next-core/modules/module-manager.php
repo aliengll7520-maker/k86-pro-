@@ -128,6 +128,50 @@ if (!class_exists('K86_Module_Registry')) {
             return empty($this->modules);
         }
 
+        /**
+         * Get modules in render order.
+         *
+         * @return array
+         */
+        public function ordered() {
+
+            $modules = $this->all();
+
+            uasort(
+                $modules,
+                function ($a, $b) {
+
+                    $a_priority = method_exists($a, 'priority') ? (int) $a->priority() : 100;
+                    $b_priority = method_exists($b, 'priority') ? (int) $b->priority() : 100;
+
+                    return $a_priority <=> $b_priority;
+                }
+            );
+
+            return $modules;
+        }
+
+        /**
+         * Render all registered modules.
+         *
+         * @param array $product
+         *
+         * @return string
+         */
+        public function render_all(array $product) {
+
+            $output = '';
+
+            foreach ($this->ordered() as $module) {
+
+                if (method_exists($module, 'render')) {
+                    $output .= $module->render($product);
+                }
+            }
+
+            return $output;
+        }
+
     }
 
 }
