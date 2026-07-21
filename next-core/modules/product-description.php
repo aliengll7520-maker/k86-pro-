@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Product Description Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 	class K86_Product_Description_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render product description.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -47,13 +46,18 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 				<?php if ( ! empty( $description ) ) : ?>
 
 					<div class="k86-description-content">
-						<?php echo $description; // Nội dung đã được wp_kses_post() lọc ?>
+						<?php
+						// Nội dung đã được lọc an toàn bằng wp_kses_post().
+						echo $description;
+						?>
 					</div>
 
 				<?php else : ?>
 
 					<div class="k86-description-placeholder">
-						No product description.
+
+						<?php esc_html_e( 'Chưa có mô tả sản phẩm.', 'k86-pro' ); ?>
+
 					</div>
 
 				<?php endif; ?>
