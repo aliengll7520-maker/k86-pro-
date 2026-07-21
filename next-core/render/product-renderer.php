@@ -27,18 +27,28 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		protected $registry;
 
 		/**
+		 * Render Pipeline.
+		 *
+		 * @var K86_Render_Pipeline|null
+		 */
+		protected $pipeline;
+
+		/**
 		 * Constructor.
 		 *
-		 * @param K86_Product_Service      $service  Product service.
-		 * @param K86_Module_Registry|null $registry Module registry.
+		 * @param K86_Product_Service        $service  Product service.
+		 * @param K86_Module_Registry|null   $registry Module registry.
+		 * @param K86_Render_Pipeline|null   $pipeline Render pipeline.
 		 */
 		public function __construct(
 			K86_Product_Service $service,
-			K86_Module_Registry $registry = null
+			K86_Module_Registry $registry = null,
+			K86_Render_Pipeline $pipeline = null
 		) {
 
 			$this->service  = $service;
 			$this->registry = $registry;
+			$this->pipeline = $pipeline;
 
 		}
 
@@ -52,7 +62,7 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		public function render( array $product = array() ) {
 
 			/*
-			 * Nếu chưa truyền dữ liệu thì lấy từ Product Service.
+			 * Lấy dữ liệu sản phẩm.
 			 */
 			if ( empty( $product ) ) {
 
@@ -76,13 +86,43 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			}
 
 			/*
-			 * Render bằng Module Registry.
+			 * Xây dựng Render Pipeline.
+			 */
+			$pipeline = null;
+
+			if (
+				$this->pipeline instanceof K86_Render_Pipeline &&
+				method_exists( $this->pipeline, 'build' )
+			) {
+				$pipeline = $this->pipeline->build();
+			}
+
+			/*
+			 * Registry V2 (tương lai).
+			 */
+			if (
+				$this->registry instanceof K86_Module_Registry &&
+				method_exists( $this->registry, 'render_pipeline' ) &&
+				$pipeline
+			) {
+
+				return $this->registry->render_pipeline(
+					$pipeline,
+					$product
+				);
+
+			}
+
+			/*
+			 * Registry hiện tại.
 			 */
 			if (
 				$this->registry instanceof K86_Module_Registry &&
 				! $this->registry->is_empty()
 			) {
+
 				return $this->registry->render_all( $product );
+
 			}
 
 			/*
@@ -94,7 +134,9 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			<div class="k86-product-box">
 
 				<div class="k86-product-price">
+
 					<?php echo esc_html( $product['price'] ?? '' ); ?>
+
 				</div>
 
 				<div class="k86-product-stock">
