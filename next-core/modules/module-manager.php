@@ -62,7 +62,7 @@ if ( ! class_exists( 'K86_Module_Registry' ) ) {
 		}
 
 		/**
-		 * Get all modules.
+		 * Get all registered modules.
 		 *
 		 * @return array
 		 */
@@ -73,7 +73,7 @@ if ( ! class_exists( 'K86_Module_Registry' ) ) {
 		}
 
 		/**
-		 * Get registered module names.
+		 * Get module names.
 		 *
 		 * @return array
 		 */
@@ -116,7 +116,7 @@ if ( ! class_exists( 'K86_Module_Registry' ) ) {
 		}
 
 		/**
-		 * Count registered modules.
+		 * Count modules.
 		 *
 		 * @return int
 		 */
@@ -138,9 +138,52 @@ if ( ! class_exists( 'K86_Module_Registry' ) ) {
 		}
 
 		/**
-		 * Get modules sorted by priority.
+		 * Check whether module can render.
 		 *
-		 * Modules without priority() are placed last.
+		 * @param object $module Module instance.
+		 *
+		 * @return bool
+		 */
+		public function can_render( $module ) {
+
+			return is_object( $module )
+				&& method_exists( $module, 'render' );
+
+		}
+
+		/**
+		 * Check whether module supports priority().
+		 *
+		 * @param object $module Module instance.
+		 *
+		 * @return bool
+		 */
+		public function has_priority( $module ) {
+
+			return is_object( $module )
+				&& method_exists( $module, 'priority' );
+
+		}
+
+		/**
+		 * Get module priority.
+		 *
+		 * @param object $module Module instance.
+		 *
+		 * @return int
+		 */
+		public function get_priority( $module ) {
+
+			if ( ! $this->has_priority( $module ) ) {
+				return PHP_INT_MAX;
+			}
+
+			return (int) $module->priority();
+
+		}
+
+		/**
+		 * Get modules sorted by priority.
 		 *
 		 * @return array
 		 */
@@ -152,20 +195,120 @@ if ( ! class_exists( 'K86_Module_Registry' ) ) {
 				$modules,
 				function ( $a, $b ) {
 
-					$a_priority = method_exists( $a, 'priority' )
-						? (int) $a->priority()
-						: PHP_INT_MAX;
-
-					$b_priority = method_exists( $b, 'priority' )
-						? (int) $b->priority()
-						: PHP_INT_MAX;
-
-					return $a_priority <=> $b_priority;
+					return $this->get_priority( $a ) <=> $this->get_priority( $b );
 
 				}
 			);
 
 			return $modules;
+
+		}
+				/**
+		 * Render modules using pipeline.
+		 *
+		 * @param array $pipeline Pipeline definition.
+		 * @param array $product  Product data.
+		 *
+		 * @return string
+		 */
+		public function render_pipeline(
+			array $pipeline,
+			array $product = array()
+		) {
+
+			$this->before_render();
+
+			$output = '';
+
+			if ( empty( $pipeline['sections'] ) ) {
+
+				$this->after_render();
+
+				return $output;
+
+			}
+
+			foreach ( $pipeline['sections'] as $section => $slots ) {
+
+				$output .= $this->render_section(
+					$section,
+					$slots,
+					$product
+				);
+
+			}
+
+			$this->after_render();
+
+			return $output;
+
+		}
+
+		/**
+		 * Render a section.
+		 *
+		 * @param string $section Section name.
+		 * @param array  $slots   Slot definitions.
+		 * @param array  $product Product data.
+		 *
+		 * @return string
+		 */
+		public function render_section(
+			$section,
+			array $slots,
+			array $product = array()
+		) {
+
+			$this->before_section( $section );
+
+			$output = '';
+
+			foreach ( $slots as $slot => $module ) {
+
+				$output .= $this->render_slot(
+					$slot,
+					$module,
+					$product
+				);
+
+			}
+
+			$this->after_section( $section );
+
+			return $output;
+
+		}
+
+		/**
+		 * Render a slot.
+		 *
+		 * @param string $slot    Slot name.
+		 * @param mixed  $module  Module instance.
+		 * @param array  $product Product data.
+		 *
+		 * @return string
+		 */
+		public function render_slot(
+			$slot,
+			$module,
+			array $product = array()
+		) {
+
+			$this->before_slot( $slot );
+
+			if ( ! $this->can_render( $module ) ) {
+
+				$this->after_slot( $slot );
+
+				return '';
+
+			}
+
+			$output = $module->render( $product );
+
+			$this->after_slot( $slot );
+
+			return $output;
 
 		}
 
@@ -176,20 +319,78 @@ if ( ! class_exists( 'K86_Module_Registry' ) ) {
 		 *
 		 * @return string
 		 */
-		public function render_all( array $product = array() ) {
+		public function render_all(
+			array $product = array()
+		) {
 
 			$output = '';
 
 			foreach ( $this->ordered() as $module ) {
 
-				if ( method_exists( $module, 'render' ) ) {
-					$output .= $module->render( $product );
+				if ( ! $this->can_render( $module ) ) {
+					continue;
 				}
+
+				$output .= $module->render( $product );
+
 			}
 
 			return $output;
 
-		}
+		}.
+			/**
+		 * Before render hook.
+		 *
+		 * Reserved for future extensions.
+		 *
+		 * @return void
+		 */
+		protected function before_render() {}
+
+		/**
+		 * After render hook.
+		 *
+		 * Reserved for future extensions.
+		 *
+		 * @return void
+		 */
+		protected function after_render() {}
+
+		/**
+		 * Before section hook.
+		 *
+		 * @param string $section Section name.
+		 *
+		 * @return void
+		 */
+		protected function before_section( $section ) {}
+
+		/**
+		 * After section hook.
+		 *
+		 * @param string $section Section name.
+		 *
+		 * @return void
+		 */
+		protected function after_section( $section ) {}
+
+		/**
+		 * Before slot hook.
+		 *
+		 * @param string $slot Slot name.
+		 *
+		 * @return void
+		 */
+		protected function before_slot( $slot ) {}
+
+		/**
+		 * After slot hook.
+		 *
+		 * @param string $slot Slot name.
+		 *
+		 * @return void
+		 */
+		protected function after_slot( $slot ) {}
 
 	}
 
