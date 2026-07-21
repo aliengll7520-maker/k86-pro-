@@ -6,105 +6,118 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Registry')) {
+if ( ! class_exists( 'K86_Registry' ) ) {
 
-    class K86_Registry {
+	class K86_Registry {
 
-        /**
-         * Danh sách đối tượng đã đăng ký.
-         *
-         * @var array
-         */
-        protected $items = array();
+		/**
+		 * Registered items.
+		 *
+		 * @var array
+		 */
+		protected $items = array();
 
-        /**
-         * Đăng ký một đối tượng.
-         *
-         * @param string $key
-         * @param mixed  $value
-         * @return $this
-         */
-        public function set($key, $value) {
+		/**
+		 * Register an item.
+		 *
+		 * @param string $key   Registry key.
+		 * @param mixed  $value Registry value.
+		 *
+		 * @return $this
+		 */
+		public function set( $key, $value ) {
 
-            $this->items[$key] = $value;
+			$this->items[ $key ] = $value;
 
-            return $this;
-        }
+			return $this;
 
-        /**
-         * Lấy đối tượng.
-         *
-         * @param string $key
-         * @param mixed  $default
-         * @return mixed
-         */
-        public function get($key, $default = null) {
+		}
 
-            return array_key_exists($key, $this->items)
-                ? $this->items[$key]
-                : $default;
-        }
+		/**
+		 * Get an item.
+		 *
+		 * @param string $key     Registry key.
+		 * @param mixed  $default Default value.
+		 *
+		 * @return mixed
+		 */
+		public function get( $key, $default = null ) {
 
-        /**
-         * Kiểm tra tồn tại.
-         *
-         * @param string $key
-         * @return bool
-         */
-        public function has($key) {
+			return array_key_exists( $key, $this->items )
+				? $this->items[ $key ]
+				: $default;
 
-            return array_key_exists($key, $this->items);
-        }
+		}
 
-        /**
-         * Xóa một đối tượng.
-         *
-         * @param string $key
-         * @return bool
-         */
-        public function remove($key) {
+		/**
+		 * Check whether an item exists.
+		 *
+		 * @param string $key Registry key.
+		 *
+		 * @return bool
+		 */
+		public function has( $key ) {
 
-            if ($this->has($key)) {
-                unset($this->items[$key]);
-                return true;
-            }
+			return array_key_exists( $key, $this->items );
 
-            return false;
-        }
+		}
 
-        /**
-         * Lấy toàn bộ Registry.
-         *
-         * @return array
-         */
-        public function all() {
+		/**
+		 * Remove an item.
+		 *
+		 * @param string $key Registry key.
+		 *
+		 * @return bool
+		 */
+		public function remove( $key ) {
 
-            return $this->items;
-        }
+			if ( ! $this->has( $key ) ) {
+				return false;
+			}
 
-        /**
-         * Xóa toàn bộ Registry.
-         *
-         * @return $this
-         */
-        public function clear() {
+			unset( $this->items[ $key ] );
 
-            $this->items = array();
+			return true;
 
-            return $this;
-        }
+		}
 
-        /**
-         * Đếm số lượng.
-         *
-         * @return int
-         */
-        public function count() {
+		/**
+		 * Get all registered items.
+		 *
+		 * @return array
+		 */
+		public function all() {
 
-            return count($this->items);
-        }
-    }
+			return $this->items;
+
+		}
+
+		/**
+		 * Clear the registry.
+		 *
+		 * @return $this
+		 */
+		public function clear() {
+
+			$this->items = array();
+
+			return $this;
+
+		}
+
+		/**
+		 * Get registered item count.
+		 *
+		 * @return int
+		 */
+		public function count() {
+
+			return count( $this->items );
+
+		}
+
+	}
 
 }
