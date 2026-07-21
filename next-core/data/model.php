@@ -2,102 +2,112 @@
 /**
  * K86 Pro Next Core
  * Product Model
+ *
+ * @package K86Pro
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
-class K86_Product_Model {
+if ( ! class_exists( 'K86_Product_Model' ) ) {
 
-	/**
-	 * Dữ liệu sản phẩm
-	 *
-	 * @var array
-	 */
-	protected $data = array();
+	class K86_Product_Model {
 
-	/**
-	 * Khởi tạo
-	 *
-	 * @param array $data
-	 */
-	public function __construct( $data = array() ) {
+		/**
+		 * Product data.
+		 *
+		 * @var array
+		 */
+		protected $data = array();
 
-		$this->data = wp_parse_args(
-			$data,
-			array(
-				'id'                => 0,
-				'title'             => '',
-				'slug'              => '',
-				'sku'               => '',
-				'description'       => '',
-				'short_description' => '',
+		/**
+		 * Constructor.
+		 *
+		 * @param array $data Product data.
+		 */
+		public function __construct( $data = array() ) {
 
-				'price'             => 0,
-				'sale_price'        => 0,
+			$this->data = wp_parse_args(
+				$data,
+				array(
+					'id'                => 0,
+					'title'             => '',
+					'slug'              => '',
+					'sku'               => '',
+					'description'       => '',
+					'short_description' => '',
 
-				'status'            => 'draft',
-				'stock'             => 0,
+					'price'             => 0,
+					'sale_price'        => 0,
 
-				'gallery'           => array(),
-				'video'             => '',
+					'status'            => 'draft',
+					'stock'             => 0,
+					'in_stock'          => false,
 
-				'rating'            => 0,
-				'review_count'      => 0,
+					'gallery'           => array(),
+					'video'             => '',
+					'highlights'        => array(),
 
-				'voucher'           => '',
-				'shipping'          => '',
-				'warranty'          => '',
-				'return_policy'     => '',
+					'rating'            => 0,
+					'review_count'      => 0,
 
-				'affiliate_links'   => array(),
-			)
-		);
+					'voucher'           => array(),
+					'countdown'         => array(),
+					'stock_progress'    => array(),
+					'free_shipping'     => array(),
+					'warranty'          => array(),
+					'return_policy'     => array(),
+					'trust'             => array(),
+					'comparison'        => array(),
+
+					'affiliate_links'   => array(),
+					'cta_buttons'       => array(),
+				)
+			);
+
+		}
+
+		/**
+		 * Get all product data.
+		 *
+		 * @return array
+		 */
+		public function get_data() {
+
+			return $this->data;
+
+		}
+
+		/**
+		 * Get a product field.
+		 *
+		 * @param string $key     Field name.
+		 * @param mixed  $default Default value.
+		 *
+		 * @return mixed
+		 */
+		public function get( $key, $default = null ) {
+
+			return isset( $this->data[ $key ] )
+				? $this->data[ $key ]
+				: $default;
+
+		}
+
+		/**
+		 * Set a product field.
+		 *
+		 * @param string $key   Field name.
+		 * @param mixed  $value Field value.
+		 *
+		 * @return $this
+		 */
+		public function set( $key, $value ) {
+
+			$this->data[ $key ] = $value;
+
+			return $this;
+
+		}
 
 	}
-
-	/**
-	 * Lấy toàn bộ dữ liệu.
-	 *
-	 * @return array
-	 */
-	public function get_data() {
-
-		return $this->data;
-
-	}
-
-	/**
-	 * Lấy một trường dữ liệu.
-	 *
-	 * @param string $key
-	 * @param mixed  $default
-	 *
-	 * @return mixed
-	 */
-	public function get( $key, $default = null ) {
-
-		return isset( $this->data[ $key ] )
-			? $this->data[ $key ]
-			: $default;
-
-	}
-
-	/**
-	 * Gán dữ liệu.
-	 *
-	 * @param string $key
-	 * @param mixed  $value
-	 *
-	 * @return $this
-	 */
-	public function set( $key, $value ) {
-
-		$this->data[ $key ] = $value;
-
-		return $this;
-
-	}
-
 }
