@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Return Policy Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Return_Policy_Module' ) ) {
 	class K86_Return_Policy_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Return_Policy_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render return policy.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -42,55 +41,97 @@ if ( ! class_exists( 'K86_Return_Policy_Module' ) ) {
 				$return = $product['return_policy'];
 			}
 
+			/*
+			 * Current fields.
+			 */
 			$enabled = ! empty( $return['enabled'] );
-			$period  = $return['period'] ?? '';
 			$message = $return['message'] ?? '';
+
+			/*
+			 * Future fields.
+			 */
+			$title             = $return['title'] ?? '';
+			$subtitle          = $return['subtitle'] ?? '';
+			$description       = $return['description'] ?? '';
+
+			$return_days       = isset( $return['return_days'] ) ? absint( $return['return_days'] ) : 0;
+			$exchange_days     = isset( $return['exchange_days'] ) ? absint( $return['exchange_days'] ) : 0;
+
+			$condition         = $return['condition'] ?? '';
+			$policy_type       = $return['policy_type'] ?? '';
+
+			$return_fee        = $return['return_fee'] ?? '';
+			$exchange_fee      = $return['exchange_fee'] ?? '';
+
+			$pickup_supported  = ! empty( $return['pickup_supported'] );
+			$refund_supported  = ! empty( $return['refund_supported'] );
+
+			$refund_method     = $return['refund_method'] ?? '';
+			$refund_time       = $return['refund_time'] ?? '';
+
+			$policy_url        = $return['policy_url'] ?? '';
+
+			$status            = $return['status'] ?? '';
+			$badge             = $return['badge'] ?? '';
+			$icon              = $return['icon'] ?? '↩️';
+			$css_class         = $return['css_class'] ?? '';
+
+			$attributes = isset( $return['attributes'] ) && is_array( $return['attributes'] )
+				? $return['attributes']
+				: array();
 
 			ob_start();
 			?>
 
-			<div class="k86-product-return-policy">
+			<div class="k86-product-return-policy <?php echo esc_attr( $css_class ); ?>">
 
 				<?php if ( $enabled ) : ?>
 
-					<div class="k86-return-policy-box">
+					<div
+						class="k86-return-policy-box"
+						data-policy-type="<?php echo esc_attr( $policy_type ); ?>"
+					>
 
-						<span class="k86-return-policy-icon">↩️</span>
+						<div class="k86-return-policy-header">
 
-						<div class="k86-return-policy-content">
+							<span class="k86-return-policy-icon">
+								<?php echo esc_html( $icon ); ?>
+							</span>
 
-							<?php if ( ! empty( $period ) ) : ?>
-								<div class="k86-return-period">
-									<?php echo esc_html( $period ); ?>
-								</div>
+							<?php if ( ! empty( $title ) ) : ?>
+								<span class="k86-return-policy-title">
+									<?php echo esc_html( $title ); ?>
+								</span>
 							<?php endif; ?>
 
-							<?php if ( ! empty( $message ) ) : ?>
-								<div class="k86-return-policy-text">
-									<?php echo esc_html( $message ); ?>
-								</div>
+							<?php if ( ! empty( $badge ) ) : ?>
+								<span class="k86-return-policy-badge">
+									<?php echo esc_html( $badge ); ?>
+								</span>
 							<?php endif; ?>
 
 						</div>
 
-					</div>
+						<?php if ( ! empty( $subtitle ) ) : ?>
+							<div class="k86-return-policy-subtitle">
+								<?php echo esc_html( $subtitle ); ?>
+							</div>
+						<?php endif; ?>
 
-				<?php else : ?>
+						<?php if ( ! empty( $message ) ) : ?>
+							<div class="k86-return-policy-message">
+								<?php echo esc_html( $message ); ?>
+							</div>
+						<?php endif; ?>
 
-					<div class="k86-return-policy-placeholder">
-						No return policy available.
-					</div>
+						<?php if ( ! empty( $description ) ) : ?>
+							<div class="k86-return-policy-description">
+								<?php echo esc_html( $description ); ?>
+							</div>
+						<?php endif; ?>
 
-				<?php endif; ?>
-
-			</div>
-
-			<?php
-
-			return ob_get_clean();
-
-		}
-
-	}
-
-}
+						<?php if ( $return_days > 0 ) : ?>
+							<div class="k86-return-days">
+								<?php
+								printf(
+									esc
