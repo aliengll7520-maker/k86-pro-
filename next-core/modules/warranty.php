@@ -4,7 +4,7 @@
  *
  * Warranty Module
  *
- * Module hiển thị thông tin bảo hành.
+ * Hiển thị thông tin bảo hành.
  *
  * @package K86Pro
  */
@@ -16,56 +16,66 @@ if ( ! class_exists( 'K86_Warranty_Module' ) ) {
 	class K86_Warranty_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 130;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
-			$period = '';
-			$policy = '';
+			$warranty = array();
 
-			if ( isset( $this->data['warranty_period'] ) ) {
-				$period = sanitize_text_field( $this->data['warranty_period'] );
+			if (
+				isset( $product['warranty'] ) &&
+				is_array( $product['warranty'] )
+			) {
+				$warranty = $product['warranty'];
 			}
 
-			if ( isset( $this->data['warranty_policy'] ) ) {
-				$policy = sanitize_text_field( $this->data['warranty_policy'] );
-			}
+			$enabled = ! empty( $warranty['enabled'] );
+			$message = $warranty['message'] ?? '';
 
 			ob_start();
 			?>
 
-			<div class="k86-warranty">
+			<div class="k86-product-warranty">
 
-				<?php if ( ! empty( $period ) ) : ?>
-					<div class="k86-warranty-period">
-						<?php echo esc_html( $period ); ?>
-					</div>
-				<?php endif; ?>
+				<?php if ( $enabled ) : ?>
 
-				<?php if ( ! empty( $policy ) ) : ?>
-					<div class="k86-warranty-policy">
-						<?php echo esc_html( $policy ); ?>
+					<div class="k86-warranty-box">
+
+						<span class="k86-warranty-icon">🛡️</span>
+
+						<span class="k86-warranty-text">
+							<?php
+							echo esc_html(
+								! empty( $message )
+									? $message
+									: __( 'Warranty available.', 'k86-pro' )
+							);
+							?>
+						</span>
+
 					</div>
+
+				<?php else : ?>
+
+					<div class="k86-warranty-placeholder">
+						No warranty information.
+					</div>
+
 				<?php endif; ?>
 
 			</div>
