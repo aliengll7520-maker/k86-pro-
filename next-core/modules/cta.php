@@ -1,10 +1,7 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * CTA Buttons Module
- *
- * Hiển thị các nút kêu gọi hành động.
  *
  * @package K86Pro
  */
@@ -16,7 +13,7 @@ if ( ! class_exists( 'K86_CTA_Buttons_Module' ) ) {
 	class K86_CTA_Buttons_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -27,9 +24,9 @@ if ( ! class_exists( 'K86_CTA_Buttons_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render CTA buttons.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -44,40 +41,91 @@ if ( ! class_exists( 'K86_CTA_Buttons_Module' ) ) {
 				$cta = $product['cta_buttons'];
 			}
 
+			$buttons = isset( $cta['buttons'] ) && is_array( $cta['buttons'] )
+				? $cta['buttons']
+				: $cta;
+
+			$css_class = $cta['css_class'] ?? '';
+
 			ob_start();
 			?>
 
-			<div class="k86-product-cta">
+			<div class="k86-product-cta <?php echo esc_attr( $css_class ); ?>">
 
-				<?php if ( ! empty( $cta ) ) : ?>
+				<?php if ( ! empty( $buttons ) ) : ?>
 
-					<?php foreach ( $cta as $button ) : ?>
+					<div class="k86-cta-buttons">
 
-						<?php
-						$label = isset( $button['label'] ) ? $button['label'] : '';
-						$url   = isset( $button['url'] ) ? $button['url'] : '';
-						$class = isset( $button['class'] ) ? $button['class'] : 'primary';
+						<?php foreach ( $buttons as $button ) : ?>
 
-						if ( empty( $label ) || empty( $url ) ) {
-							continue;
-						}
-						?>
+							<?php
 
-						<a
-							class="k86-cta-button <?php echo esc_attr( $class ); ?>"
-							href="<?php echo esc_url( $url ); ?>"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<?php echo esc_html( $label ); ?>
-						</a>
+							$enabled = ! empty( $button['enabled'] );
 
-					<?php endforeach; ?>
+							if ( ! $enabled ) {
+								continue;
+							}
+
+							$label  = $button['label'] ?? '';
+							$url    = $button['url'] ?? '';
+
+							if ( empty( $label ) || empty( $url ) ) {
+								continue;
+							}
+
+							$class  = $button['class'] ?? 'primary';
+							$icon   = $button['icon'] ?? '';
+							$target = $button['target'] ?? '_blank';
+							$rel    = $button['rel'] ?? 'noopener noreferrer';
+
+							$type   = $button['type'] ?? '';
+							$vendor = $button['vendor'] ?? '';
+							$badge  = $button['badge'] ?? '';
+
+							?>
+
+							<a
+								class="k86-cta-button <?php echo esc_attr( $class ); ?>"
+								href="<?php echo esc_url( $url ); ?>"
+								target="<?php echo esc_attr( $target ); ?>"
+								rel="<?php echo esc_attr( $rel ); ?>"
+								data-type="<?php echo esc_attr( $type ); ?>"
+								data-vendor="<?php echo esc_attr( $vendor ); ?>"
+							>
+
+								<?php if ( ! empty( $icon ) ) : ?>
+
+									<span class="k86-cta-icon">
+										<?php echo esc_html( $icon ); ?>
+									</span>
+
+								<?php endif; ?>
+
+								<span class="k86-cta-label">
+									<?php echo esc_html( $label ); ?>
+								</span>
+
+								<?php if ( ! empty( $badge ) ) : ?>
+
+									<span class="k86-cta-badge">
+										<?php echo esc_html( $badge ); ?>
+									</span>
+
+								<?php endif; ?>
+
+							</a>
+
+						<?php endforeach; ?>
+
+					</div>
 
 				<?php else : ?>
 
 					<div class="k86-cta-placeholder">
-						No call-to-action buttons.
+						<?php esc_html_e(
+							'Không có nút hành động.',
+							'k86-pro'
+						); ?>
 					</div>
 
 				<?php endif; ?>
