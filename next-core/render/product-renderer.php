@@ -20,12 +20,24 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		protected $service;
 
 		/**
+		 * Module Registry.
+		 *
+		 * @var K86_Module_Registry|null
+		 */
+		protected $registry;
+
+		/**
 		 * Constructor.
 		 *
-		 * @param K86_Product_Service $service
+		 * @param K86_Product_Service       $service
+		 * @param K86_Module_Registry|null  $registry
 		 */
-		public function __construct( K86_Product_Service $service ) {
-			$this->service = $service;
+		public function __construct(
+			K86_Product_Service $service,
+			K86_Module_Registry $registry = null
+		) {
+			$this->service  = $service;
+			$this->registry = $registry;
 		}
 
 		/**
@@ -35,20 +47,40 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		 */
 		public function render() {
 
-			$price = $this->service->get_current_price();
-			$stock = $this->service->is_in_stock();
+			$product = array(
+				'price'    => $this->service->get_current_price(),
+				'in_stock' => $this->service->is_in_stock(),
+			);
 
+			/*
+			 * Nếu đã có Module Registry và có module,
+			 * sử dụng Module Pipeline.
+			 */
+			if (
+				$this->registry instanceof K86_Module_Registry
+				&& ! $this->registry->is_empty()
+			) {
+				return $this->registry->render_all( $product );
+			}
+
+			/*
+			 * Fallback để tương thích với phiên bản hiện tại.
+			 */
 			ob_start();
 			?>
 
 			<div class="k86-product-box">
 
 				<div class="k86-product-price">
-					<?php echo esc_html( $price ); ?>
+					<?php echo esc_html( $product['price'] ); ?>
 				</div>
 
 				<div class="k86-product-stock">
-					<?php echo $stock ? esc_html__( 'Còn hàng', 'k86-pro' ) : esc_html__( 'Hết hàng', 'k86-pro' ); ?>
+					<?php
+					echo $product['in_stock']
+						? esc_html__( 'Còn hàng', 'k86-pro' )
+						: esc_html__( 'Hết hàng', 'k86-pro' );
+					?>
 				</div>
 
 			</div>
