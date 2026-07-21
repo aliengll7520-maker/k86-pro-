@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Stock Progress Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 	class K86_Stock_Progress_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render stock progress.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -82,7 +81,9 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 				<?php else : ?>
 
 					<div class="k86-stock-placeholder">
-						Stock information unavailable.
+
+						<?php esc_html_e( 'Chưa có thông tin tồn kho.', 'k86-pro' ); ?>
+
 					</div>
 
 				<?php endif; ?>
