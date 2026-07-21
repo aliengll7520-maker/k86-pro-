@@ -6,125 +6,111 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Loader')) {
+if ( ! class_exists( 'K86_Loader' ) ) {
 
-    class K86_Loader {
+	class K86_Loader {
 
-        /**
-         * Đường dẫn Next Core.
-         *
-         * @var string
-         */
-        protected $base_path;
+		/**
+		 * Base path of Next Core.
+		 *
+		 * @var string
+		 */
+		protected $base_path;
 
-        public function __construct() {
-            $this->base_path = dirname(__DIR__);
-        }
+		/**
+		 * Constructor.
+		 */
+		public function __construct() {
 
-        /**
-         * Nạp một file nếu tồn tại.
-         *
-         * @param string $file
-         */
-        protected function require_file($file) {
+			$this->base_path = dirname( __DIR__ );
 
-            if (is_file($file)) {
-                require_once $file;
-            }
-        }
+		}
 
-        /**
-         * Nạp toàn bộ Framework.
-         */
-        public function load() {
+		/**
+		 * Require a file if it exists.
+		 *
+		 * @param string $file File path.
+		 *
+		 * @return void
+		 */
+		protected function require_file( $file ) {
 
-            /*
-             * Foundation
-             */
-            $this->require_file($this->base_path . '/foundation/registry.php');
-            $this->require_file($this->base_path . '/foundation/container.php');
+			if ( is_string( $file ) && is_file( $file ) ) {
+				require_once $file;
+			}
 
-            /*
-             * Data Layer
-             */
-            foreach (glob($this->base_path . '/data/*.php') as $file) {
-                $this->require_file($file);
-            }
+		}
 
-            /*
-             * Engine Core
-             */
-            $this->require_file($this->base_path . '/engine/engine-base.php');
-            $this->require_file($this->base_path . '/engine/engine-manager.php');
+		/**
+		 * Require all PHP files in a directory.
+		 *
+		 * @param string $directory Directory path.
+		 * @param array  $exclude   Excluded filenames.
+		 *
+		 * @return void
+		 */
+		protected function require_directory( $directory, array $exclude = array() ) {
 
-            /*
-             * Các Engine còn lại
-             */
-            foreach (glob($this->base_path . '/engine/*.php') as $file) {
+			$files = glob( $directory . '/*.php' );
 
-                $name = basename($file);
+			if ( empty( $files ) ) {
+				return;
+			}
 
-                if (
-                    $name === 'engine-base.php' ||
-                    $name === 'engine-manager.php'
-                ) {
-                    continue;
-                }
+			sort( $files, SORT_STRING );
 
-                $this->require_file($file);
-            }
+			foreach ( $files as $file ) {
 
-            /*
-             * Services
-             */
-            foreach (glob($this->base_path . '/services/*.php') as $file) {
-                $this->require_file($file);
-            }
+				if ( in_array( basename( $file ), $exclude, true ) ) {
+					continue;
+				}
 
-            /*
-             * Providers
-             */
-            foreach (glob($this->base_path . '/providers/*.php') as $file) {
-                $this->require_file($file);
-            }
+				$this->require_file( $file );
 
-            /*
-             * Support
-             */
-            foreach (glob($this->base_path . '/support/*.php') as $file) {
-                $this->require_file($file);
-            }
+			}
 
-            /*
-             * Render
-             */
-            foreach (glob($this->base_path . '/render/*.php') as $file) {
-                $this->require_file($file);
-            }
+		}
 
-            /*
-             * Modules
-             */
-            foreach (glob($this->base_path . '/modules/*.php') as $file) {
-                $this->require_file($file);
-            }
+		/**
+		 * Load Next Core framework.
+		 *
+		 * @return void
+		 */
+		public function load() {
 
-            /*
-             * Compatibility
-             */
-            foreach (glob($this->base_path . '/compatibility/*.php') as $file) {
-                $this->require_file($file);
-            }
+			// Foundation.
+			$this->require_file( $this->base_path . '/foundation/registry.php' );
+			$this->require_file( $this->base_path . '/foundation/container.php' );
 
-            /*
-             * Frontend
-             */
-            foreach (glob($this->base_path . '/frontend/*.php') as $file) {
-                $this->require_file($file);
-            }
-        }
-    }
+			// Data.
+			$this->require_directory( $this->base_path . '/data' );
+
+			// Engine core.
+			$this->require_file( $this->base_path . '/engine/engine-base.php' );
+			$this->require_file( $this->base_path . '/engine/engine-manager.php' );
+
+			// Remaining engines.
+			$this->require_directory(
+				$this->base_path . '/engine',
+				array(
+					'engine-base.php',
+					'engine-manager.php',
+				)
+			);
+
+			// Other framework layers.
+			$this->require_directory( $this->base_path . '/services' );
+			$this->require_directory( $this->base_path . '/providers' );
+			$this->require_directory( $this->base_path . '/support' );
+			$this->require_directory( $this->base_path . '/render' );
+			$this->require_directory( $this->base_path . '/modules' );
+			$this->require_directory( $this->base_path . '/compatibility' );
+			$this->require_directory( $this->base_path . '/frontend' );
+
+		}
+
+	}
 
 }
