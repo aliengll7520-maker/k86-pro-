@@ -29,15 +29,17 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		/**
 		 * Constructor.
 		 *
-		 * @param K86_Product_Service       $service
-		 * @param K86_Module_Registry|null  $registry
+		 * @param K86_Product_Service      $service  Product service.
+		 * @param K86_Module_Registry|null $registry Module registry.
 		 */
 		public function __construct(
 			K86_Product_Service $service,
 			K86_Module_Registry $registry = null
 		) {
+
 			$this->service  = $service;
 			$this->registry = $registry;
+
 		}
 
 		/**
@@ -47,24 +49,39 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		 */
 		public function render() {
 
-			$product = array(
-				'price'    => $this->service->get_current_price(),
-				'in_stock' => $this->service->is_in_stock(),
-			);
+			/*
+			 * Lấy toàn bộ dữ liệu sản phẩm.
+			 * Nếu Product Service chưa hỗ trợ thì fallback.
+			 */
+			if ( method_exists( $this->service, 'get_product_data' ) ) {
+
+				$product = $this->service->get_product_data();
+
+			} else {
+
+				$product = array(
+					'price'     => $this->service->get_current_price(),
+					'in_stock'  => $this->service->is_in_stock(),
+				);
+
+			}
+
+			if ( ! is_array( $product ) ) {
+				$product = array();
+			}
 
 			/*
-			 * Nếu đã có Module Registry và có module,
-			 * sử dụng Module Pipeline.
+			 * Render bằng Module Registry.
 			 */
 			if (
-				$this->registry instanceof K86_Module_Registry
-				&& ! $this->registry->is_empty()
+				$this->registry instanceof K86_Module_Registry &&
+				! $this->registry->is_empty()
 			) {
 				return $this->registry->render_all( $product );
 			}
 
 			/*
-			 * Fallback để tương thích với phiên bản hiện tại.
+			 * Fallback cho phiên bản cũ.
 			 */
 			ob_start();
 			?>
@@ -72,15 +89,17 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			<div class="k86-product-box">
 
 				<div class="k86-product-price">
-					<?php echo esc_html( $product['price'] ); ?>
+					<?php echo esc_html( $product['price'] ?? '' ); ?>
 				</div>
 
 				<div class="k86-product-stock">
+
 					<?php
-					echo $product['in_stock']
+					echo ! empty( $product['in_stock'] )
 						? esc_html__( 'Còn hàng', 'k86-pro' )
 						: esc_html__( 'Hết hàng', 'k86-pro' );
 					?>
+
 				</div>
 
 			</div>
@@ -88,6 +107,9 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			<?php
 
 			return ob_get_clean();
+
 		}
+
 	}
+
 }
