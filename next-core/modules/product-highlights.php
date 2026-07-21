@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Product Highlights Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 	class K86_Product_Highlights_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render product highlights.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -70,7 +69,9 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 				<?php else : ?>
 
 					<div class="k86-highlights-placeholder">
-						No product highlights.
+
+						<?php esc_html_e( 'Chưa có điểm nổi bật của sản phẩm.', 'k86-pro' ); ?>
+
 					</div>
 
 				<?php endif; ?>
