@@ -6,57 +6,56 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Product_Renderer')) {
+if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 
-    class K86_Product_Renderer {
+	class K86_Product_Renderer {
 
-        /**
-         * Product Service.
-         *
-         * @var K86_Product_Service
-         */
-        protected $service;
+		/**
+		 * Product Service.
+		 *
+		 * @var K86_Product_Service
+		 */
+		protected $service;
 
-        /**
-         * Constructor.
-         *
-         * @param K86_Product_Service $service
-         */
-        public function __construct($service) {
-            $this->service = $service;
-        }
+		/**
+		 * Constructor.
+		 *
+		 * @param K86_Product_Service $service
+		 */
+		public function __construct( K86_Product_Service $service ) {
+			$this->service = $service;
+		}
 
-        /**
-         * Render product.
-         *
-         * @return string
-         */
-        public function render() {
+		/**
+		 * Render Product Box.
+		 *
+		 * @return string
+		 */
+		public function render() {
 
-            $price = $this->service->price();
-            $stock = $this->service->in_stock();
+			$price = $this->service->get_current_price();
+			$stock = $this->service->is_in_stock();
 
-            ob_start();
-            ?>
+			ob_start();
+			?>
 
-            <div class="k86-product-box">
+			<div class="k86-product-box">
 
-                <div class="k86-product-price">
-                    <?php echo esc_html($price); ?>
-                </div>
+				<div class="k86-product-price">
+					<?php echo esc_html( $price ); ?>
+				</div>
 
-                <div class="k86-product-stock">
-                    <?php echo $stock ? 'Còn hàng' : 'Hết hàng'; ?>
-                </div>
+				<div class="k86-product-stock">
+					<?php echo $stock ? esc_html__( 'Còn hàng', 'k86-pro' ) : esc_html__( 'Hết hàng', 'k86-pro' ); ?>
+				</div>
 
-            </div>
+			</div>
 
-            <?php
+			<?php
 
-            return ob_get_clean();
-        }
-    }
-
+			return ob_get_clean();
+		}
+	}
 }
