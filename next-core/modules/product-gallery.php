@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Product Gallery Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 	class K86_Product_Gallery_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,15 +24,16 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 		}
 
 		/**
-		 * Render Gallery.
+		 * Render product gallery.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
 		public function render( array $product = array() ) {
 
 			$gallery = array();
+			$alt     = $product['title'] ?? '';
 
 			if (
 				isset( $product['gallery'] ) &&
@@ -53,7 +53,7 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 
 						<img
 							src="<?php echo esc_url( $gallery[0] ); ?>"
-							alt=""
+							alt="<?php echo esc_attr( $alt ); ?>"
 							class="k86-gallery-main-image"
 						>
 
@@ -67,7 +67,8 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 
 								<img
 									src="<?php echo esc_url( $image ); ?>"
-									alt=""
+									alt="<?php echo esc_attr( $alt ); ?>"
+									class="k86-gallery-thumbnail-image"
 								>
 
 							</div>
@@ -79,7 +80,9 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 				<?php else : ?>
 
 					<div class="k86-gallery-placeholder">
-						No product images.
+
+						<?php esc_html_e( 'Chưa có hình ảnh sản phẩm.', 'k86-pro' ); ?>
+
 					</div>
 
 				<?php endif; ?>
