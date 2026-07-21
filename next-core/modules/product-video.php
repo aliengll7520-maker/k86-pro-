@@ -4,8 +4,6 @@
  *
  * Product Video Module
  *
- * Module hiển thị video sản phẩm.
- *
  * @package K86Pro
  */
 
@@ -16,34 +14,29 @@ if ( ! class_exists( 'K86_Product_Video_Module' ) ) {
 	class K86_Product_Video_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 20;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
 			$video = '';
 
-			if ( isset( $this->data['video'] ) ) {
-				$video = esc_url( $this->data['video'] );
+			if ( ! empty( $product['video'] ) ) {
+				$video = esc_url( $product['video'] );
 			}
 
 			ob_start();
@@ -53,9 +46,20 @@ if ( ! class_exists( 'K86_Product_Video_Module' ) ) {
 
 				<?php if ( ! empty( $video ) ) : ?>
 
-					<video controls preload="metadata">
-						<source src="<?php echo $video; ?>" type="video/mp4">
+					<video
+						class="k86-video-player"
+						controls
+						preload="metadata"
+						playsinline
+					>
+						<source src="<?php echo esc_url( $video ); ?>" type="video/mp4">
 					</video>
+
+				<?php else : ?>
+
+					<div class="k86-video-placeholder">
+						No product video.
+					</div>
 
 				<?php endif; ?>
 
