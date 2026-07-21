@@ -4,8 +4,6 @@
  *
  * Product Rating Module
  *
- * Module hiển thị đánh giá sản phẩm.
- *
  * @package K86Pro
  */
 
@@ -16,53 +14,61 @@ if ( ! class_exists( 'K86_Product_Rating_Module' ) ) {
 	class K86_Product_Rating_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 50;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
-			$rating = 0;
-			$count  = 0;
+			$rating = isset( $product['rating'] )
+				? (float) $product['rating']
+				: 0;
 
-			if ( isset( $this->data['rating'] ) ) {
-				$rating = floatval( $this->data['rating'] );
-			}
-
-			if ( isset( $this->data['rating_count'] ) ) {
-				$count = absint( $this->data['rating_count'] );
-			}
+			$review_count = isset( $product['review_count'] )
+				? absint( $product['review_count'] )
+				: 0;
 
 			ob_start();
 			?>
 
 			<div class="k86-product-rating">
 
-				<span class="k86-rating-score">
-					<?php echo esc_html( number_format( $rating, 1 ) ); ?>/5
-				</span>
+				<div class="k86-rating-summary">
 
-				<span class="k86-rating-count">
-					(<?php echo esc_html( $count ); ?>)
-				</span>
+					<span class="k86-rating-score">
+						<?php echo esc_html( number_format( $rating, 1 ) ); ?>/5
+					</span>
+
+					<span class="k86-rating-stars">
+						★★★★★
+					</span>
+
+					<span class="k86-rating-count">
+						(<?php echo esc_html( $review_count ); ?> reviews)
+					</span>
+
+				</div>
+
+				<?php if ( 0 === $review_count ) : ?>
+
+					<div class="k86-rating-placeholder">
+						No reviews yet.
+					</div>
+
+				<?php endif; ?>
 
 			</div>
 
