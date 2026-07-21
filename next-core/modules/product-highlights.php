@@ -4,8 +4,6 @@
  *
  * Product Highlights Module
  *
- * Module hiển thị các điểm nổi bật của sản phẩm.
- *
  * @package K86Pro
  */
 
@@ -16,34 +14,32 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 	class K86_Product_Highlights_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 40;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
 			$highlights = array();
 
-			if ( isset( $this->data['highlights'] ) && is_array( $this->data['highlights'] ) ) {
-				$highlights = $this->data['highlights'];
+			if (
+				isset( $product['highlights'] ) &&
+				is_array( $product['highlights'] )
+			) {
+				$highlights = $product['highlights'];
 			}
 
 			ob_start();
@@ -53,15 +49,29 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 
 				<?php if ( ! empty( $highlights ) ) : ?>
 
-					<ul>
+					<ul class="k86-highlights-list">
 
 						<?php foreach ( $highlights as $item ) : ?>
 
-							<li><?php echo esc_html( $item ); ?></li>
+							<li class="k86-highlight-item">
+
+								<span class="k86-highlight-icon">✓</span>
+
+								<span class="k86-highlight-text">
+									<?php echo esc_html( $item ); ?>
+								</span>
+
+							</li>
 
 						<?php endforeach; ?>
 
 					</ul>
+
+				<?php else : ?>
+
+					<div class="k86-highlights-placeholder">
+						No product highlights.
+					</div>
 
 				<?php endif; ?>
 
