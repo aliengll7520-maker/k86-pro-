@@ -1,10 +1,9 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Foundation Config
  *
- * Quản lý cấu hình của toàn bộ Framework.
+ * Manage framework configuration.
  *
  * @package K86Pro
  */
@@ -16,14 +15,14 @@ if ( ! class_exists( 'K86_Config' ) ) {
 	class K86_Config {
 
 		/**
-		 * Dữ liệu cấu hình.
+		 * Configuration data.
 		 *
 		 * @var array
 		 */
 		protected $config = array();
 
 		/**
-		 * Khởi tạo Config.
+		 * Initialize configuration.
 		 *
 		 * @return void
 		 */
@@ -34,32 +33,90 @@ if ( ! class_exists( 'K86_Config' ) ) {
 		}
 
 		/**
-		 * Thiết lập cấu hình.
+		 * Set a configuration value.
 		 *
-		 * @param string $key
-		 * @param mixed  $value
-		 * @return void
+		 * @param string $key   Configuration key.
+		 * @param mixed  $value Configuration value.
+		 *
+		 * @return $this
 		 */
 		public function set( $key, $value ) {
 
 			$this->config[ $key ] = $value;
 
+			return $this;
+
 		}
 
 		/**
-		 * Lấy cấu hình.
+		 * Get a configuration value.
 		 *
-		 * @param string $key
-		 * @param mixed  $default
+		 * @param string $key     Configuration key.
+		 * @param mixed  $default Default value.
+		 *
 		 * @return mixed
 		 */
 		public function get( $key, $default = null ) {
 
-			if ( array_key_exists( $key, $this->config ) ) {
-				return $this->config[ $key ];
+			return array_key_exists( $key, $this->config )
+				? $this->config[ $key ]
+				: $default;
+
+		}
+
+		/**
+		 * Check whether a configuration exists.
+		 *
+		 * @param string $key Configuration key.
+		 *
+		 * @return bool
+		 */
+		public function has( $key ) {
+
+			return array_key_exists( $key, $this->config );
+
+		}
+
+		/**
+		 * Remove a configuration value.
+		 *
+		 * @param string $key Configuration key.
+		 *
+		 * @return bool
+		 */
+		public function remove( $key ) {
+
+			if ( ! $this->has( $key ) ) {
+				return false;
 			}
 
-			return $default;
+			unset( $this->config[ $key ] );
+
+			return true;
+
+		}
+
+		/**
+		 * Get all configuration values.
+		 *
+		 * @return array
+		 */
+		public function all() {
+
+			return $this->config;
+
+		}
+
+		/**
+		 * Clear all configuration.
+		 *
+		 * @return $this
+		 */
+		public function clear() {
+
+			$this->config = array();
+
+			return $this;
 
 		}
 
