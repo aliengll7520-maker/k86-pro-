@@ -105,6 +105,7 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 			$this->require_directory( $this->base_path . '/providers' );
 			$this->require_directory( $this->base_path . '/support' );
 			$this->require_directory( $this->base_path . '/render' );
+			$this->require_directory( $this->base_path . '/ui' );
 			$this->require_directory( $this->base_path . '/modules' );
 			$this->require_directory( $this->base_path . '/compatibility' );
 			$this->require_directory( $this->base_path . '/frontend' );
