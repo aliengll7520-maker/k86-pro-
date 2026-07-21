@@ -41,13 +41,27 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 				$stock = $product['stock_progress'];
 			}
 
-			$total = isset( $stock['total'] ) ? absint( $stock['total'] ) : 0;
-			$sold  = isset( $stock['sold'] ) ? absint( $stock['sold'] ) : 0;
+			$total = isset( $stock['total'] )
+				? absint( $stock['total'] )
+				: 0;
+
+			$sold = isset( $stock['sold'] )
+				? absint( $stock['sold'] )
+				: 0;
+
+			$remaining = isset( $stock['remaining'] )
+				? absint( $stock['remaining'] )
+				: max( 0, $total - $sold );
+
+			$status = $stock['status'] ?? '';
 
 			$percent = 0;
 
 			if ( $total > 0 ) {
-				$percent = min( 100, round( ( $sold / $total ) * 100 ) );
+				$percent = min(
+					100,
+					round( ( $sold / $total ) * 100 )
+				);
 			}
 
 			ob_start();
@@ -78,11 +92,33 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 
 					</div>
 
+					<div class="k86-stock-remaining">
+
+						<?php
+						printf(
+							esc_html__( 'Còn lại: %d', 'k86-pro' ),
+							$remaining
+						);
+						?>
+
+					</div>
+
+					<?php if ( ! empty( $status ) ) : ?>
+
+						<div class="k86-stock-status">
+							<?php echo esc_html( $status ); ?>
+						</div>
+
+					<?php endif; ?>
+
 				<?php else : ?>
 
 					<div class="k86-stock-placeholder">
 
-						<?php esc_html_e( 'Chưa có thông tin tồn kho.', 'k86-pro' ); ?>
+						<?php esc_html_e(
+							'Chưa có thông tin tồn kho.',
+							'k86-pro'
+						); ?>
 
 					</div>
 
