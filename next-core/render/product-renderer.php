@@ -45,24 +45,29 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 		/**
 		 * Render Product Box.
 		 *
+		 * @param array $product Product data.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
 			/*
-			 * Lấy toàn bộ dữ liệu sản phẩm.
-			 * Nếu Product Service chưa hỗ trợ thì fallback.
+			 * Nếu chưa truyền dữ liệu thì lấy từ Product Service.
 			 */
-			if ( method_exists( $this->service, 'get_product_data' ) ) {
+			if ( empty( $product ) ) {
 
-				$product = $this->service->get_product_data();
+				if ( method_exists( $this->service, 'get_product_data' ) ) {
 
-			} else {
+					$product = $this->service->get_product_data();
 
-				$product = array(
-					'price'     => $this->service->get_current_price(),
-					'in_stock'  => $this->service->is_in_stock(),
-				);
+				} else {
+
+					$product = array(
+						'price'    => $this->service->get_current_price(),
+						'in_stock' => $this->service->is_in_stock(),
+					);
+
+				}
 
 			}
 
@@ -81,7 +86,7 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			}
 
 			/*
-			 * Fallback cho phiên bản cũ.
+			 * Fallback.
 			 */
 			ob_start();
 			?>
