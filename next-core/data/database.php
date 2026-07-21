@@ -31,9 +31,9 @@ class K86_Database {
 
 		global $wpdb;
 
-		$this->db = $wpdb;
-
+		$this->db    = $wpdb;
 		$this->table = $wpdb->prefix . 'k86_products';
+
 	}
 
 	/**
@@ -42,7 +42,9 @@ class K86_Database {
 	 * @return wpdb
 	 */
 	public function db() {
+
 		return $this->db;
+
 	}
 
 	/**
@@ -51,7 +53,38 @@ class K86_Database {
 	 * @return string
 	 */
 	public function table() {
+
 		return $this->table;
+
+	}
+
+	/**
+	 * Charset và Collation.
+	 *
+	 * @return string
+	 */
+	public function charset_collate() {
+
+		return $this->db->get_charset_collate();
+
+	}
+
+	/**
+	 * Kiểm tra bảng có tồn tại.
+	 *
+	 * @return bool
+	 */
+	public function table_exists() {
+
+		$table = $this->table();
+
+		return $this->db->get_var(
+			$this->db->prepare(
+				"SHOW TABLES LIKE %s",
+				$table
+			)
+		) === $table;
+
 	}
 
 }
