@@ -337,7 +337,7 @@ if ( ! class_exists( 'K86_Module_Registry' ) ) {
 
 			return $output;
 
-		}.
+		}
 			/**
 		 * Before render hook.
 		 *
