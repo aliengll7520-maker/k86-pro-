@@ -4,8 +4,6 @@
  *
  * Comparison Table Module
  *
- * Module hiển thị bảng so sánh sản phẩm.
- *
  * @package K86Pro
  */
 
@@ -16,55 +14,74 @@ if ( ! class_exists( 'K86_Comparison_Table_Module' ) ) {
 	class K86_Comparison_Table_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 70;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
 			$rows = array();
 
-			if ( isset( $this->data['comparison'] ) && is_array( $this->data['comparison'] ) ) {
-				$rows = $this->data['comparison'];
+			if (
+				isset( $product['comparison'] ) &&
+				is_array( $product['comparison'] )
+			) {
+				$rows = $product['comparison'];
 			}
 
 			ob_start();
 			?>
 
-			<table class="k86-comparison-table">
+			<div class="k86-product-comparison">
 
-				<tbody>
+				<?php if ( ! empty( $rows ) ) : ?>
 
-				<?php foreach ( $rows as $label => $value ) : ?>
+					<table class="k86-comparison-table">
 
-					<tr>
-						<th><?php echo esc_html( $label ); ?></th>
-						<td><?php echo esc_html( $value ); ?></td>
-					</tr>
+						<tbody>
 
-				<?php endforeach; ?>
+						<?php foreach ( $rows as $label => $value ) : ?>
 
-				</tbody>
+							<tr>
 
-			</table>
+								<th>
+									<?php echo esc_html( $label ); ?>
+								</th>
+
+								<td>
+									<?php echo esc_html( $value ); ?>
+								</td>
+
+							</tr>
+
+						<?php endforeach; ?>
+
+						</tbody>
+
+					</table>
+
+				<?php else : ?>
+
+					<div class="k86-comparison-placeholder">
+						No comparison data.
+					</div>
+
+				<?php endif; ?>
+
+			</div>
 
 			<?php
 
