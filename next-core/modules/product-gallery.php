@@ -4,8 +4,6 @@
  *
  * Product Gallery Module
  *
- * Module hiển thị thư viện ảnh sản phẩm.
- *
  * @package K86Pro
  */
 
@@ -16,34 +14,32 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 	class K86_Product_Gallery_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 30;
 
 		}
 
 		/**
-		 * Render module.
+		 * Render Gallery.
+		 *
+		 * @param array $product Dữ liệu sản phẩm.
 		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
-			$images = array();
+			$gallery = array();
 
-			if ( isset( $this->data['images'] ) && is_array( $this->data['images'] ) ) {
-				$images = $this->data['images'];
+			if (
+				isset( $product['gallery'] ) &&
+				is_array( $product['gallery'] )
+			) {
+				$gallery = $product['gallery'];
 			}
 
 			ob_start();
@@ -51,13 +47,42 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 
 			<div class="k86-product-gallery">
 
-				<?php foreach ( $images as $image ) : ?>
+				<?php if ( ! empty( $gallery ) ) : ?>
 
-					<div class="k86-gallery-item">
-						<img src="<?php echo esc_url( $image ); ?>" alt="">
+					<div class="k86-gallery-main">
+
+						<img
+							src="<?php echo esc_url( $gallery[0] ); ?>"
+							alt=""
+							class="k86-gallery-main-image"
+						>
+
 					</div>
 
-				<?php endforeach; ?>
+					<div class="k86-gallery-thumbnails">
+
+						<?php foreach ( $gallery as $image ) : ?>
+
+							<div class="k86-gallery-thumb">
+
+								<img
+									src="<?php echo esc_url( $image ); ?>"
+									alt=""
+								>
+
+							</div>
+
+						<?php endforeach; ?>
+
+					</div>
+
+				<?php else : ?>
+
+					<div class="k86-gallery-placeholder">
+						No product images.
+					</div>
+
+				<?php endif; ?>
 
 			</div>
 
