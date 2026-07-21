@@ -22,106 +22,157 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 		/**
 		 * Constructor.
 		 *
-		 * @param K86_Engine_Manager $manager
+		 * @param K86_Engine_Manager $manager Engine manager.
 		 */
 		public function __construct( K86_Engine_Manager $manager ) {
+
 			$this->manager = $manager;
+
 		}
 
 		/**
-		 * Lấy Engine theo tên.
+		 * Get engine by name.
 		 *
-		 * @param string $name
+		 * @param string $name Engine name.
+		 *
 		 * @return object|null
 		 */
 		public function engine( $name ) {
+
 			return $this->manager->get( $name );
+
 		}
 
 		/**
-		 * Lấy giá hiện tại.
+		 * Get complete product data.
+		 *
+		 * @return array
+		 */
+		public function get_product_data() {
+
+			return array(
+				'price'            => $this->get_current_price(),
+				'in_stock'         => $this->is_in_stock(),
+				'free_shipping'    => array(),
+				'warranty'         => array(),
+				'return_policy'    => array(),
+				'voucher'          => array(),
+				'countdown'        => array(),
+				'stock_progress'   => array(),
+				'trust'            => array(),
+				'gallery'          => array(),
+				'highlights'       => array(),
+				'comparison'       => array(),
+				'cta_buttons'      => array(),
+				'rating'           => 0,
+				'review_count'     => 0,
+				'description'      => '',
+				'video'            => '',
+				'title'            => '',
+			);
+
+		}
+
+		/**
+		 * Get current price.
 		 *
 		 * @return float
 		 */
 		public function get_current_price() {
 
-			$pricing = $this->engine( 'pricing' );
+			$pricing = $this->pricing();
 
 			if ( ! $pricing ) {
 				return 0;
 			}
 
 			return $pricing->get_current_price();
+
 		}
 
 		/**
-		 * Kiểm tra còn hàng.
+		 * Check stock.
 		 *
 		 * @return bool
 		 */
 		public function is_in_stock() {
 
-			$inventory = $this->engine( 'inventory' );
+			$inventory = $this->inventory();
 
 			if ( ! $inventory ) {
 				return false;
 			}
 
 			return $inventory->is_in_stock();
+
 		}
 
 		/**
-		 * Lấy Shipping Engine.
+		 * Shipping Engine.
 		 *
-		 * @return K86_Shipping_Engine|null
+		 * @return object|null
 		 */
 		public function shipping() {
+
 			return $this->engine( 'shipping' );
+
 		}
 
 		/**
-		 * Lấy Warranty Engine.
+		 * Warranty Engine.
 		 *
-		 * @return K86_Warranty_Engine|null
+		 * @return object|null
 		 */
 		public function warranty() {
+
 			return $this->engine( 'warranty' );
+
 		}
 
 		/**
-		 * Lấy Return Policy Engine.
+		 * Return Policy Engine.
 		 *
-		 * @return K86_Return_Policy_Engine|null
+		 * @return object|null
 		 */
 		public function return_policy() {
+
 			return $this->engine( 'return_policy' );
+
 		}
 
 		/**
-		 * Lấy Review Engine.
+		 * Review Engine.
 		 *
-		 * @return K86_Review_Engine|null
+		 * @return object|null
 		 */
 		public function review() {
+
 			return $this->engine( 'review' );
+
 		}
 
 		/**
-		 * Lấy Pricing Engine.
+		 * Pricing Engine.
 		 *
-		 * @return K86_Pricing_Engine|null
+		 * @return object|null
 		 */
 		public function pricing() {
+
 			return $this->engine( 'pricing' );
+
 		}
 
 		/**
-		 * Lấy Inventory Engine.
+		 * Inventory Engine.
 		 *
-		 * @return K86_Inventory_Engine|null
+		 * @return object|null
 		 */
 		public function inventory() {
+
 			return $this->engine( 'inventory' );
+
 		}
+
 	}
+
 }
