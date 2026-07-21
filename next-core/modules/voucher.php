@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Voucher Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Voucher_Module' ) ) {
 	class K86_Voucher_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Voucher_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render voucher.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -75,7 +74,9 @@ if ( ! class_exists( 'K86_Voucher_Module' ) ) {
 				<?php else : ?>
 
 					<div class="k86-voucher-placeholder">
-						No voucher available.
+
+						<?php esc_html_e( 'Hiện chưa có voucher cho sản phẩm này.', 'k86-pro' ); ?>
+
 					</div>
 
 				<?php endif; ?>
