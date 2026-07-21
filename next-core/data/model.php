@@ -23,48 +23,81 @@ class K86_Product_Model {
 	 * @param array $data
 	 */
 	public function __construct( $data = array() ) {
+
 		$this->data = wp_parse_args(
 			$data,
 			array(
-				'id'            => 0,
-				'title'         => '',
-				'slug'          => '',
-				'description'   => '',
+				'id'                => 0,
+				'title'             => '',
+				'slug'              => '',
+				'sku'               => '',
+				'description'       => '',
 				'short_description' => '',
-				'price'         => 0,
-				'sale_price'    => 0,
-				'gallery'       => array(),
-				'video'         => '',
-				'rating'        => 0,
-				'review_count'  => 0,
-				'stock'         => 0,
-				'voucher'       => '',
-				'shipping'      => '',
-				'warranty'      => '',
-				'return_policy' => '',
+
+				'price'             => 0,
+				'sale_price'        => 0,
+
+				'status'            => 'draft',
+				'stock'             => 0,
+
+				'gallery'           => array(),
+				'video'             => '',
+
+				'rating'            => 0,
+				'review_count'      => 0,
+
+				'voucher'           => '',
+				'shipping'          => '',
+				'warranty'          => '',
+				'return_policy'     => '',
+
+				'affiliate_links'   => array(),
 			)
 		);
+
 	}
 
 	/**
-	 * Lấy toàn bộ dữ liệu
+	 * Lấy toàn bộ dữ liệu.
+	 *
+	 * @return array
 	 */
 	public function get_data() {
+
 		return $this->data;
+
 	}
 
 	/**
-	 * Lấy một trường dữ liệu
+	 * Lấy một trường dữ liệu.
+	 *
+	 * @param string $key
+	 * @param mixed  $default
+	 *
+	 * @return mixed
 	 */
 	public function get( $key, $default = null ) {
-		return isset( $this->data[ $key ] ) ? $this->data[ $key ] : $default;
+
+		return isset( $this->data[ $key ] )
+			? $this->data[ $key ]
+			: $default;
+
 	}
 
 	/**
-	 * Gán dữ liệu
+	 * Gán dữ liệu.
+	 *
+	 * @param string $key
+	 * @param mixed  $value
+	 *
+	 * @return $this
 	 */
 	public function set( $key, $value ) {
+
 		$this->data[ $key ] = $value;
+
+		return $this;
+
 	}
 
 }
