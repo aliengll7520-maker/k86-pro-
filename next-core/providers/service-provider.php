@@ -60,11 +60,26 @@ if ( ! class_exists( 'K86_Service_Provider' ) ) {
 				fn() => new K86_Health_Check()
 			);
 
+			/*
+			 * Module Registry + Module Bootstrap
+			 */
 			$container->singleton(
 				'module_registry',
-				fn() => new K86_Module_Registry()
+				function () {
+
+					$registry = new K86_Module_Registry();
+
+					$bootstrap = new K86_Module_Bootstrap( $registry );
+					$bootstrap->register_modules();
+
+					return $registry;
+
+				}
 			);
 
+			/*
+			 * WordPress Hooks
+			 */
 			$container->singleton(
 				'wordpress_hooks',
 				fn() => new K86_WordPress_Hooks()
@@ -86,10 +101,12 @@ if ( ! class_exists( 'K86_Service_Provider' ) ) {
 			);
 
 			foreach ( $engines as $engine ) {
+
 				$manager->register(
 					$engine,
 					$container->get( $engine )
 				);
+
 			}
 
 		}
