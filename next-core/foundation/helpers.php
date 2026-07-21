@@ -1,10 +1,9 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Foundation Helpers
  *
- * Chứa các hàm hỗ trợ dùng chung cho toàn bộ Framework.
+ * Common helper utilities for the framework.
  *
  * @package K86Pro
  */
@@ -16,21 +15,21 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 	class K86_Helpers {
 
 		/**
-		 * Khởi tạo Helpers.
+		 * Initialize helpers.
 		 *
-		 * @return void
+		 * @return $this
 		 */
 		public function init() {
 
-			// Khởi tạo Helpers.
-			return;
+			return $this;
 
 		}
 
 		/**
-		 * Kiểm tra chuỗi rỗng.
+		 * Check whether a value is empty.
 		 *
-		 * @param mixed $value Giá trị cần kiểm tra.
+		 * @param mixed $value Value to check.
+		 *
 		 * @return bool
 		 */
 		public function is_empty( $value ) {
@@ -40,9 +39,10 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 		}
 
 		/**
-		 * Kiểm tra giá trị có phải mảng hay không.
+		 * Check whether a value is an array.
 		 *
-		 * @param mixed $value Giá trị cần kiểm tra.
+		 * @param mixed $value Value to check.
+		 *
 		 * @return bool
 		 */
 		public function is_array( $value ) {
@@ -52,9 +52,10 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 		}
 
 		/**
-		 * Kiểm tra giá trị có phải chuỗi hay không.
+		 * Check whether a value is a string.
 		 *
-		 * @param mixed $value Giá trị cần kiểm tra.
+		 * @param mixed $value Value to check.
+		 *
 		 * @return bool
 		 */
 		public function is_string( $value ) {
@@ -64,9 +65,10 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 		}
 
 		/**
-		 * Kiểm tra giá trị có phải số hay không.
+		 * Check whether a value is numeric.
 		 *
-		 * @param mixed $value Giá trị cần kiểm tra.
+		 * @param mixed $value Value to check.
+		 *
 		 * @return bool
 		 */
 		public function is_numeric( $value ) {
@@ -76,14 +78,15 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 		}
 
 		/**
-		 * Chuyển giá trị thành chuỗi an toàn.
+		 * Convert a value to string.
 		 *
-		 * @param mixed $value Giá trị đầu vào.
+		 * @param mixed $value Input value.
+		 *
 		 * @return string
 		 */
 		public function to_string( $value ) {
 
-			if ( is_null( $value ) ) {
+			if ( null === $value ) {
 				return '';
 			}
 
@@ -91,14 +94,17 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 				return (string) $value;
 			}
 
-			return wp_json_encode( $value );
+			$json = wp_json_encode( $value );
+
+			return false === $json ? '' : $json;
 
 		}
 
 		/**
-		 * Chuyển giá trị thành mảng.
+		 * Convert a value to array.
 		 *
-		 * @param mixed $value Giá trị đầu vào.
+		 * @param mixed $value Input value.
+		 *
 		 * @return array
 		 */
 		public function to_array( $value ) {
@@ -107,7 +113,7 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 				return $value;
 			}
 
-			if ( is_null( $value ) ) {
+			if ( null === $value ) {
 				return array();
 			}
 
@@ -116,5 +122,4 @@ if ( ! class_exists( 'K86_Helpers' ) ) {
 		}
 
 	}
-
 }
