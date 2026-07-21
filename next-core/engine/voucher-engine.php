@@ -6,84 +6,116 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Voucher_Engine')) {
+if ( ! class_exists( 'K86_Voucher_Engine' ) ) {
 
-    class K86_Voucher_Engine extends K86_Engine_Base {
+	class K86_Voucher_Engine extends K86_Engine_Base {
 
-        /**
-         * Thiết lập mã voucher.
-         */
-        public function set_code($code) {
-            return $this->register('code', strtoupper(trim($code)));
-        }
+		/**
+		 * Thiết lập mã voucher.
+		 *
+		 * @param string $code
+		 * @return $this
+		 */
+		public function set_code( $code ) {
+			return $this->register( 'code', strtoupper( trim( $code ) ) );
+		}
 
-        /**
-         * Lấy mã voucher.
-         */
-        public function code() {
-            return $this->get('code', '');
-        }
+		/**
+		 * Lấy mã voucher.
+		 *
+		 * @return string
+		 */
+		public function get_code() {
+			return $this->get( 'code', '' );
+		}
 
-        /**
-         * Thiết lập giá trị giảm.
-         */
-        public function set_value($value) {
-            return $this->register('value', (float) $value);
-        }
+		/**
+		 * Thiết lập giá trị giảm.
+		 *
+		 * @param float $value
+		 * @return $this
+		 */
+		public function set_value( $value ) {
+			return $this->register( 'value', (float) $value );
+		}
 
-        /**
-         * Lấy giá trị giảm.
-         */
-        public function value() {
-            return $this->get('value', 0);
-        }
+		/**
+		 * Lấy giá trị giảm.
+		 *
+		 * @return float
+		 */
+		public function get_value() {
+			return $this->get( 'value', 0 );
+		}
 
-        /**
-         * Thiết lập loại voucher.
-         * percent | fixed
-         */
-        public function set_type($type) {
+		/**
+		 * Thiết lập loại voucher.
+		 * percent | fixed
+		 *
+		 * @param string $type
+		 * @return $this
+		 */
+		public function set_type( $type ) {
 
-            $allowed = array('percent', 'fixed');
+			$allowed = array( 'percent', 'fixed' );
 
-            if (!in_array($type, $allowed, true)) {
-                $type = 'fixed';
-            }
+			if ( ! in_array( $type, $allowed, true ) ) {
+				$type = 'fixed';
+			}
 
-            return $this->register('type', $type);
-        }
+			return $this->register( 'type', $type );
+		}
 
-        /**
-         * Lấy loại voucher.
-         */
-        public function type() {
-            return $this->get('type', 'fixed');
-        }
+		/**
+		 * Lấy loại voucher.
+		 *
+		 * @return string
+		 */
+		public function get_type() {
+			return $this->get( 'type', 'fixed' );
+		}
 
-        /**
-         * Kiểm tra voucher có hợp lệ.
-         */
-        public function is_valid() {
-            return $this->code() !== '' && $this->value() > 0;
-        }
+		/**
+		 * Kiểm tra voucher hợp lệ.
+		 *
+		 * @return bool
+		 */
+		public function is_valid() {
+			return $this->get_code() !== '' && $this->get_value() > 0;
+		}
 
-        /**
-         * Tính số tiền được giảm.
-         */
-        public function calculate_discount($price) {
+		/**
+		 * Tính số tiền được giảm.
+		 *
+		 * @param float $price
+		 * @return float
+		 */
+		public function calculate_discount( $price ) {
 
-            if (!$this->is_valid()) {
-                return 0;
-            }
+			if ( ! $this->is_valid() ) {
+				return 0;
+			}
 
-            if ($this->type() === 'percent') {
-                return ($price * $this->value()) / 100;
-            }
+			if ( $this->get_type() === 'percent' ) {
+				return ( $price * $this->get_value() ) / 100;
+			}
 
-            return min($price, $this->value());
-        }
-    }
+			return min( $price, $this->get_value() );
+		}
 
+		/**
+		 * Tính giá sau khi áp dụng voucher.
+		 *
+		 * @param float $price
+		 * @return float
+		 */
+		public function calculate_final_price( $price ) {
+
+			$discount = $this->calculate_discount( $price );
+
+			return max( 0, $price - $discount );
+		}
+	}
 }
