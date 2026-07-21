@@ -1,10 +1,9 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Foundation Error Handler
  *
- * Chịu trách nhiệm xử lý lỗi của toàn bộ Framework.
+ * Handle framework errors and exceptions.
  *
  * @package K86Pro
  */
@@ -16,9 +15,9 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 	class K86_Error_Handler {
 
 		/**
-		 * Khởi tạo Error Handler.
+		 * Initialize error handling.
 		 *
-		 * @return void
+		 * @return $this
 		 */
 		public function init() {
 
@@ -26,12 +25,15 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 			set_exception_handler( array( $this, 'handle_exception' ) );
 			register_shutdown_function( array( $this, 'handle_shutdown' ) );
 
+			return $this;
+
 		}
 
 		/**
-		 * Xử lý Exception.
+		 * Handle uncaught exceptions.
 		 *
-		 * @param \Throwable $exception
+		 * @param \Throwable $exception Exception instance.
+		 *
 		 * @return void
 		 */
 		public function handle_exception( $exception ) {
@@ -41,13 +43,14 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 		}
 
 		/**
-		 * Xử lý Error.
+		 * Handle PHP errors.
 		 *
-		 * @param int    $errno
-		 * @param string $errstr
-		 * @param string $errfile
-		 * @param int    $errline
-		 * @return void
+		 * @param int    $errno   Error level.
+		 * @param string $errstr  Error message.
+		 * @param string $errfile Error file.
+		 * @param int    $errline Error line.
+		 *
+		 * @return bool
 		 */
 		public function handle_error( $errno, $errstr, $errfile, $errline ) {
 
@@ -60,10 +63,13 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 				)
 			);
 
+			// Allow PHP to continue with its normal error handling.
+			return false;
+
 		}
 
 		/**
-		 * Xử lý Fatal Error khi PHP shutdown.
+		 * Handle fatal shutdown errors.
 		 *
 		 * @return void
 		 */
@@ -78,14 +84,17 @@ if ( ! class_exists( 'K86_Error_Handler' ) ) {
 		}
 
 		/**
-		 * Ghi log lỗi.
+		 * Write error information.
 		 *
-		 * @param mixed $data
+		 * Reserved for Logger integration.
+		 *
+		 * @param mixed $data Error data.
+		 *
 		 * @return void
 		 */
 		protected function write_log( $data ) {
 
-			// Sẽ kết nối với Logger ở giai đoạn sau.
+			// Logger integration will be implemented later.
 
 		}
 
