@@ -4,8 +4,6 @@
  *
  * Product Title Module
  *
- * Module hiển thị tiêu đề sản phẩm.
- *
  * @package K86Pro
  */
 
@@ -16,34 +14,29 @@ if ( ! class_exists( 'K86_Product_Title_Module' ) ) {
 	class K86_Product_Title_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Module priority.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 10;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product ) {
 
 			$title = '';
 
-			if ( isset( $this->data['title'] ) ) {
-				$title = esc_html( $this->data['title'] );
+			if ( ! empty( $product['title'] ) ) {
+				$title = esc_html( $product['title'] );
 			}
 
 			ob_start();
