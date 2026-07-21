@@ -13,93 +13,128 @@ if ( ! class_exists( 'K86_Shipping_Engine' ) ) {
 	class K86_Shipping_Engine extends K86_Engine_Base {
 
 		/**
-		 * Thiết lập phương thức vận chuyển.
+		 * Set shipping method.
 		 *
-		 * @param string $method
+		 * @param string $method Shipping method.
+		 *
 		 * @return $this
 		 */
 		public function set_method( $method ) {
-			return $this->register( 'shipping_method', sanitize_text_field( $method ) );
+
+			return $this->register(
+				'shipping_method',
+				sanitize_text_field( $method )
+			);
+
 		}
 
 		/**
-		 * Lấy phương thức vận chuyển.
+		 * Get shipping method.
 		 *
 		 * @return string
 		 */
 		public function get_method() {
-			return $this->get( 'shipping_method', '' );
+
+			return (string) $this->get( 'shipping_method', '' );
+
 		}
 
 		/**
-		 * Thiết lập phí vận chuyển.
+		 * Set shipping fee.
 		 *
-		 * @param float $fee
+		 * @param float $fee Shipping fee.
+		 *
 		 * @return $this
 		 */
 		public function set_fee( $fee ) {
-			return $this->register( 'shipping_fee', (float) $fee );
+
+			return $this->register(
+				'shipping_fee',
+				max( 0, (float) $fee )
+			);
+
 		}
 
 		/**
-		 * Lấy phí vận chuyển.
+		 * Get shipping fee.
 		 *
 		 * @return float
 		 */
 		public function get_fee() {
+
 			return (float) $this->get( 'shipping_fee', 0 );
+
 		}
 
 		/**
-		 * Thiết lập miễn phí vận chuyển.
+		 * Enable or disable free shipping.
 		 *
-		 * @param bool $enabled
+		 * @param bool $enabled Free shipping status.
+		 *
 		 * @return $this
 		 */
 		public function set_free_shipping( $enabled ) {
-			return $this->register( 'free_shipping', (bool) $enabled );
+
+			return $this->register(
+				'free_shipping',
+				(bool) $enabled
+			);
+
 		}
 
 		/**
-		 * Kiểm tra miễn phí vận chuyển.
+		 * Check free shipping status.
 		 *
 		 * @return bool
 		 */
 		public function is_free_shipping() {
+
 			return (bool) $this->get( 'free_shipping', false );
+
 		}
 
 		/**
-		 * Thiết lập thời gian giao hàng dự kiến.
+		 * Set delivery estimate.
 		 *
-		 * @param string $estimate
+		 * @param string $estimate Delivery estimate.
+		 *
 		 * @return $this
 		 */
 		public function set_estimate( $estimate ) {
-			return $this->register( 'delivery_estimate', sanitize_text_field( $estimate ) );
+
+			return $this->register(
+				'delivery_estimate',
+				sanitize_text_field( $estimate )
+			);
+
 		}
 
 		/**
-		 * Lấy thời gian giao hàng dự kiến.
+		 * Get delivery estimate.
 		 *
 		 * @return string
 		 */
 		public function get_estimate() {
-			return $this->get( 'delivery_estimate', '' );
+
+			return (string) $this->get( 'delivery_estimate', '' );
+
 		}
 
 		/**
-		 * Tính phí vận chuyển thực tế.
+		 * Calculate final shipping fee.
 		 *
 		 * @return float
 		 */
 		public function calculate_shipping_fee() {
 
 			if ( $this->is_free_shipping() ) {
-				return 0;
+				return 0.0;
 			}
 
 			return $this->get_fee();
+
 		}
+
 	}
+
 }
