@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class K86_Migration {
 
 	/**
-	 * Thực hiện tạo/cập nhật bảng
+	 * Thực hiện tạo/cập nhật bảng.
 	 */
 	public static function migrate() {
 
@@ -29,11 +29,35 @@ class K86_Migration {
 
 			product_name VARCHAR(255) NOT NULL,
 
+			slug VARCHAR(255) NOT NULL DEFAULT '',
+
+			sku VARCHAR(100) NOT NULL DEFAULT '',
+
+			description LONGTEXT NULL,
+
+			short_description TEXT NULL,
+
 			price DECIMAL(15,2) NOT NULL DEFAULT 0,
 
 			sale_price DECIMAL(15,2) NOT NULL DEFAULT 0,
 
+			status VARCHAR(30) NOT NULL DEFAULT 'draft',
+
 			stock INT NOT NULL DEFAULT 0,
+
+			gallery LONGTEXT NULL,
+
+			video TEXT NULL,
+
+			voucher TEXT NULL,
+
+			shipping TEXT NULL,
+
+			warranty TEXT NULL,
+
+			return_policy TEXT NULL,
+
+			affiliate_links LONGTEXT NULL,
 
 			rating DECIMAL(3,2) NOT NULL DEFAULT 0,
 
@@ -45,7 +69,13 @@ class K86_Migration {
 
 			PRIMARY KEY (id),
 
-			KEY post_id (post_id)
+			KEY post_id (post_id),
+
+			KEY slug (slug),
+
+			KEY sku (sku),
+
+			KEY status (status)
 
 		) {$charset_collate};";
 
