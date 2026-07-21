@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Product Rating Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Product_Rating_Module' ) ) {
 	class K86_Product_Rating_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Product_Rating_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render product rating.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -57,7 +56,8 @@ if ( ! class_exists( 'K86_Product_Rating_Module' ) ) {
 					</span>
 
 					<span class="k86-rating-count">
-						(<?php echo esc_html( $review_count ); ?> reviews)
+						(<?php echo esc_html( $review_count ); ?>
+						<?php esc_html_e( ' đánh giá', 'k86-pro' ); ?>)
 					</span>
 
 				</div>
@@ -65,7 +65,9 @@ if ( ! class_exists( 'K86_Product_Rating_Module' ) ) {
 				<?php if ( 0 === $review_count ) : ?>
 
 					<div class="k86-rating-placeholder">
-						No reviews yet.
+
+						<?php esc_html_e( 'Chưa có đánh giá cho sản phẩm.', 'k86-pro' ); ?>
+
 					</div>
 
 				<?php endif; ?>
