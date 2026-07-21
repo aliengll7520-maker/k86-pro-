@@ -4,8 +4,6 @@
  *
  * Stock Progress Module
  *
- * Module hiển thị tiến độ tồn kho.
- *
  * @package K86Pro
  */
 
@@ -16,40 +14,36 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 	class K86_Stock_Progress_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 100;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
-			$total = 0;
-			$sold  = 0;
+			$stock = array();
 
-			if ( isset( $this->data['stock_total'] ) ) {
-				$total = absint( $this->data['stock_total'] );
+			if (
+				isset( $product['stock_progress'] ) &&
+				is_array( $product['stock_progress'] )
+			) {
+				$stock = $product['stock_progress'];
 			}
 
-			if ( isset( $this->data['stock_sold'] ) ) {
-				$sold = absint( $this->data['stock_sold'] );
-			}
+			$total = isset( $stock['total'] ) ? absint( $stock['total'] ) : 0;
+			$sold  = isset( $stock['sold'] ) ? absint( $stock['sold'] ) : 0;
 
 			$percent = 0;
 
@@ -60,29 +54,38 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 			ob_start();
 			?>
 
-			<div class="k86-stock-progress">
+			<div class="k86-product-stock-progress">
 
-				<div class="k86-stock-bar">
+				<?php if ( $total > 0 ) : ?>
 
-					<div
-						class="k86-stock-bar-fill"
-						style="width: <?php echo esc_attr( $percent ); ?>%;">
+					<div class="k86-stock-bar">
+
+						<div
+							class="k86-stock-bar-fill"
+							style="width: <?php echo esc_attr( $percent ); ?>%;"
+						></div>
+
 					</div>
 
-				</div>
+					<div class="k86-stock-text">
 
-				<div class="k86-stock-text">
+						<?php
+						printf(
+							esc_html__( 'Đã bán %1$d / %2$d', 'k86-pro' ),
+							$sold,
+							$total
+						);
+						?>
 
-					<?php
-					printf(
-						/* translators: 1: sold quantity, 2: total quantity */
-						esc_html__( 'Đã bán %1$d/%2$d', 'k86-pro' ),
-						$sold,
-						$total
-					);
-					?>
+					</div>
 
-				</div>
+				<?php else : ?>
+
+					<div class="k86-stock-placeholder">
+						Stock information unavailable.
+					</div>
+
+				<?php endif; ?>
 
 			</div>
 
