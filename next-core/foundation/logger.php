@@ -1,10 +1,9 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Foundation Logger
  *
- * Chịu trách nhiệm ghi log cho toàn bộ Framework.
+ * Framework logging service.
  *
  * @package K86Pro
  */
@@ -16,25 +15,38 @@ if ( ! class_exists( 'K86_Logger' ) ) {
 	class K86_Logger {
 
 		/**
-		 * Khởi tạo Logger.
+		 * Initialize logger.
 		 *
-		 * @return void
+		 * @return $this
 		 */
 		public function init() {
 
-			// Khởi tạo Logger.
-			return;
+			return $this;
 
 		}
 
 		/**
-		 * Ghi log.
+		 * Write a log record.
 		 *
-		 * @param mixed  $data
-		 * @param string $level
-		 * @return void
+		 * @param mixed  $data  Log data.
+		 * @param string $level Log level.
+		 *
+		 * @return array
 		 */
 		public function log( $data, $level = 'info' ) {
+
+			$allowed_levels = array(
+				'debug',
+				'info',
+				'notice',
+				'warning',
+				'error',
+				'critical',
+			);
+
+			if ( ! in_array( $level, $allowed_levels, true ) ) {
+				$level = 'info';
+			}
 
 			$record = array(
 				'time'  => current_time( 'mysql' ),
@@ -42,23 +54,24 @@ if ( ! class_exists( 'K86_Logger' ) ) {
 				'data'  => $data,
 			);
 
-			// Sẽ ghi $record vào hệ thống log ở giai đoạn sau.
+			// Logger storage will be implemented later.
+
+			return $record;
 
 		}
 
 		/**
-		 * Xóa toàn bộ log.
+		 * Clear all log records.
 		 *
-		 * @return void
+		 * @return bool
 		 */
 		public function clear() {
 
-			// Sẽ xóa log ở giai đoạn sau.
+			// Logger cleanup will be implemented later.
 
-			return;
+			return true;
 
 		}
 
 	}
-
 }
