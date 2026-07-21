@@ -13,9 +13,10 @@ if ( ! class_exists( 'K86_Review_Engine' ) ) {
 	class K86_Review_Engine extends K86_Engine_Base {
 
 		/**
-		 * Đặt điểm đánh giá.
+		 * Set rating.
 		 *
-		 * @param float $rating
+		 * @param float $rating Rating value.
+		 *
 		 * @return $this
 		 */
 		public function set_rating( $rating ) {
@@ -23,64 +24,85 @@ if ( ! class_exists( 'K86_Review_Engine' ) ) {
 			$rating = max( 0, min( 5, (float) $rating ) );
 
 			return $this->register( 'rating', $rating );
+
 		}
 
 		/**
-		 * Lấy điểm đánh giá.
+		 * Get rating.
 		 *
 		 * @return float
 		 */
 		public function get_rating() {
-			return $this->get( 'rating', 0 );
+
+			return (float) $this->get( 'rating', 0 );
+
 		}
 
 		/**
-		 * Đặt số lượng đánh giá.
+		 * Set review count.
 		 *
-		 * @param int $count
+		 * @param int $count Review count.
+		 *
 		 * @return $this
 		 */
 		public function set_review_count( $count ) {
-			return $this->register( 'review_count', max( 0, (int) $count ) );
+
+			return $this->register(
+				'review_count',
+				max( 0, (int) $count )
+			);
+
 		}
 
 		/**
-		 * Lấy số lượng đánh giá.
+		 * Get review count.
 		 *
 		 * @return int
 		 */
 		public function get_review_count() {
-			return $this->get( 'review_count', 0 );
+
+			return (int) $this->get( 'review_count', 0 );
+
 		}
 
 		/**
-		 * Kiểm tra có đánh giá hay không.
+		 * Check whether reviews exist.
 		 *
 		 * @return bool
 		 */
 		public function has_reviews() {
+
 			return $this->get_review_count() > 0;
+
 		}
 
 		/**
-		 * Thêm một đánh giá mới.
+		 * Add a new review and recalculate average rating.
 		 *
-		 * @param float $rating
+		 * @param float $rating Rating value.
+		 *
 		 * @return float
 		 */
 		public function add_review( $rating = 5 ) {
+
+			$rating = max( 0, min( 5, (float) $rating ) );
 
 			$count   = $this->get_review_count();
 			$current = $this->get_rating();
 
 			$new_count = $count + 1;
 
-			$average = ( ( $current * $count ) + $rating ) / $new_count;
+			$average = (
+				( $current * $count ) + $rating
+			) / $new_count;
 
 			$this->set_rating( $average );
 			$this->set_review_count( $new_count );
 
-			return $average;
+			return (float) $average;
+
 		}
+
 	}
+
 }
