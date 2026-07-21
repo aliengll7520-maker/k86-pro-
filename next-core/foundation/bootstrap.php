@@ -34,22 +34,31 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 
 			// Shared services.
 			$services = array(
-				'container'         => $container,
-				'engine_manager'    => $manager,
-				'product_service'   => 'product_service',
-				'health_check'      => 'health_check',
-				'module_registry'   => 'module_registry',
-				'wordpress_hooks'   => 'wordpress_hooks',
-				'event_dispatcher'  => 'event_dispatcher',
+
+				// Core.
+				'container'      => $container,
+				'engine_manager' => $manager,
+
+				// Foundation.
+				'config'         => 'config',
+				'registry'       => 'registry',
+				'helpers'        => 'helpers',
+				'logger'         => 'logger',
+				'event_manager'  => 'event_manager',
+				'error_handler'  => 'error_handler',
+
+				// Services.
+				'product_service' => 'product_service',
+				'health_check'    => 'health_check',
+				'module_registry' => 'module_registry',
+				'wordpress_hooks' => 'wordpress_hooks',
 			);
 
 			foreach ( $services as $key => $service ) {
 
 				if ( is_object( $service ) ) {
-
 					$registry->set( $key, $service );
 					continue;
-
 				}
 
 				if (
@@ -63,7 +72,6 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 					);
 
 					continue;
-
 				}
 
 				if ( method_exists( $container, 'get' ) ) {
