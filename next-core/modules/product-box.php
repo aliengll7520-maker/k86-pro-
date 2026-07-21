@@ -6,46 +6,58 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Product_Box_Module')) {
+if ( ! class_exists( 'K86_Product_Box_Module' ) ) {
 
-    class K86_Product_Box_Module {
+	class K86_Product_Box_Module {
 
-        /**
-         * Product Service.
-         *
-         * @var K86_Product_Service
-         */
-        protected $service;
+		/**
+		 * Product Service.
+		 *
+		 * @var K86_Product_Service
+		 */
+		protected $service;
 
-        /**
-         * Product Renderer.
-         *
-         * @var K86_Product_Renderer
-         */
-        protected $renderer;
+		/**
+		 * Product Renderer.
+		 *
+		 * @var K86_Product_Renderer
+		 */
+		protected $renderer;
 
-        /**
-         * Constructor.
-         *
-         * @param K86_Product_Service  $service
-         * @param K86_Product_Renderer $renderer
-         */
-        public function __construct($service, $renderer) {
-            $this->service  = $service;
-            $this->renderer = $renderer;
-        }
+		/**
+		 * Constructor.
+		 *
+		 * @param K86_Product_Service  $service  Product service.
+		 * @param K86_Product_Renderer $renderer Product renderer.
+		 */
+		public function __construct(
+			K86_Product_Service $service,
+			K86_Product_Renderer $renderer
+		) {
 
-        /**
-         * Render Product Box.
-         *
-         * @return string
-         */
-        public function render() {
-            return $this->renderer->render();
-        }
+			$this->service  = $service;
+			$this->renderer = $renderer;
 
-    }
+		}
 
+		/**
+		 * Render Product Box.
+		 *
+		 * Nếu truyền dữ liệu sản phẩm thì render trực tiếp.
+		 * Nếu không truyền thì Product Renderer sẽ tự lấy
+		 * dữ liệu từ Product Service.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return string
+		 */
+		public function render( array $product = array() ) {
+
+			return $this->renderer->render( $product );
+
+		}
+
+	}
 }
