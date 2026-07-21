@@ -4,8 +4,6 @@
  *
  * Voucher Module
  *
- * Module hiển thị voucher và mã giảm giá.
- *
  * @package K86Pro
  */
 
@@ -16,56 +14,70 @@ if ( ! class_exists( 'K86_Voucher_Module' ) ) {
 	class K86_Voucher_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 80;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
-			$code = '';
-			$text = '';
+			$voucher = array();
 
-			if ( isset( $this->data['voucher_code'] ) ) {
-				$code = sanitize_text_field( $this->data['voucher_code'] );
+			if (
+				isset( $product['voucher'] ) &&
+				is_array( $product['voucher'] )
+			) {
+				$voucher = $product['voucher'];
 			}
 
-			if ( isset( $this->data['voucher_text'] ) ) {
-				$text = sanitize_text_field( $this->data['voucher_text'] );
-			}
+			$code = $voucher['code'] ?? '';
+			$text = $voucher['text'] ?? '';
 
 			ob_start();
 			?>
 
-			<div class="k86-voucher">
+			<div class="k86-product-voucher">
 
-				<?php if ( ! empty( $text ) ) : ?>
-					<div class="k86-voucher-text">
-						<?php echo esc_html( $text ); ?>
-					</div>
-				<?php endif; ?>
+				<?php if ( ! empty( $voucher ) ) : ?>
 
-				<?php if ( ! empty( $code ) ) : ?>
-					<div class="k86-voucher-code">
-						<?php echo esc_html( $code ); ?>
+					<div class="k86-voucher-box">
+
+						<?php if ( ! empty( $text ) ) : ?>
+
+							<div class="k86-voucher-text">
+								<?php echo esc_html( $text ); ?>
+							</div>
+
+						<?php endif; ?>
+
+						<?php if ( ! empty( $code ) ) : ?>
+
+							<div class="k86-voucher-code">
+								<?php echo esc_html( $code ); ?>
+							</div>
+
+						<?php endif; ?>
+
 					</div>
+
+				<?php else : ?>
+
+					<div class="k86-voucher-placeholder">
+						No voucher available.
+					</div>
+
 				<?php endif; ?>
 
 			</div>
