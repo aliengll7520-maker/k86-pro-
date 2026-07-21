@@ -13,97 +13,115 @@ if ( ! class_exists( 'K86_Inventory_Engine' ) ) {
 	class K86_Inventory_Engine extends K86_Engine_Base {
 
 		/**
-		 * Đặt số lượng tồn kho.
+		 * Set stock quantity.
 		 *
-		 * @param int $quantity
+		 * @param int $quantity Stock quantity.
+		 *
 		 * @return $this
 		 */
 		public function set_stock( $quantity ) {
+
 			return $this->register( 'stock', max( 0, (int) $quantity ) );
+
 		}
 
 		/**
-		 * Lấy số lượng tồn kho.
+		 * Get stock quantity.
 		 *
 		 * @return int
 		 */
 		public function get_stock() {
-			return $this->get( 'stock', 0 );
+
+			return (int) $this->get( 'stock', 0 );
+
 		}
 
 		/**
-		 * Đặt trạng thái tồn kho.
+		 * Set stock status.
 		 *
-		 * @param string $status
+		 * @param string $status Stock status.
+		 *
 		 * @return $this
 		 */
 		public function set_stock_status( $status ) {
+
+			$status = in_array(
+				$status,
+				array( 'instock', 'outofstock', 'onbackorder' ),
+				true
+			) ? $status : 'instock';
+
 			return $this->register( 'stock_status', $status );
+
 		}
 
 		/**
-		 * Lấy trạng thái tồn kho.
+		 * Get stock status.
 		 *
 		 * @return string
 		 */
 		public function get_stock_status() {
-			return $this->get( 'stock_status', 'instock' );
+
+			return (string) $this->get( 'stock_status', 'instock' );
+
 		}
 
 		/**
-		 * Kiểm tra còn hàng.
+		 * Check whether product is in stock.
 		 *
 		 * @return bool
 		 */
 		public function is_in_stock() {
+
 			return $this->get_stock() > 0;
+
 		}
 
 		/**
-		 * Giảm tồn kho.
+		 * Decrease stock.
 		 *
-		 * @param int $quantity
+		 * @param int $quantity Quantity.
+		 *
 		 * @return int
 		 */
 		public function decrease( $quantity = 1 ) {
 
-			$stock = max( 0, $this->get_stock() - (int) $quantity );
+			$quantity = max( 0, (int) $quantity );
+
+			$stock = max(
+				0,
+				$this->get_stock() - $quantity
+			);
 
 			$this->set_stock( $stock );
-
-			/*
-			 * Tự động cập nhật trạng thái tồn kho.
-			 */
-			if ( $stock > 0 ) {
-				$this->set_stock_status( 'instock' );
-			} else {
-				$this->set_stock_status( 'outofstock' );
-			}
+			$this->sync_stock_status();
 
 			return $stock;
+
 		}
 
 		/**
-		 * Tăng tồn kho.
+		 * Increase stock.
 		 *
-		 * @param int $quantity
+		 * @param int $quantity Quantity.
+		 *
 		 * @return int
 		 */
 		public function increase( $quantity = 1 ) {
 
-			$stock = $this->get_stock() + (int) $quantity;
+			$quantity = max( 0, (int) $quantity );
+
+			$stock = $this->get_stock() + $quantity;
 
 			$this->set_stock( $stock );
-
-			if ( $stock > 0 ) {
-				$this->set_stock_status( 'instock' );
-			}
+			$this->sync_stock_status();
 
 			return $stock;
+
 		}
 
 		/**
-		 * Đồng bộ trạng thái tồn kho.
+		 * Sync stock status.
 		 *
 		 * @return void
 		 */
@@ -114,7 +132,9 @@ if ( ! class_exists( 'K86_Inventory_Engine' ) ) {
 			} else {
 				$this->set_stock_status( 'outofstock' );
 			}
+
 		}
+
 	}
 
 }
