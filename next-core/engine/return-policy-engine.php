@@ -6,75 +6,97 @@
  * @package K86Pro
  */
 
-defined('ABSPATH') || exit;
+defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('K86_Return_Policy_Engine')) {
+if ( ! class_exists( 'K86_Return_Policy_Engine' ) ) {
 
-    class K86_Return_Policy_Engine extends K86_Engine_Base {
+	class K86_Return_Policy_Engine extends K86_Engine_Base {
 
-        /**
-         * Set return period.
-         *
-         * @param string $period
-         */
-        public function set_period($period) {
-            $this->set('return_period', sanitize_text_field($period));
-        }
+		/**
+		 * Thiết lập thời gian đổi trả.
+		 *
+		 * @param string $period
+		 * @return $this
+		 */
+		public function set_period( $period ) {
+			return $this->register( 'return_period', sanitize_text_field( $period ) );
+		}
 
-        /**
-         * Get return period.
-         *
-         * @return string
-         */
-        public function period() {
-            return $this->get('return_period', '');
-        }
+		/**
+		 * Lấy thời gian đổi trả.
+		 *
+		 * @return string
+		 */
+		public function get_period() {
+			return $this->get( 'return_period', '' );
+		}
 
-        /**
-         * Set return conditions.
-         *
-         * @param string $conditions
-         */
-        public function set_conditions($conditions) {
-            $this->set('return_conditions', sanitize_textarea_field($conditions));
-        }
+		/**
+		 * Thiết lập điều kiện đổi trả.
+		 *
+		 * @param string $conditions
+		 * @return $this
+		 */
+		public function set_conditions( $conditions ) {
+			return $this->register(
+				'return_conditions',
+				sanitize_textarea_field( $conditions )
+			);
+		}
 
-        /**
-         * Get return conditions.
-         *
-         * @return string
-         */
-        public function conditions() {
-            return $this->get('return_conditions', '');
-        }
+		/**
+		 * Lấy điều kiện đổi trả.
+		 *
+		 * @return string
+		 */
+		public function get_conditions() {
+			return $this->get( 'return_conditions', '' );
+		}
 
-        /**
-         * Set return contact.
-         *
-         * @param string $contact
-         */
-        public function set_contact($contact) {
-            $this->set('return_contact', sanitize_text_field($contact));
-        }
+		/**
+		 * Thiết lập thông tin liên hệ đổi trả.
+		 *
+		 * @param string $contact
+		 * @return $this
+		 */
+		public function set_contact( $contact ) {
+			return $this->register(
+				'return_contact',
+				sanitize_text_field( $contact )
+			);
+		}
 
-        /**
-         * Get return contact.
-         *
-         * @return string
-         */
-        public function contact() {
-            return $this->get('return_contact', '');
-        }
+		/**
+		 * Lấy thông tin liên hệ đổi trả.
+		 *
+		 * @return string
+		 */
+		public function get_contact() {
+			return $this->get( 'return_contact', '' );
+		}
 
-        /**
-         * Check if returns are supported.
-         *
-         * @return bool
-         */
-        public function is_returnable() {
-            return $this->period() !== '';
-        }
+		/**
+		 * Kiểm tra sản phẩm có hỗ trợ đổi trả.
+		 *
+		 * @return bool
+		 */
+		public function is_returnable() {
+			return '' !== $this->get_period();
+		}
 
-    }
+		/**
+		 * Lấy toàn bộ thông tin chính sách đổi trả.
+		 *
+		 * @return array
+		 */
+		public function get_return_policy() {
+			return array(
+				'period'     => $this->get_period(),
+				'conditions' => $this->get_conditions(),
+				'contact'    => $this->get_contact(),
+				'available'  => $this->is_returnable(),
+			);
+		}
+	}
 
 }
