@@ -4,8 +4,6 @@
  *
  * Return Policy Module
  *
- * Module hiển thị chính sách đổi trả.
- *
  * @package K86Pro
  */
 
@@ -16,56 +14,73 @@ if ( ! class_exists( 'K86_Return_Policy_Module' ) ) {
 	class K86_Return_Policy_Module {
 
 		/**
-		 * Dữ liệu module.
+		 * Thứ tự hiển thị.
 		 *
-		 * @var array
+		 * @return int
 		 */
-		protected $data = array();
+		public function priority() {
 
-		/**
-		 * Khởi tạo module.
-		 *
-		 * @param array $data Dữ liệu sản phẩm.
-		 */
-		public function __construct( $data = array() ) {
-
-			$this->data = $data;
+			return 140;
 
 		}
 
 		/**
 		 * Render module.
 		 *
+		 * @param array $product Dữ liệu sản phẩm.
+		 *
 		 * @return string
 		 */
-		public function render() {
+		public function render( array $product = array() ) {
 
-			$period = '';
-			$policy = '';
+			$return = array();
 
-			if ( isset( $this->data['return_period'] ) ) {
-				$period = sanitize_text_field( $this->data['return_period'] );
+			if (
+				isset( $product['return_policy'] ) &&
+				is_array( $product['return_policy'] )
+			) {
+				$return = $product['return_policy'];
 			}
 
-			if ( isset( $this->data['return_policy'] ) ) {
-				$policy = sanitize_text_field( $this->data['return_policy'] );
-			}
+			$enabled = ! empty( $return['enabled'] );
+			$period  = $return['period'] ?? '';
+			$message = $return['message'] ?? '';
 
 			ob_start();
 			?>
 
-			<div class="k86-return-policy">
+			<div class="k86-product-return-policy">
 
-				<?php if ( ! empty( $period ) ) : ?>
-					<div class="k86-return-period">
-						<?php echo esc_html( $period ); ?>
-					</div>
-				<?php endif; ?>
+				<?php if ( $enabled ) : ?>
 
-				<?php if ( ! empty( $policy ) ) : ?>
-					<div class="k86-return-policy-text">
-						<?php echo esc_html( $policy ); ?>
+					<div class="k86-return-policy-box">
+
+						<span class="k86-return-policy-icon">↩️</span>
+
+						<div class="k86-return-policy-content">
+
+							<?php if ( ! empty( $period ) ) : ?>
+								<div class="k86-return-period">
+									<?php echo esc_html( $period ); ?>
+								</div>
+							<?php endif; ?>
+
+							<?php if ( ! empty( $message ) ) : ?>
+								<div class="k86-return-policy-text">
+									<?php echo esc_html( $message ); ?>
+								</div>
+							<?php endif; ?>
+
+						</div>
+
 					</div>
+
+				<?php else : ?>
+
+					<div class="k86-return-policy-placeholder">
+						No return policy available.
+					</div>
+
 				<?php endif; ?>
 
 			</div>
