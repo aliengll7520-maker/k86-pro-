@@ -37,7 +37,7 @@ if ( ! class_exists( 'K86_Inventory_Engine' ) ) {
 		 * @param string $status
 		 * @return $this
 		 */
-		public function set_status( $status ) {
+		public function set_stock_status( $status ) {
 			return $this->register( 'stock_status', $status );
 		}
 
@@ -46,7 +46,7 @@ if ( ! class_exists( 'K86_Inventory_Engine' ) ) {
 		 *
 		 * @return string
 		 */
-		public function get_status() {
+		public function get_stock_status() {
 			return $this->get( 'stock_status', 'instock' );
 		}
 
@@ -71,6 +71,15 @@ if ( ! class_exists( 'K86_Inventory_Engine' ) ) {
 
 			$this->set_stock( $stock );
 
+			/*
+			 * Tự động cập nhật trạng thái tồn kho.
+			 */
+			if ( $stock > 0 ) {
+				$this->set_stock_status( 'instock' );
+			} else {
+				$this->set_stock_status( 'outofstock' );
+			}
+
 			return $stock;
 		}
 
@@ -86,7 +95,26 @@ if ( ! class_exists( 'K86_Inventory_Engine' ) ) {
 
 			$this->set_stock( $stock );
 
+			if ( $stock > 0 ) {
+				$this->set_stock_status( 'instock' );
+			}
+
 			return $stock;
 		}
+
+		/**
+		 * Đồng bộ trạng thái tồn kho.
+		 *
+		 * @return void
+		 */
+		public function sync_stock_status() {
+
+			if ( $this->get_stock() > 0 ) {
+				$this->set_stock_status( 'instock' );
+			} else {
+				$this->set_stock_status( 'outofstock' );
+			}
+		}
 	}
+
 }
