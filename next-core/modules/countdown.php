@@ -41,16 +41,36 @@ if ( ! class_exists( 'K86_Countdown_Module' ) ) {
 				$countdown = $product['countdown'];
 			}
 
-			$enabled = ! empty( $countdown['enabled'] );
-			$title   = $countdown['title'] ?? '';
+			/*
+			 * Current fields
+			 */
+			$enabled  = ! empty( $countdown['enabled'] );
+			$title    = $countdown['title'] ?? '';
+			$subtitle = $countdown['subtitle'] ?? '';
 			$end_time = $countdown['end_time'] ?? '';
-			$timezone = $countdown['timezone'] ?? '';
-			$status   = $countdown['status'] ?? '';
+
+			/*
+			 * Future fields
+			 */
+			$timezone         = $countdown['timezone'] ?? '';
+			$status           = $countdown['status'] ?? '';
+			$campaign_id      = $countdown['campaign_id'] ?? '';
+			$campaign_type    = $countdown['campaign_type'] ?? '';
+			$priority         = isset( $countdown['priority'] )
+				? absint( $countdown['priority'] )
+				: 0;
+			$auto_hide        = ! empty( $countdown['auto_hide'] );
+			$expired_message  = $countdown['expired_message'] ?? '';
+			$replacement_text = $countdown['replacement_text'] ?? '';
+			$css_class        = $countdown['css_class'] ?? '';
+			$attributes       = isset( $countdown['attributes'] ) && is_array( $countdown['attributes'] )
+				? $countdown['attributes']
+				: array();
 
 			ob_start();
 			?>
 
-			<div class="k86-product-countdown">
+			<div class="k86-product-countdown <?php echo esc_attr( $css_class ); ?>">
 
 				<?php if ( $enabled && ! empty( $end_time ) ) : ?>
 
@@ -62,12 +82,22 @@ if ( ! class_exists( 'K86_Countdown_Module' ) ) {
 
 					<?php endif; ?>
 
+					<?php if ( ! empty( $subtitle ) ) : ?>
+
+						<div class="k86-countdown-subtitle">
+							<?php echo esc_html( $subtitle ); ?>
+						</div>
+
+					<?php endif; ?>
+
 					<div
 						class="k86-countdown-timer"
 						data-end-time="<?php echo esc_attr( $end_time ); ?>"
-						<?php if ( ! empty( $timezone ) ) : ?>
-							data-timezone="<?php echo esc_attr( $timezone ); ?>"
-						<?php endif; ?>
+						data-timezone="<?php echo esc_attr( $timezone ); ?>"
+						data-campaign-id="<?php echo esc_attr( $campaign_id ); ?>"
+						data-campaign-type="<?php echo esc_attr( $campaign_type ); ?>"
+						data-priority="<?php echo esc_attr( $priority ); ?>"
+						data-auto-hide="<?php echo $auto_hide ? '1' : '0'; ?>"
 					>
 						<?php echo esc_html( $end_time ); ?>
 					</div>
@@ -80,14 +110,23 @@ if ( ! class_exists( 'K86_Countdown_Module' ) ) {
 
 					<?php endif; ?>
 
+					<?php if ( ! empty( $replacement_text ) ) : ?>
+
+						<div class="k86-countdown-replacement-text">
+							<?php echo esc_html( $replacement_text ); ?>
+						</div>
+
+					<?php endif; ?>
+
 				<?php else : ?>
 
 					<div class="k86-countdown-placeholder">
 
-						<?php esc_html_e(
-							'Hiện không có chương trình đếm ngược.',
-							'k86-pro'
-						); ?>
+						<?php
+						echo ! empty( $expired_message )
+							? esc_html( $expired_message )
+							: esc_html__( 'Hiện không có chương trình đếm ngược.', 'k86-pro' );
+						?>
 
 					</div>
 
