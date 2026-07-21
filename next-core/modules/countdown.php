@@ -1,7 +1,6 @@
 <?php
 /**
  * K86 Pro Next Core
- *
  * Countdown Module
  *
  * @package K86Pro
@@ -14,7 +13,7 @@ if ( ! class_exists( 'K86_Countdown_Module' ) ) {
 	class K86_Countdown_Module {
 
 		/**
-		 * Thứ tự hiển thị.
+		 * Module priority.
 		 *
 		 * @return int
 		 */
@@ -25,9 +24,9 @@ if ( ! class_exists( 'K86_Countdown_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render countdown.
 		 *
-		 * @param array $product Dữ liệu sản phẩm.
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
@@ -45,6 +44,8 @@ if ( ! class_exists( 'K86_Countdown_Module' ) ) {
 			$enabled = ! empty( $countdown['enabled'] );
 			$title   = $countdown['title'] ?? '';
 			$end_time = $countdown['end_time'] ?? '';
+			$timezone = $countdown['timezone'] ?? '';
+			$status   = $countdown['status'] ?? '';
 
 			ob_start();
 			?>
@@ -54,22 +55,40 @@ if ( ! class_exists( 'K86_Countdown_Module' ) ) {
 				<?php if ( $enabled && ! empty( $end_time ) ) : ?>
 
 					<?php if ( ! empty( $title ) ) : ?>
+
 						<div class="k86-countdown-title">
 							<?php echo esc_html( $title ); ?>
 						</div>
+
 					<?php endif; ?>
 
 					<div
 						class="k86-countdown-timer"
 						data-end-time="<?php echo esc_attr( $end_time ); ?>"
+						<?php if ( ! empty( $timezone ) ) : ?>
+							data-timezone="<?php echo esc_attr( $timezone ); ?>"
+						<?php endif; ?>
 					>
 						<?php echo esc_html( $end_time ); ?>
 					</div>
 
+					<?php if ( ! empty( $status ) ) : ?>
+
+						<div class="k86-countdown-status">
+							<?php echo esc_html( $status ); ?>
+						</div>
+
+					<?php endif; ?>
+
 				<?php else : ?>
 
 					<div class="k86-countdown-placeholder">
-						No active countdown.
+
+						<?php esc_html_e(
+							'Hiện không có chương trình đếm ngược.',
+							'k86-pro'
+						); ?>
+
 					</div>
 
 				<?php endif; ?>
