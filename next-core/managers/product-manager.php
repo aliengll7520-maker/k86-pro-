@@ -90,11 +90,15 @@ class K86_Product_Manager {
 	 */
 	public function validate_product( array $product ) {
 
-		if ( empty( $product['title'] ) ) {
-			return false;
-		}
+	if ( empty( $product['title'] ) ) {
+		return false;
+	}
 
-		return true;
+	if ( empty( $product['slug'] ) ) {
+		return false;
+	}
+
+	return true;
 
 	}
 
