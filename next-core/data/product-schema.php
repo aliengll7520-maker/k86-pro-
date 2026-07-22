@@ -1,52 +1,72 @@
 <?php
 /**
- * K86 Pro Next Core
  * Product Schema
  *
- * @package K86Pro
+ * Product Engine Schema.
+ *
+ * @package K86_Pro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! function_exists( 'k86_product_schema' ) ) {
+if ( ! class_exists( 'K86_Product_Schema' ) ) {
 
-	/**
-	 * Return Product schema definition.
-	 *
-	 * @return array
-	 */
-	function k86_product_schema() {
+	class K86_Product_Schema {
 
-		global $wpdb;
+		/**
+		 * Get schema.
+		 *
+		 * @return array
+		 */
+		public static function get() {
 
-		$contract = array();
+			return array(
 
-		if ( class_exists( 'K86_Product_Contract' ) ) {
-			$contract = K86_Product_Contract::fields();
+				'table'       => 'k86_products',
+
+				'primary_key' => 'id',
+
+				'contract'    => K86_Product_Contract::fields(),
+
+				'columns'     => array(
+
+					'id',
+
+					'title',
+					'slug',
+					'sku',
+					'status',
+
+					'gallery',
+					'video',
+
+					'price',
+					'sale_price',
+
+					'affiliate_links',
+
+					'rating',
+					'review_count',
+
+					'voucher',
+
+					'stock',
+
+					'shipping',
+
+					'warranty',
+					'return_policy',
+
+					'post_id',
+
+					'created_at',
+					'updated_at',
+
+				),
+
+			);
+
 		}
-
-		return array(
-
-			'table' => $wpdb->prefix . 'k86_products',
-
-			'primary_key' => 'id',
-
-			'contract' => $contract,
-
-			'columns' => array(
-
-				'id'         => 'BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT',
-				'title'      => 'TEXT NOT NULL',
-				'price'      => 'DECIMAL(18,2) NOT NULL DEFAULT 0',
-				'sale_price' => 'DECIMAL(18,2) NOT NULL DEFAULT 0',
-				'status'     => 'VARCHAR(20) NOT NULL DEFAULT "draft"',
-
-				'created_at' => 'DATETIME NULL',
-				'updated_at' => 'DATETIME NULL',
-
-			),
-
-		);
 
 	}
 
