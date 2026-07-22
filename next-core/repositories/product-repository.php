@@ -13,6 +13,30 @@ if ( ! class_exists( 'K86_Product_Repository' ) ) {
 	class K86_Product_Repository {
 
 		/**
+		 * Get schema.
+		 *
+		 * @return array
+		 */
+		protected function schema() {
+
+			return k86_product_schema();
+
+		}
+
+		/**
+		 * Get table name.
+		 *
+		 * @return string
+		 */
+		protected function table() {
+
+			$schema = $this->schema();
+
+			return $schema['table'];
+
+		}
+
+		/**
 		 * Save product.
 		 *
 		 * @param array $product Product data.
@@ -50,7 +74,7 @@ if ( ! class_exists( 'K86_Product_Repository' ) ) {
 		}
 
 		/**
-		 * Find one product.
+		 * Find product.
 		 *
 		 * @param int $id Product ID.
 		 * @return array
