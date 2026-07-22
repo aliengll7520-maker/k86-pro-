@@ -1,6 +1,7 @@
 <?php
 /**
  * K86 Pro Next Core
+ *
  * Product Gallery Module
  *
  * @package K86Pro
@@ -24,22 +25,26 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 		}
 
 		/**
-		 * Render product gallery.
+		 * Render module.
 		 *
 		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
-		public function render( array $product = array() ) {
+		public function render( array $product ) {
 
 			$gallery = array();
-			$alt     = $product['title'] ?? '';
 
-			if (
-				isset( $product['gallery'] ) &&
-				is_array( $product['gallery'] )
-			) {
+			if ( ! empty( $product['gallery'] ) && is_array( $product['gallery'] ) ) {
 				$gallery = $product['gallery'];
+			}
+
+			if ( empty( $gallery ) && ! empty( $product['image'] ) ) {
+				$gallery[] = $product['image'];
+			}
+
+			if ( empty( $gallery ) ) {
+				return '';
 			}
 
 			ob_start();
@@ -47,41 +52,29 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 
 			<div class="k86-product-gallery">
 
-				<?php if ( ! empty( $gallery ) ) : ?>
+				<div class="k86-gallery-main">
 
-					<div class="k86-gallery-main">
+					<img
+						src="<?php echo esc_url( $gallery[0] ); ?>"
+						alt=""
+						class="k86-gallery-image"
+					/>
 
-						<img
-							src="<?php echo esc_url( $gallery[0] ); ?>"
-							alt="<?php echo esc_attr( $alt ); ?>"
-							class="k86-gallery-main-image"
-						>
+				</div>
 
-					</div>
+				<?php if ( count( $gallery ) > 1 ) : ?>
 
 					<div class="k86-gallery-thumbnails">
 
 						<?php foreach ( $gallery as $image ) : ?>
 
-							<div class="k86-gallery-thumb">
-
-								<img
-									src="<?php echo esc_url( $image ); ?>"
-									alt="<?php echo esc_attr( $alt ); ?>"
-									class="k86-gallery-thumbnail-image"
-								>
-
-							</div>
+							<img
+								src="<?php echo esc_url( $image ); ?>"
+								alt=""
+								class="k86-gallery-thumb"
+							/>
 
 						<?php endforeach; ?>
-
-					</div>
-
-				<?php else : ?>
-
-					<div class="k86-gallery-placeholder">
-
-						<?php esc_html_e( 'Chưa có hình ảnh sản phẩm.', 'k86-pro' ); ?>
 
 					</div>
 
