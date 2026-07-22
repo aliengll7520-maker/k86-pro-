@@ -25,7 +25,7 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render highlights.
 		 *
 		 * @param array $product Product data.
 		 *
@@ -33,13 +33,7 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 		 */
 		public function render( array $product ) {
 
-			$highlights = array();
-
-			if ( ! empty( $product['highlights'] ) && is_array( $product['highlights'] ) ) {
-				$highlights = $product['highlights'];
-			}
-
-			if ( empty( $highlights ) ) {
+			if ( empty( $product['highlights'] ) || ! is_array( $product['highlights'] ) ) {
 				return '';
 			}
 
@@ -48,11 +42,63 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 
 			<div class="k86-product-highlights">
 
-				<?php foreach ( $highlights as $item ) : ?>
+				<?php foreach ( $product['highlights'] as $item ) : ?>
 
-					<span class="k86-highlight-item">
-						<?php echo esc_html( $item ); ?>
-					</span>
+					<?php
+					$icon  = '';
+					$title = '';
+					$text  = '';
+
+					if ( is_array( $item ) ) {
+
+						$icon  = ! empty( $item['icon'] ) ? $item['icon'] : '';
+						$title = ! empty( $item['title'] ) ? $item['title'] : '';
+						$text  = ! empty( $item['text'] ) ? $item['text'] : '';
+
+					} else {
+
+						$title = (string) $item;
+
+					}
+					?>
+
+					<div class="k86-highlight-item">
+
+						<?php if ( $icon ) : ?>
+
+							<div class="k86-highlight-icon">
+
+								<span class="<?php echo esc_attr( $icon ); ?>"></span>
+
+							</div>
+
+						<?php endif; ?>
+
+						<div class="k86-highlight-content">
+
+							<?php if ( $title ) : ?>
+
+								<div class="k86-highlight-title">
+
+									<?php echo esc_html( $title ); ?>
+
+								</div>
+
+							<?php endif; ?>
+
+							<?php if ( $text ) : ?>
+
+								<div class="k86-highlight-text">
+
+									<?php echo esc_html( $text ); ?>
+
+								</div>
+
+							<?php endif; ?>
+
+						</div>
+
+					</div>
 
 				<?php endforeach; ?>
 
