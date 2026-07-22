@@ -27,6 +27,8 @@ if ( ! class_exists( 'K86_Product_Contract' ) ) {
 					'slug',
 					'sku',
 					'status',
+					'short_description',
+					'description',
 				),
 
 				'media' => array(
