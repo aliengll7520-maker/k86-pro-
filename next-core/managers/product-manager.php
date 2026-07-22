@@ -1,9 +1,18 @@
-K86_Product_Manager
+<?php
+/**
+ * Product Manager
+ */
 
-↓
+defined( 'ABSPATH' ) || exit;
 
-Repository
+class K86_Product_Manager {
 
-↓
+	protected $repository;
 
-Database
+	public function __construct() {
+
+		$this->repository = new K86_Product_Repository();
+
+	}
+
+}
