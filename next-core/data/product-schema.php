@@ -19,11 +19,19 @@ if ( ! function_exists( 'k86_product_schema' ) ) {
 
 		global $wpdb;
 
+		$contract = array();
+
+		if ( class_exists( 'K86_Product_Contract' ) ) {
+			$contract = K86_Product_Contract::fields();
+		}
+
 		return array(
 
 			'table' => $wpdb->prefix . 'k86_products',
 
 			'primary_key' => 'id',
+
+			'contract' => $contract,
 
 			'columns' => array(
 
