@@ -1,6 +1,7 @@
 <?php
 /**
  * K86 Pro Next Core
+ *
  * Product Rating Module
  *
  * @package K86Pro
@@ -24,53 +25,56 @@ if ( ! class_exists( 'K86_Product_Rating_Module' ) ) {
 		}
 
 		/**
-		 * Render product rating.
+		 * Render rating.
 		 *
 		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
-		public function render( array $product = array() ) {
+		public function render( array $product ) {
 
-			$rating = isset( $product['rating'] )
-				? (float) $product['rating']
-				: 0;
+			$rating = isset( $product['rating'] ) ? (float) $product['rating'] : 0;
 
-			$review_count = isset( $product['review_count'] )
-				? absint( $product['review_count'] )
-				: 0;
+			if ( $rating <= 0 ) {
+				return '';
+			}
+
+			$rating = max( 0, min( 5, $rating ) );
 
 			ob_start();
 			?>
 
 			<div class="k86-product-rating">
 
-				<div class="k86-rating-summary">
+				<div class="k86-rating-score">
 
-					<span class="k86-rating-score">
-						<?php echo esc_html( number_format( $rating, 1 ) ); ?>/5
-					</span>
-
-					<span class="k86-rating-stars">
-						★★★★★
-					</span>
-
-					<span class="k86-rating-count">
-						(<?php echo esc_html( $review_count ); ?>
-						<?php esc_html_e( ' đánh giá', 'k86-pro' ); ?>)
-					</span>
+					<?php echo esc_html( number_format( $rating, 1 ) ); ?>
 
 				</div>
 
-				<?php if ( 0 === $review_count ) : ?>
+				<div class="k86-rating-stars">
 
-					<div class="k86-rating-placeholder">
+					<?php
+					for ( $i = 1; $i <= 5; $i++ ) {
 
-						<?php esc_html_e( 'Chưa có đánh giá cho sản phẩm.', 'k86-pro' ); ?>
+						if ( $rating >= $i ) {
 
-					</div>
+							echo '<span class="k86-star filled">★</span>';
 
-				<?php endif; ?>
+						} elseif ( $rating >= ( $i - 0.5 ) ) {
+
+							echo '<span class="k86-star half">★</span>';
+
+						} else {
+
+							echo '<span class="k86-star">☆</span>';
+
+						}
+
+					}
+					?>
+
+				</div>
 
 			</div>
 
