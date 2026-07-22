@@ -8,6 +8,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+$manager = new K86_Product_Manager();
+
+$products = $manager->get_products();
+
 ?>
 <div class="wrap">
 
