@@ -22,29 +22,58 @@ if ( ! class_exists( 'K86_Product_Contract' ) ) {
 
 			return array(
 
-				'basic' => array(),
+				'basic' => array(
+					'title',
+					'slug',
+					'sku',
+					'status',
+				),
 
-				'media' => array(),
+				'media' => array(
+					'gallery',
+					'video',
+				),
 
-				'pricing' => array(),
+				'pricing' => array(
+					'price',
+					'sale_price',
+				),
 
-				'affiliate' => array(),
+				'affiliate' => array(
+					'affiliate_links',
+				),
 
-				'review' => array(),
+				'review' => array(
+					'rating',
+					'review_count',
+				),
 
-				'voucher' => array(),
+				'voucher' => array(
+					'voucher',
+				),
 
 				'countdown' => array(),
 
-				'stock' => array(),
+				'stock' => array(
+					'stock',
+				),
 
-				'shipping' => array(),
+				'shipping' => array(
+					'shipping',
+				),
 
-				'policy' => array(),
+				'policy' => array(
+					'warranty',
+					'return_policy',
+				),
 
 				'seo' => array(),
 
-				'system' => array(),
+				'system' => array(
+					'post_id',
+					'created_at',
+					'updated_at',
+				),
 
 			);
 
