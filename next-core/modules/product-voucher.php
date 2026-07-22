@@ -25,13 +25,17 @@ if ( ! class_exists( 'K86_Product_Voucher_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render voucher section.
 		 *
 		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
 		public function render( array $product ) {
+
+			$title = ! empty( $product['voucher_title'] )
+				? sanitize_text_field( $product['voucher_title'] )
+				: __( 'Ưu đãi dành cho bạn', 'k86-pro' );
 
 			$vouchers = array();
 
@@ -46,21 +50,35 @@ if ( ! class_exists( 'K86_Product_Voucher_Module' ) ) {
 			ob_start();
 			?>
 
-			<div class="k86-product-vouchers">
+			<div class="k86-product-voucher">
 
-				<h3>Ưu đãi</h3>
+				<h3 class="k86-voucher-title">
+					<?php echo esc_html( $title ); ?>
+				</h3>
 
-				<ul class="k86-voucher-list">
+				<div class="k86-voucher-list">
 
 					<?php foreach ( $vouchers as $voucher ) : ?>
 
-						<li class="k86-voucher-item">
-							🎁 <?php echo esc_html( $voucher ); ?>
-						</li>
+						<div class="k86-voucher-item">
+
+							<strong>
+								<?php echo esc_html( $voucher['code'] ?? '' ); ?>
+							</strong>
+
+							<?php if ( ! empty( $voucher['description'] ) ) : ?>
+
+								<div class="k86-voucher-description">
+									<?php echo esc_html( $voucher['description'] ); ?>
+								</div>
+
+							<?php endif; ?>
+
+						</div>
 
 					<?php endforeach; ?>
 
-				</ul>
+				</div>
 
 			</div>
 
