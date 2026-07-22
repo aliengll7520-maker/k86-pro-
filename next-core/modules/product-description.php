@@ -20,7 +20,7 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 		 */
 		public function priority() {
 
-			return 60;
+			return 65;
 
 		}
 
@@ -33,9 +33,19 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 		 */
 		public function render( array $product ) {
 
-			$description = ! empty( $product['description'] ) ? wp_kses_post( $product['description'] ) : '';
+			$title = ! empty( $product['description_title'] )
+				? sanitize_text_field( $product['description_title'] )
+				: __( 'Mô tả sản phẩm', 'k86-pro' );
 
-			if ( '' === $description ) {
+			$short_description = ! empty( $product['short_description'] )
+				? wp_kses_post( $product['short_description'] )
+				: '';
+
+			$description = ! empty( $product['description'] )
+				? wp_kses_post( $product['description'] )
+				: '';
+
+			if ( '' === $short_description && '' === $description ) {
 				return '';
 			}
 
@@ -44,11 +54,25 @@ if ( ! class_exists( 'K86_Product_Description_Module' ) ) {
 
 			<div class="k86-product-description">
 
-				<h3>Mô tả sản phẩm</h3>
+				<h3 class="k86-description-title">
+					<?php echo esc_html( $title ); ?>
+				</h3>
 
-				<div class="k86-description-content">
-					<?php echo $description; ?>
-				</div>
+				<?php if ( '' !== $short_description ) : ?>
+
+					<div class="k86-description-summary">
+						<?php echo $short_description; ?>
+					</div>
+
+				<?php endif; ?>
+
+				<?php if ( '' !== $description ) : ?>
+
+					<div class="k86-description-content">
+						<?php echo $description; ?>
+					</div>
+
+				<?php endif; ?>
 
 			</div>
 
