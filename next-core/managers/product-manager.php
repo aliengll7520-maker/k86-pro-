@@ -27,4 +27,52 @@ class K86_Product_Manager {
 
 	}
 
+	/**
+	 * Update product.
+	 *
+	 * @param int   $id      Product ID.
+	 * @param array $product Product data.
+	 * @return bool
+	 */
+	public function update_product( int $id, array $product ) {
+
+		return $this->repository->update( $id, $product );
+
+	}
+
+	/**
+	 * Delete product.
+	 *
+	 * @param int $id Product ID.
+	 * @return bool
+	 */
+	public function delete_product( int $id ) {
+
+		return $this->repository->delete( $id );
+
+	}
+
+	/**
+	 * Get product.
+	 *
+	 * @param int $id Product ID.
+	 * @return array
+	 */
+	public function get_product( int $id ) {
+
+		return $this->repository->find( $id );
+
+	}
+
+	/**
+	 * Get products.
+	 *
+	 * @return array
+	 */
+	public function get_products() {
+
+		return $this->repository->find_all();
+
+	}
+
 }
