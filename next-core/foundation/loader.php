@@ -101,6 +101,7 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 			);
 
 			// Other framework layers.
+			$this->require_directory( $this->base_path . '/repositories' );
 			$this->require_directory( $this->base_path . '/services' );
 			$this->require_directory( $this->base_path . '/providers' );
 			$this->require_directory( $this->base_path . '/support' );
