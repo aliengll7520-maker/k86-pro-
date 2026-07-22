@@ -36,6 +36,8 @@ if ( ! class_exists( 'K86_Product_Schema' ) ) {
 					'slug',
 					'sku',
 					'status',
+					'short_description',
+					'description',
 
 					'gallery',
 					'video',
