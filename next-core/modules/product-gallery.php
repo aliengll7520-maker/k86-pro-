@@ -28,17 +28,22 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 		 * Render module.
 		 *
 		 * @param array $product Product data.
-		 *
-		 * @return string
-		 */
-		public function render( array $product ) {
+		 			$gallery = array();
 
-			$gallery = array();
+			if ( class_exists( 'K86_Media_Manager' ) ) {
 
-			if ( ! empty( $product['gallery'] ) && is_array( $product['gallery'] ) ) {
+				$media   = ( new K86_Media_Manager() )->get_product_media( $product );
+				$gallery = $media['gallery'];
+
+			}
+
+			if ( empty( $gallery ) && ! empty( $product['gallery'] ) && is_array( $product['gallery'] ) ) {
 				$gallery = $product['gallery'];
 			}
 
+			if ( empty( $gallery ) && ! empty( $product['image'] ) ) {
+				$gallery[] = $product['image'];
+			}
 			if ( empty( $gallery ) && ! empty( $product['image'] ) ) {
 				$gallery[] = $product['image'];
 			}
