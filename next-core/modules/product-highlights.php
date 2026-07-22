@@ -1,6 +1,7 @@
 <?php
 /**
  * K86 Pro Next Core
+ *
  * Product Highlights Module
  *
  * @package K86Pro
@@ -24,21 +25,22 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 		}
 
 		/**
-		 * Render product highlights.
+		 * Render module.
 		 *
 		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
-		public function render( array $product = array() ) {
+		public function render( array $product ) {
 
 			$highlights = array();
 
-			if (
-				isset( $product['highlights'] ) &&
-				is_array( $product['highlights'] )
-			) {
+			if ( ! empty( $product['highlights'] ) && is_array( $product['highlights'] ) ) {
 				$highlights = $product['highlights'];
+			}
+
+			if ( empty( $highlights ) ) {
+				return '';
 			}
 
 			ob_start();
@@ -46,35 +48,13 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 
 			<div class="k86-product-highlights">
 
-				<?php if ( ! empty( $highlights ) ) : ?>
+				<?php foreach ( $highlights as $item ) : ?>
 
-					<ul class="k86-highlights-list">
+					<span class="k86-highlight-item">
+						<?php echo esc_html( $item ); ?>
+					</span>
 
-						<?php foreach ( $highlights as $item ) : ?>
-
-							<li class="k86-highlight-item">
-
-								<span class="k86-highlight-icon">✓</span>
-
-								<span class="k86-highlight-text">
-									<?php echo esc_html( $item ); ?>
-								</span>
-
-							</li>
-
-						<?php endforeach; ?>
-
-					</ul>
-
-				<?php else : ?>
-
-					<div class="k86-highlights-placeholder">
-
-						<?php esc_html_e( 'Chưa có điểm nổi bật của sản phẩm.', 'k86-pro' ); ?>
-
-					</div>
-
-				<?php endif; ?>
+				<?php endforeach; ?>
 
 			</div>
 
