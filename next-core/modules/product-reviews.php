@@ -20,12 +20,12 @@ if ( ! class_exists( 'K86_Product_Reviews_Module' ) ) {
 		 */
 		public function priority() {
 
-			return 50;
+			return 55;
 
 		}
 
 		/**
-		 * Render module.
+		 * Render reviews summary.
 		 *
 		 * @param array $product Product data.
 		 *
@@ -33,13 +33,10 @@ if ( ! class_exists( 'K86_Product_Reviews_Module' ) ) {
 		 */
 		public function render( array $product ) {
 
-			$reviews = array();
+			$reviews = isset( $product['review_count'] ) ? (int) $product['review_count'] : 0;
+			$sold    = isset( $product['sold_count'] ) ? (int) $product['sold_count'] : 0;
 
-			if ( ! empty( $product['reviews'] ) && is_array( $product['reviews'] ) ) {
-				$reviews = $product['reviews'];
-			}
-
-			if ( empty( $reviews ) ) {
+			if ( $reviews <= 0 && $sold <= 0 ) {
 				return '';
 			}
 
@@ -48,27 +45,27 @@ if ( ! class_exists( 'K86_Product_Reviews_Module' ) ) {
 
 			<div class="k86-product-reviews">
 
-				<h3>Đánh giá sản phẩm</h3>
+				<?php if ( $reviews > 0 ) : ?>
 
-				<?php foreach ( $reviews as $review ) : ?>
+					<div class="k86-review-count">
 
-					<div class="k86-review-item">
-
-						<div class="k86-review-author">
-							<?php echo esc_html( $review['author'] ?? 'Khách hàng' ); ?>
-						</div>
-
-						<div class="k86-review-rating">
-							⭐ <?php echo esc_html( number_format( (float) ( $review['rating'] ?? 5 ), 1 ) ); ?>
-						</div>
-
-						<div class="k86-review-content">
-							<?php echo esc_html( $review['content'] ?? '' ); ?>
-						</div>
+						<?php echo esc_html( number_format_i18n( $reviews ) ); ?>
+						<?php esc_html_e( 'đánh giá', 'k86-pro' ); ?>
 
 					</div>
 
-				<?php endforeach; ?>
+				<?php endif; ?>
+
+				<?php if ( $sold > 0 ) : ?>
+
+					<div class="k86-sold-count">
+
+						<?php echo esc_html( number_format_i18n( $sold ) ); ?>
+						<?php esc_html_e( 'đã bán', 'k86-pro' ); ?>
+
+					</div>
+
+				<?php endif; ?>
 
 			</div>
 
