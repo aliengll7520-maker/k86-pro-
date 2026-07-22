@@ -152,34 +152,15 @@ if ( ! class_exists( 'K86_Product_Renderer' ) ) {
 			}
 
 			/*
-			 * Fallback.
-			 */
-			ob_start();
-			?>
+ * Fallback.
+ */
+ob_start();
 
-			<div class="k86-product-box">
+$product = is_array( $product ) ? $product : array();
 
-				<div class="k86-product-price">
+require __DIR__ . '/product-layout.php';
 
-					<?php echo esc_html( $product['price'] ?? '' ); ?>
-
-				</div>
-
-				<div class="k86-product-stock">
-
-					<?php
-					echo ! empty( $product['in_stock'] )
-						? esc_html__( 'Còn hàng', 'k86-pro' )
-						: esc_html__( 'Hết hàng', 'k86-pro' );
-					?>
-
-				</div>
-
-			</div>
-
-			<?php
-
-			return ob_get_clean();
+return ob_get_clean();
 					}
 
 	}
