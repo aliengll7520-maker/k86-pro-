@@ -8,84 +8,54 @@
 
 defined( 'ABSPATH' ) || exit;
 
+// Product mặc định.
+$product = $product ?? array();
+
 ?>
 <div class="wrap">
 
-	<h1>Add Product</h1>
+	<h1><?php esc_html_e( 'Add Product', 'k86-pro' ); ?></h1>
 
-	<form method="post" action="">
+	<form
+		method="post"
+		action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>"
+	>
 
-		<table class="form-table">
+		<input
+			type="hidden"
+			name="action"
+			value="k86_save_product"
+		/>
 
-			<tr>
-				<th scope="row">
-					<label for="k86_title">Product Title</label>
-				</th>
-				<td>
-					<input
-						type="text"
-						id="k86_title"
-						name="k86_title"
-						class="regular-text"
-					/>
-				</td>
-			</tr>
+		<?php wp_nonce_field( 'k86_save_product', 'k86_product_nonce' ); ?>
 
-			<tr>
-				<th scope="row">
-					<label for="k86_price">Price</label>
-				</th>
-				<td>
-					<input
-						type="number"
-						id="k86_price"
-						name="k86_price"
-						class="regular-text"
-					/>
-				</td>
-			</tr>
+		<?php require __DIR__ . '/sections/basic.php'; ?>
 
-			<tr>
-				<th scope="row">
-					<label for="k86_sale_price">Sale Price</label>
-				</th>
-				<td>
-					<input
-						type="number"
-						id="k86_sale_price"
-						name="k86_sale_price"
-						class="regular-text"
-					/>
-				</td>
-			</tr>
+		<?php require __DIR__ . '/sections/media.php'; ?>
 
-			<tr>
-				<th scope="row">
-					<label for="k86_status">Status</label>
-				</th>
-				<td>
+		<?php require __DIR__ . '/sections/pricing.php'; ?>
 
-					<select
-						id="k86_status"
-						name="k86_status"
-					>
+		<?php require __DIR__ . '/sections/actions.php'; ?>
 
-						<option value="instock">
-							In Stock
-						</option>
+		<?php require __DIR__ . '/sections/rating.php'; ?>
 
-						<option value="outofstock">
-							Out of Stock
-						</option>
+		<?php require __DIR__ . '/sections/description.php'; ?>
 
-					</select>
+		<?php require __DIR__ . '/sections/compare.php'; ?>
 
-				</td>
-			</tr>
+		<?php require __DIR__ . '/sections/voucher.php'; ?>
 
-		</table>
+		<?php require __DIR__ . '/sections/countdown.php'; ?>
 
-		<?php submit_button( 'Save Product' ); ?>
+		<?php require __DIR__ . '/sections/stock.php'; ?>
+
+		<?php require __DIR__ . '/sections/shipping.php'; ?>
+
+		<?php require __DIR__ . '/sections/policy.php'; ?>
+
+		<?php require __DIR__ . '/sections/faq.php'; ?>
+
+		<?php submit_button( __( 'Save Product', 'k86-pro' ) ); ?>
 
 	</form>
 
