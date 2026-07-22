@@ -20,13 +20,25 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 		protected $manager;
 
 		/**
+		 * Product Repository.
+		 *
+		 * @var K86_Product_Repository
+		 */
+		protected $repository;
+
+		/**
 		 * Constructor.
 		 *
 		 * @param K86_Engine_Manager $manager Engine manager.
+		 * @param K86_Product_Repository $repository Product repository.
 		 */
-		public function __construct( K86_Engine_Manager $manager ) {
+		public function __construct(
+			K86_Engine_Manager $manager,
+			K86_Product_Repository $repository
+		) {
 
-			$this->manager = $manager;
+			$this->manager    = $manager;
+			$this->repository = $repository;
 
 		}
 
@@ -40,6 +52,17 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 		public function engine( $name ) {
 
 			return $this->manager->get( $name );
+
+		}
+
+		/**
+		 * Get repository.
+		 *
+		 * @return K86_Product_Repository
+		 */
+		public function repository() {
+
+			return $this->repository;
 
 		}
 
@@ -75,7 +98,7 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 
 		/**
 		 * Get current price.
-		 *
+				 *
 		 * @return float
 		 */
 		public function get_current_price() {
@@ -89,7 +112,8 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 			return $pricing->get_current_price();
 
 		}
-				/**
+
+		/**
 		 * Check stock.
 		 *
 		 * @return bool
@@ -172,5 +196,4 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 		}
 
 	}
-
 }
