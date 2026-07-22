@@ -15,4 +15,16 @@ class K86_Product_Manager {
 
 	}
 
+	/**
+	 * Create product.
+	 *
+	 * @param array $product Product data.
+	 * @return bool
+	 */
+	public function create_product( array $product ) {
+
+		return $this->repository->save( $product );
+
+	}
+
 }
