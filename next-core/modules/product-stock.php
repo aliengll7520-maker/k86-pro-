@@ -25,7 +25,7 @@ if ( ! class_exists( 'K86_Product_Stock_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render stock information.
 		 *
 		 * @param array $product Product data.
 		 *
@@ -35,24 +35,34 @@ if ( ! class_exists( 'K86_Product_Stock_Module' ) ) {
 
 			$stock = isset( $product['stock'] ) ? (int) $product['stock'] : 0;
 
+			if ( $stock <= 0 ) {
+				return '';
+			}
+
+			$title = ! empty( $product['stock_title'] )
+				? sanitize_text_field( $product['stock_title'] )
+				: __( 'Tình trạng kho', 'k86-pro' );
+
 			ob_start();
 			?>
 
 			<div class="k86-product-stock">
 
-				<?php if ( $stock > 0 ) : ?>
+				<h3 class="k86-stock-title">
+					<?php echo esc_html( $title ); ?>
+				</h3>
 
-					<div class="k86-stock in-stock">
-						✅ Còn hàng (<?php echo esc_html( number_format_i18n( $stock ) ); ?> sản phẩm)
-					</div>
+				<div class="k86-stock-content">
 
-				<?php else : ?>
+					<span class="k86-stock-label">
+						<?php esc_html_e( 'Còn lại:', 'k86-pro' ); ?>
+					</span>
 
-					<div class="k86-stock out-of-stock">
-						❌ Hết hàng
-					</div>
+					<strong class="k86-stock-value">
+						<?php echo esc_html( number_format_i18n( $stock ) ); ?>
+					</strong>
 
-				<?php endif; ?>
+				</div>
 
 			</div>
 
