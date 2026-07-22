@@ -25,7 +25,7 @@ if ( ! class_exists( 'K86_Product_Compare_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render compare section.
 		 *
 		 * @param array $product Product data.
 		 *
@@ -33,13 +33,17 @@ if ( ! class_exists( 'K86_Product_Compare_Module' ) ) {
 		 */
 		public function render( array $product ) {
 
-			$specs = array();
+			$title = ! empty( $product['compare_title'] )
+				? sanitize_text_field( $product['compare_title'] )
+				: __( 'So sánh sản phẩm', 'k86-pro' );
 
-			if ( ! empty( $product['specifications'] ) && is_array( $product['specifications'] ) ) {
-				$specs = $product['specifications'];
+			$items = array();
+
+			if ( ! empty( $product['compare_items'] ) && is_array( $product['compare_items'] ) ) {
+				$items = $product['compare_items'];
 			}
 
-			if ( empty( $specs ) ) {
+			if ( empty( $items ) ) {
 				return '';
 			}
 
@@ -48,22 +52,24 @@ if ( ! class_exists( 'K86_Product_Compare_Module' ) ) {
 
 			<div class="k86-product-compare">
 
-				<h3>Thông số kỹ thuật</h3>
+				<h3 class="k86-compare-title">
+					<?php echo esc_html( $title ); ?>
+				</h3>
 
-				<table class="k86-specifications">
+				<table class="k86-compare-table">
 
 					<tbody>
 
-					<?php foreach ( $specs as $label => $value ) : ?>
+					<?php foreach ( $items as $item ) : ?>
 
 						<tr>
 
 							<th>
-								<?php echo esc_html( $label ); ?>
+								<?php echo esc_html( $item['label'] ?? '' ); ?>
 							</th>
 
 							<td>
-								<?php echo esc_html( $value ); ?>
+								<?php echo esc_html( $item['value'] ?? '' ); ?>
 							</td>
 
 						</tr>
