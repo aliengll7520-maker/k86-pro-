@@ -22,6 +22,7 @@ if ( ! class_exists( 'K86_Render_Context' ) ) {
 		 * @var array
 		 */
 		protected $context = array();
+		protected $media_manager = null;
 
 		/**
 		 * Constructor.
