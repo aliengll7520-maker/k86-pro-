@@ -56,6 +56,10 @@ if ( ! class_exists( 'K86_Service_Provider' ) ) {
 				'product_repository',
 				fn() => new K86_Product_Repository()
 			);
+			$container->singleton(
+    'product_manager',
+    fn() => new K86_Product_Manager()
+);
 
 			$container->singleton(
 				'product_service',
