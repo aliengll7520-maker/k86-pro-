@@ -23,7 +23,11 @@ class K86_Product_Manager {
 	 */
 	public function create_product( array $product ) {
 
-		return $this->repository->save( $product );
+	if ( ! $this->validate_product( $product ) ) {
+		return false;
+	}
+
+	return $this->repository->save( $product );
 
 	}
 
