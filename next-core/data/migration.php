@@ -27,7 +27,7 @@ class K86_Migration {
 
 			post_id BIGINT UNSIGNED NOT NULL DEFAULT 0,
 
-			product_name VARCHAR(255) NOT NULL,
+			title varchar(255) NOT NULL,
 
 			slug VARCHAR(255) NOT NULL DEFAULT '',
 
