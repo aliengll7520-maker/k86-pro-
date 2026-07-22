@@ -51,18 +51,30 @@ if ( ! class_exists( 'K86_Render_Manager' ) ) {
 		 *
 		 * @return void
 		 */
-		public function init() {
+				public function init() {
 
 			$this->data = array();
 
 			if ( class_exists( 'K86_Render_Context' ) ) {
+
 				$this->context = new K86_Render_Context();
+
+				if ( class_exists( 'K86_Media_Manager' ) ) {
+
+					$this->media_manager = new K86_Media_Manager();
+
+					$this->context->set_media_manager( $this->media_manager );
+
+				}
+
 			}
 
 			if ( class_exists( 'K86_HTML_Builder' ) ) {
+
 				$this->builder = new K86_HTML_Builder(
 					$this->context
 				);
+
 			}
 
 		}
