@@ -15,7 +15,6 @@ class K86_Product_Module {
 
 	}
 
-}
 	/**
 	 * Get Product Manager.
 	 *
@@ -25,4 +24,17 @@ class K86_Product_Module {
 
 		return $this->manager;
 
-  }
+	}
+
+	/**
+	 * Boot module.
+	 *
+	 * @return void
+	 */
+	public function boot() {
+
+		// Boot Product Module.
+
+	}
+
+}
