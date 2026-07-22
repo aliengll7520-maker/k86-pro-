@@ -89,8 +89,7 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 			return $pricing->get_current_price();
 
 		}
-
-		/**
+				/**
 		 * Check stock.
 		 *
 		 * @return bool
