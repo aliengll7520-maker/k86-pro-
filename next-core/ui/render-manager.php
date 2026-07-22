@@ -28,6 +28,7 @@ if ( ! class_exists( 'K86_Render_Manager' ) ) {
 		 * @var K86_Render_Context|null
 		 */
 		protected $context = null;
+		protected $media_manager = null;
 
 		/**
 		 * HTML Builder.
