@@ -40,7 +40,11 @@ class K86_Product_Manager {
 	 */
 	public function update_product( int $id, array $product ) {
 
-		return $this->repository->update( $id, $product );
+	if ( ! $this->validate_product( $product ) ) {
+		return false;
+	}
+
+	return $this->repository->update( $id, $product );
 
 	}
 
