@@ -51,7 +51,7 @@ if ( ! class_exists( 'K86_Render_Manager' ) ) {
 		 *
 		 * @return void
 		 */
-				public function init() {
+						public function init() {
 
 			$this->data = array();
 
