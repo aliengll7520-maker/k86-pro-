@@ -56,6 +56,13 @@ if ( ! class_exists( 'K86_Render_Context' ) ) {
 		 *
 		 * @param string $key     Context key.
 		 * @param mixed  $default Default value.
+		 				if ( class_exists( 'K86_Media_Manager' ) ) {
+
+					$this->media_manager = new K86_Media_Manager();
+
+					$this->context->set_media_manager( $this->media_manager );
+
+				}
 		 *
 		 				if ( class_exists( 'K86_Media_Manager' ) ) {
 
