@@ -291,7 +291,28 @@ if ( ! class_exists( 'K86_Render_Context' ) ) {
 			);
 
 		}
+		/**
+		 * Set media manager.
+		 *
+		 * @param object $manager Media manager.
+		 *
+		 * @return void
+		 */
+		public function set_media_manager( $manager ) {
 
+			$this->media_manager = $manager;
+
+		}
+			/**
+	 * Get media manager.
+	 *
+	 * @return object|null
+	 */
+	public function get_media_manager() {
+
+		return $this->media_manager;
+
+	}
 	}
 
 }
