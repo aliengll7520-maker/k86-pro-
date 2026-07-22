@@ -1,16 +1,17 @@
 <?php
 /**
  * K86 Pro Next Core
- * Voucher Module
+ *
+ * Product Voucher Module
  *
  * @package K86Pro
  */
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'K86_Voucher_Module' ) ) {
+if ( ! class_exists( 'K86_Product_Voucher_Module' ) ) {
 
-	class K86_Voucher_Module {
+	class K86_Product_Voucher_Module {
 
 		/**
 		 * Module priority.
@@ -24,62 +25,42 @@ if ( ! class_exists( 'K86_Voucher_Module' ) ) {
 		}
 
 		/**
-		 * Render voucher.
+		 * Render module.
 		 *
 		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
-		public function render( array $product = array() ) {
+		public function render( array $product ) {
 
-			$voucher = array();
+			$vouchers = array();
 
-			if (
-				isset( $product['voucher'] ) &&
-				is_array( $product['voucher'] )
-			) {
-				$voucher = $product['voucher'];
+			if ( ! empty( $product['vouchers'] ) && is_array( $product['vouchers'] ) ) {
+				$vouchers = $product['vouchers'];
 			}
 
-			$code = $voucher['code'] ?? '';
-			$text = $voucher['text'] ?? '';
+			if ( empty( $vouchers ) ) {
+				return '';
+			}
 
 			ob_start();
 			?>
 
-			<div class="k86-product-voucher">
+			<div class="k86-product-vouchers">
 
-				<?php if ( ! empty( $voucher ) ) : ?>
+				<h3>Ưu đãi</h3>
 
-					<div class="k86-voucher-box">
+				<ul class="k86-voucher-list">
 
-						<?php if ( ! empty( $text ) ) : ?>
+					<?php foreach ( $vouchers as $voucher ) : ?>
 
-							<div class="k86-voucher-text">
-								<?php echo esc_html( $text ); ?>
-							</div>
+						<li class="k86-voucher-item">
+							🎁 <?php echo esc_html( $voucher ); ?>
+						</li>
 
-						<?php endif; ?>
+					<?php endforeach; ?>
 
-						<?php if ( ! empty( $code ) ) : ?>
-
-							<div class="k86-voucher-code">
-								<?php echo esc_html( $code ); ?>
-							</div>
-
-						<?php endif; ?>
-
-					</div>
-
-				<?php else : ?>
-
-					<div class="k86-voucher-placeholder">
-
-						<?php esc_html_e( 'Hiện chưa có voucher cho sản phẩm này.', 'k86-pro' ); ?>
-
-					</div>
-
-				<?php endif; ?>
+				</ul>
 
 			</div>
 
