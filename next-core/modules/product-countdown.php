@@ -25,7 +25,7 @@ if ( ! class_exists( 'K86_Product_Countdown_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Render countdown.
 		 *
 		 * @param array $product Product data.
 		 *
@@ -33,22 +33,40 @@ if ( ! class_exists( 'K86_Product_Countdown_Module' ) ) {
 		 */
 		public function render( array $product ) {
 
-			$end_time = ! empty( $product['countdown_end'] ) ? esc_attr( $product['countdown_end'] ) : '';
+			$end_time = ! empty( $product['countdown_end'] )
+				? sanitize_text_field( $product['countdown_end'] )
+				: '';
 
 			if ( '' === $end_time ) {
 				return '';
 			}
 
+			$title = ! empty( $product['countdown_title'] )
+				? sanitize_text_field( $product['countdown_title'] )
+				: __( 'Ưu đãi kết thúc sau', 'k86-pro' );
+
 			ob_start();
 			?>
 
-			<div class="k86-product-countdown">
+			<div class="k86-product-countdown"
+			     data-end="<?php echo esc_attr( $end_time ); ?>">
 
-				<h3>⏰ Kết thúc sau</h3>
+				<h3 class="k86-countdown-title">
 
-				<div
-					class="k86-countdown"
-					data-end="<?php echo $end_time; ?>">
+					<?php echo esc_html( $title ); ?>
+
+				</h3>
+
+				<div class="k86-countdown-timer">
+
+					<span class="k86-days">00</span> :
+
+					<span class="k86-hours">00</span> :
+
+					<span class="k86-minutes">00</span> :
+
+					<span class="k86-seconds">00</span>
+
 				</div>
 
 			</div>
