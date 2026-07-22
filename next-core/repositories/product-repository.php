@@ -24,6 +24,21 @@ if ( ! class_exists( 'K86_Product_Repository' ) ) {
 		}
 
 		/**
+		 * Get Product Contract.
+		 *
+		 * @return array
+		 */
+		protected function contract() {
+
+			$schema = $this->schema();
+
+			return isset( $schema['contract'] )
+				? $schema['contract']
+				: array();
+
+		}
+
+		/**
 		 * Get table name.
 		 *
 		 * @return string
@@ -33,6 +48,36 @@ if ( ! class_exists( 'K86_Product_Repository' ) ) {
 			$schema = $this->schema();
 
 			return $schema['table'];
+
+		}
+
+		/**
+		 * Get primary key.
+		 *
+		 * @return string
+		 */
+		protected function primary_key() {
+
+			$schema = $this->schema();
+
+			return isset( $schema['primary_key'] )
+				? $schema['primary_key']
+				: 'id';
+
+		}
+
+		/**
+		 * Get columns.
+		 *
+		 * @return array
+		 */
+		protected function columns() {
+
+			$schema = $this->schema();
+
+			return isset( $schema['columns'] )
+				? $schema['columns']
+				: array();
 
 		}
 
@@ -97,4 +142,5 @@ if ( ! class_exists( 'K86_Product_Repository' ) ) {
 		}
 
 	}
+
 }
