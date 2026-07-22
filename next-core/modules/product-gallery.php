@@ -28,12 +28,20 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 		 * Render module.
 		 *
 		 * @param array $product Product data.
-		 			$gallery = array();
+		 *
+		 * @return string
+		 */
+		public function render( array $product ) {
+
+			$gallery = array();
 
 			if ( class_exists( 'K86_Media_Manager' ) ) {
 
-				$media   = ( new K86_Media_Manager() )->get_product_media( $product );
-				$gallery = $media['gallery'];
+				$media = ( new K86_Media_Manager() )->get_product_media( $product );
+
+				if ( ! empty( $media['gallery'] ) && is_array( $media['gallery'] ) ) {
+					$gallery = $media['gallery'];
+				}
 
 			}
 
@@ -41,9 +49,6 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 				$gallery = $product['gallery'];
 			}
 
-			if ( empty( $gallery ) && ! empty( $product['image'] ) ) {
-				$gallery[] = $product['image'];
-			}
 			if ( empty( $gallery ) && ! empty( $product['image'] ) ) {
 				$gallery[] = $product['image'];
 			}
