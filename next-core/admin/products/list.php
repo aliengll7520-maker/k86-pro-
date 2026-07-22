@@ -43,7 +43,7 @@ defined( 'ABSPATH' ) || exit;
 
 					<p style="text-align:center;padding:30px 0;">
 
-						No products found.
+						<?php echo esc_html__( 'Loading products...', 'k86-pro' ); ?>
 
 					</p>
 
