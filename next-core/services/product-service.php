@@ -149,8 +149,7 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 			return $this->engine( 'review' );
 
 		}
-
-		/**
+				/**
 		 * Pricing Engine.
 		 *
 		 * @return object|null
