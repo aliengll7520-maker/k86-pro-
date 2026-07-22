@@ -27,23 +27,55 @@ if ( ! class_exists( 'K86_Product_Title_Module' ) ) {
 		/**
 		 * Render module.
 		 *
-		 * @param array $product
+		 * @param array $product Product data.
 		 *
 		 * @return string
 		 */
 		public function render( array $product ) {
 
-			$title = '';
-
-			if ( ! empty( $product['title'] ) ) {
-				$title = esc_html( $product['title'] );
-			}
+			$title   = ! empty( $product['title'] ) ? esc_html( $product['title'] ) : '';
+			$badge   = ! empty( $product['badge'] ) ? esc_html( $product['badge'] ) : '';
+			$rating  = isset( $product['rating'] ) ? (float) $product['rating'] : 0;
+			$reviews = isset( $product['review_count'] ) ? (int) $product['review_count'] : 0;
+			$sold    = ! empty( $product['sold'] ) ? esc_html( $product['sold'] ) : '';
 
 			ob_start();
 			?>
 
 			<div class="k86-product-title">
-				<h1><?php echo $title; ?></h1>
+
+				<?php if ( $badge ) : ?>
+					<div class="k86-product-badge">
+						<?php echo $badge; ?>
+					</div>
+				<?php endif; ?>
+
+				<h1 class="k86-product-name">
+					<?php echo $title; ?>
+				</h1>
+
+				<div class="k86-product-meta">
+
+					<?php if ( $rating > 0 ) : ?>
+						<span class="k86-product-rating">
+							⭐ <?php echo esc_html( number_format( $rating, 1 ) ); ?>
+						</span>
+					<?php endif; ?>
+
+					<?php if ( $reviews > 0 ) : ?>
+						<span class="k86-product-reviews">
+							(<?php echo esc_html( number_format_i18n( $reviews ) ); ?> đánh giá)
+						</span>
+					<?php endif; ?>
+
+					<?php if ( $sold ) : ?>
+						<span class="k86-product-sold">
+							Đã bán <?php echo $sold; ?>
+						</span>
+					<?php endif; ?>
+
+				</div>
+
 			</div>
 
 			<?php
