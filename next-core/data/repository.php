@@ -12,106 +12,98 @@ if ( ! class_exists( 'K86_Product_Repository' ) ) {
 
 	class K86_Product_Repository {
 
-		/**
-		 * Lấy sản phẩm theo ID.
-		 *
-		 * @param int $id
-		 * @return K86_Product_Model
-		 */
 		public function find( $id ) {
 
 			$data = array(
 				'id' => absint( $id ),
 			);
 
+			$data = apply_filters( 'k86_repository_find', $data, $id );
+
 			return new K86_Product_Model( $data );
 		}
 
-		/**
-		 * Lấy sản phẩm theo Slug.
-		 *
-		 * @param string $slug
-		 * @return K86_Product_Model|null
-		 */
 		public function find_by_slug( $slug ) {
 
-			// TODO: Build tiếp theo sẽ truy vấn Database.
+			$slug = sanitize_title( $slug );
+
+			do_action( 'k86_repository_find_by_slug', $slug );
 
 			return null;
 		}
 
-		/**
-		 * Lấy sản phẩm theo SKU.
-		 *
-		 * @param string $sku
-		 * @return K86_Product_Model|null
-		 */
 		public function find_by_sku( $sku ) {
 
-			// TODO: Build tiếp theo sẽ truy vấn Database.
+			$sku = sanitize_text_field( $sku );
+
+			do_action( 'k86_repository_find_by_sku', $sku );
 
 			return null;
 		}
 
-		/**
-		 * Kiểm tra sản phẩm có tồn tại.
-		 *
-		 * @param int $id
-		 * @return bool
-		 */
 		public function exists( $id ) {
 
 			return $this->find( $id )->get( 'id' ) > 0;
 		}
 
-		/**
-		 * Lấy danh sách sản phẩm.
-		 *
-		 * @return array
-		 */
 		public function all() {
 
-			// TODO: Build tiếp theo sẽ lấy dữ liệu từ Database.
+			$products = array();
 
-			return array();
+			return apply_filters(
+				'k86_repository_all',
+				$products
+			);
 		}
 
-		/**
-		 * Phân trang danh sách sản phẩm.
-		 *
-		 * @param int $page
-		 * @param int $per_page
-		 * @return array
-		 */
 		public function paginate( $page = 1, $per_page = 20 ) {
 
-			// TODO: Build tiếp theo sẽ hỗ trợ phân trang.
+			$result = array(
+				'items'    => array(),
+				'total'    => 0,
+				'page'     => max( 1, absint( $page ) ),
+				'per_page' => max( 1, absint( $per_page ) ),
+			);
 
-			return array();
+			return apply_filters(
+				'k86_repository_paginate',
+				$result,
+				$page,
+				$per_page
+			);
 		}
 
-		/**
-		 * Lưu sản phẩm.
-		 *
-		 * @param K86_Product_Model $product
-		 * @return bool
-		 */
 		public function save( K86_Product_Model $product ) {
 
-			// TODO: Build tiếp theo sẽ ghi vào Database.
+			if ( method_exists( $product, 'to_array' ) ) {
+				$data = $product->to_array();
+			} else {
+				$data = array();
+			}
+
+			$data = apply_filters(
+				'k86_before_repository_save',
+				$data,
+				$product
+			);
+
+			do_action(
+				'k86_repository_save',
+				$data,
+				$product
+			);
 
 			return true;
 		}
 
-		/**
-		 * Xóa sản phẩm.
-		 *
-		 * @param int $id
-		 * @return bool
-		 */
 		public function delete( $id ) {
 
-			// TODO: Build tiếp theo sẽ xóa khỏi Database.
+			$id = absint( $id );
+
+			do_action(
+				'k86_repository_delete',
+				$id
+			);
 
 			return true;
 		}
