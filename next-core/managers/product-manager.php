@@ -74,5 +74,20 @@ class K86_Product_Manager {
 		return $this->repository->find_all();
 
 	}
+		/**
+	 * Validate product data.
+	 *
+	 * @param array $product Product data.
+	 * @return bool
+	 */
+	public function validate_product( array $product ) {
+
+		if ( empty( $product['title'] ) ) {
+			return false;
+		}
+
+		return true;
+
+	}
 
 }
