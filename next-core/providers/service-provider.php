@@ -51,6 +51,11 @@ if ( ! class_exists( 'K86_Service_Provider' ) ) {
 			 * Core Services
 			 */
 			$container->singleton(
+				'product_repository',
+				fn() => new K86_Product_Repository()
+			);
+
+			$container->singleton(
 				'product_service',
 				fn() => new K86_Product_Service( $manager )
 			);
