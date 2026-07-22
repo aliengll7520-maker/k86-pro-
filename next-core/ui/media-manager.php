@@ -58,6 +58,58 @@ if ( ! class_exists( 'K86_Media_Manager' ) ) {
 
 		}
 
+		/**
+		 * Get featured image.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return string
+		 */
+		public function get_featured_image( array $product ) {
+
+			return $this->get_product_media( $product )['featured'];
+
+		}
+
+		/**
+		 * Get gallery.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return array
+		 */
+		public function get_gallery( array $product ) {
+
+			return $this->get_product_media( $product )['gallery'];
+
+		}
+
+		/**
+		 * Get video.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return string
+		 */
+		public function get_video( array $product ) {
+
+			return $this->get_product_media( $product )['video'];
+
+		}
+
+		/**
+		 * Get downloads.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return array
+		 */
+		public function get_downloads( array $product ) {
+
+			return $this->get_product_media( $product )['downloads'];
+
+		}
+
 	}
 
 }
