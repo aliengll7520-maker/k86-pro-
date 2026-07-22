@@ -33,8 +33,30 @@ if ( ! class_exists( 'K86_Product_Video_Module' ) ) {
 		 */
 		public function render( array $product ) {
 
-			$video = ! empty( $product['video'] ) ? esc_url( $product['video'] ) : '';
-			$image = ! empty( $product['image'] ) ? esc_url( $product['image'] ) : '';
+			$video = '';
+			$image = '';
+
+			if ( class_exists( 'K86_Media_Manager' ) ) {
+
+				$media = ( new K86_Media_Manager() )->get_product_media( $product );
+
+				if ( ! empty( $media['video'] ) ) {
+					$video = esc_url( $media['video'] );
+				}
+
+				if ( ! empty( $media['featured'] ) ) {
+					$image = esc_url( $media['featured'] );
+				}
+
+			}
+
+			if ( empty( $video ) && ! empty( $product['video'] ) ) {
+				$video = esc_url( $product['video'] );
+			}
+
+			if ( empty( $image ) && ! empty( $product['image'] ) ) {
+				$image = esc_url( $product['image'] );
+			}
 
 			ob_start();
 			?>
@@ -49,14 +71,14 @@ if ( ! class_exists( 'K86_Product_Video_Module' ) ) {
 						preload="metadata"
 						playsinline
 					>
-						<source src="<?php echo $video; ?>">
+						<source src="<?php echo esc_url( $video ); ?>">
 					</video>
 
 				<?php elseif ( $image ) : ?>
 
 					<img
 						class="k86-video-placeholder"
-						src="<?php echo $image; ?>"
+						src="<?php echo esc_url( $image ); ?>"
 						alt=""
 					/>
 
