@@ -4,6 +4,7 @@
  * Engine Manager
  *
  * @package K86Pro
+ * @since   1.6.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -31,6 +32,26 @@ if ( ! class_exists( 'K86_Engine_Manager' ) ) {
 
 			$this->engines[ $name ] = $engine;
 
+			do_action( 'k86_engine_registered', $name, $engine );
+
+			return $this;
+
+		}
+
+		/**
+		 * Replace an existing engine.
+		 *
+		 * @param string $name   Engine name.
+		 * @param object $engine Engine instance.
+		 *
+		 * @return $this
+		 */
+		public function replace( $name, $engine ) {
+
+			$this->engines[ $name ] = $engine;
+
+			do_action( 'k86_engine_replaced', $name, $engine );
+
 			return $this;
 
 		}
@@ -49,6 +70,30 @@ if ( ! class_exists( 'K86_Engine_Manager' ) ) {
 		}
 
 		/**
+		 * Get an engine or throw an exception.
+		 *
+		 * @param string $name Engine name.
+		 *
+		 * @throws InvalidArgumentException
+		 *
+		 * @return object
+		 */
+		public function getOrFail( $name ) {
+
+			if ( ! $this->has( $name ) ) {
+				throw new InvalidArgumentException(
+					sprintf(
+						'Engine "%s" does not exist.',
+						$name
+					)
+				);
+			}
+
+			return $this->engines[ $name ];
+
+		}
+
+		/**
 		 * Check whether an engine exists.
 		 *
 		 * @param string $name Engine name.
@@ -57,7 +102,7 @@ if ( ! class_exists( 'K86_Engine_Manager' ) ) {
 		 */
 		public function has( $name ) {
 
-			return isset( $this->engines[ $name ] );
+			return array_key_exists( $name, $this->engines );
 
 		}
 
@@ -69,6 +114,17 @@ if ( ! class_exists( 'K86_Engine_Manager' ) ) {
 		public function all() {
 
 			return $this->engines;
+
+		}
+
+		/**
+		 * Get all engine names.
+		 *
+		 * @return array
+		 */
+		public function keys() {
+
+			return array_keys( $this->engines );
 
 		}
 
@@ -85,7 +141,11 @@ if ( ! class_exists( 'K86_Engine_Manager' ) ) {
 				return false;
 			}
 
+			$engine = $this->engines[ $name ];
+
 			unset( $this->engines[ $name ] );
+
+			do_action( 'k86_engine_removed', $name, $engine );
 
 			return true;
 
@@ -127,7 +187,7 @@ if ( ! class_exists( 'K86_Engine_Manager' ) ) {
 		}
 
 		/**
-		 * Initialize all engines that implement init().
+		 * Initialize all engines.
 		 *
 		 * @return void
 		 */
@@ -137,6 +197,40 @@ if ( ! class_exists( 'K86_Engine_Manager' ) ) {
 
 				if ( method_exists( $engine, 'init' ) ) {
 					$engine->init();
+				}
+
+			}
+
+		}
+
+		/**
+		 * Boot all engines.
+		 *
+		 * @return void
+		 */
+		public function boot() {
+
+			foreach ( $this->engines as $engine ) {
+
+				if ( method_exists( $engine, 'boot' ) ) {
+					$engine->boot();
+				}
+
+			}
+
+		}
+
+		/**
+		 * Shutdown all engines.
+		 *
+		 * @return void
+		 */
+		public function shutdown() {
+
+			foreach ( $this->engines as $engine ) {
+
+				if ( method_exists( $engine, 'shutdown' ) ) {
+					$engine->shutdown();
 				}
 
 			}
