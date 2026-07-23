@@ -1,68 +1,136 @@
 <?php
 /**
- * K86 Pro Next Core
+ * Kiểm tra handler tồn tại.
  *
- * Render Engine
- *
- * Engine quản lý Render của hệ thống.
- *
- * @package K86Pro
+ * @param string $key Handler key.
+ * @return bool
  */
+public function has( $key ) {
 
-defined( 'ABSPATH' ) || exit;
+	return array_key_exists(
+		$key,
+		$this->handlers
+	);
 
-if ( ! class_exists( 'K86_Render_Engine' ) ) {
+}
 
-	class K86_Render_Engine {
+/**
+ * Xóa handler.
+ *
+ * @param string $key Handler key.
+ * @return void
+ */
+public function unregister( $key ) {
 
-		/**
-		 * Danh sách render handlers.
-		 *
-		 * @var array
-		 */
-		protected $handlers = array();
-
-		/**
-		 * Khởi tạo Engine.
-		 *
-		 * @return void
-		 */
-		public function init() {
-
-			$this->handlers = array();
-
-		}
-
-		/**
-		 * Đăng ký render.
-		 *
-		 * @param string $key
-		 * @param mixed  $handler
-		 * @return void
-		 */
-		public function register( $key, $handler ) {
-
-			$this->handlers[ $key ] = $handler;
-
-		}
-
-		/**
-		 * Lấy render.
-		 *
-		 * @param string $key
-		 * @param mixed  $default
-		 * @return mixed
-		 */
-		public function get( $key, $default = null ) {
-
-			if ( array_key_exists( $key, $this->handlers ) ) {
-				return $this->handlers[ $key ];
-			}
-
-			return $default;
-
-		}
-
+	if ( $this->has( $key ) ) {
+		unset( $this->handlers[ $key ] );
 	}
+
+}
+
+/**
+ * Lấy tất cả handlers.
+ *
+ * @return array
+ */
+public function all() {
+
+	return $this->handlers;
+
+}
+/**
+ * Thực thi một render handler.
+ *
+ * @param string $key
+ * @param mixed  ...$args
+ * @return mixed|null
+ */
+public function render( $key, ...$args ) {
+
+	$handler = $this->get( $key );
+
+	if ( ! is_callable( $handler ) ) {
+		return null;
+	}
+
+	return call_user_func_array(
+		$handler,
+		$args
+	);
+
+}
+
+/**
+ * Xóa toàn bộ handlers.
+ *
+ * @return void
+ */
+public function reset() {
+
+	$this->handlers = array();
+
+}
+
+/**
+ * Đếm số handlers.
+ *
+ * @return int
+ */
+public function count() {
+
+	return count( $this->handlers );
+
+}
+/**
+ * Khởi động Render Engine.
+ *
+ * @return void
+ */
+public function boot() {
+
+	do_action(
+		'k86_render_engine_boot',
+		$this
+	);
+
+}
+
+/**
+ * Tắt Render Engine.
+ *
+ * @return void
+ */
+public function shutdown() {
+
+	do_action(
+		'k86_render_engine_shutdown',
+		$this
+	);
+
+}
+
+/**
+ * Xuất cấu hình Engine.
+ *
+ * @return array
+ */
+public function to_array() {
+
+	return array(
+		'handlers' => array_keys( $this->handlers ),
+		'count'    => $this->count(),
+		'version'  => $this->version(),
+	);
+
+}
+
+/**
+ * Phiên bản Engine.
+ *
+ * @return string
+ */
+public function version() {
+
+	return '2.0.0';
 
 }
