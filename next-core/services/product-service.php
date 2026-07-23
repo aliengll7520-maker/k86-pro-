@@ -194,6 +194,56 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 			return $this->engine( 'inventory' );
 
 		}
+	/**
+	 * Get product rating.
+	 *
+	 * @return float
+	 */
+	public function get_rating() {
 
+		$review = $this->review();
+
+		return $review
+			? $review->get_rating()
+			: 0;
+
+	}
+
+	/**
+	 * Get review count.
+	 *
+	 * @return int
+	 */
+	public function get_review_count() {
+
+		$review = $this->review();
+
+		return $review
+			? $review->get_review_count()
+			: 0;
+
+	}
+
+	/**
+	 * Get shipping information.
+	 *
+	 * @return array
+	 */
+	public function get_shipping_data() {
+
+		$shipping = $this->shipping();
+
+		if ( ! $shipping ) {
+			return array();
+		}
+
+		return array(
+			'fee'      => $shipping->calculate_shipping_fee(),
+			'free'     => $shipping->is_free_shipping(),
+			'estimate' => $shipping->get_estimate(),
+			'label'    => $shipping->get_shipping_label(),
+		);
+
+	}
 	}
 }
