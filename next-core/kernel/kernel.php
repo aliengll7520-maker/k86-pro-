@@ -74,7 +74,8 @@ class K86_Kernel {
 		$this->registry        = $registry;
 		$this->engine_manager  = $engine_manager;
 		$this->module_registry = $module_registry;
-  }
+	}
+
 	/**
 	 * Boot Kernel.
 	 *
@@ -126,8 +127,7 @@ class K86_Kernel {
 
 		do_action( 'k86_kernel_initialized', $this );
 	}
-
-	/**
+		/**
 	 * Register core managers into Registry.
 	 *
 	 * @return void
@@ -141,14 +141,15 @@ class K86_Kernel {
 		if ( ! $this->registry->has( 'engine_manager' ) ) {
 			$this->registry->set( 'engine_manager', $this->engine_manager );
 		}
+
 		if ( ! $this->registry->has( 'module_registry' ) ) {
-    $this->registry->set( 'module_registry', $this->module_registry );
-}
+			$this->registry->set( 'module_registry', $this->module_registry );
+		}
 
-do_action( 'k86_kernel_managers_registered', $this );
-
+		do_action( 'k86_kernel_managers_registered', $this );
 	}
-			/**
+
+	/**
 	 * Start Kernel.
 	 *
 	 * @return void
@@ -171,78 +172,3 @@ do_action( 'k86_kernel_managers_registered', $this );
 
 		do_action( 'k86_kernel_running', $this );
 	}
-
-	/**
-	 * Shutdown Kernel.
-	 *
-	 * @return void
-	 */
-	public function shutdown() {
-
-		if ( ! $this->running ) {
-			return;
-		}
-
-		do_action( 'k86_kernel_before_shutdown', $this );
-
-		$this->running = false;
-		$this->booted  = false;
-
-		do_action( 'k86_kernel_shutdown', $this );
-	}
-
-	/**
-	 * Get Container.
-	 *
-	 * @return K86_Container
-	 */
-	public function getContainer() {
-		return $this->container;
-	}
-
-	/**
-	 * Get Registry.
-	 *
-	 * @return K86_Registry
-	 */
-	public function getRegistry() {
-		return $this->registry;
-	}
-
-	/**
-	 * Get Engine Manager.
-	 *
-	 * @return K86_Engine_Manager
-	 */
-	public function getEngineManager() {
-		return $this->engine_manager;
-	}
-
-	/**
-	 * Get Module Registry.
-	 *
-	 * @return K86_Module_Registry
-	 */
-	public function getModuleRegistry() {
-		return $this->module_registry;
-	}
-
-	/**
-	 * Is Kernel Booted.
-	 *
-	 * @return bool
-	 */
-	public function isBooted() {
-		return $this->booted;
-	}
-
-	/**
-	 * Is Kernel Running.
-	 *
-	 * @return bool
-	 */
-	public function isRunning() {
-		return $this->running;
-	}
-	}
-	
