@@ -135,7 +135,25 @@ protected $table;
 		 */
 		public function find( $id ) {
 
-			return null;
+	$id = absint( $id );
+
+	if ( ! $id ) {
+		return null;
+	}
+
+	$row = $this->db->get_row(
+		$this->db->prepare(
+			"SELECT * FROM {$this->table} WHERE id = %d LIMIT 1",
+			$id
+		),
+		ARRAY_A
+	);
+
+	if ( empty( $row ) ) {
+		return null;
+	}
+
+	return new K86_Product_Model( $row );
 
 		}
 
