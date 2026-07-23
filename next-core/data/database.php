@@ -288,7 +288,30 @@ protected $table;
 		 */
 		public function save( K86_Product_Model $product ) {
 
-			return false;
+	$data = $product->to_array();
+
+	$id = isset( $data['id'] ) ? absint( $data['id'] ) : 0;
+
+	if ( $id > 0 ) {
+
+		$this->db->update(
+			$this->table,
+			$data,
+			array(
+				'id' => $id,
+			)
+		);
+
+		return $id;
+
+	}
+
+	$this->db->insert(
+		$this->table,
+		$data
+	);
+
+	return $this->db->insert_id;
 
 		}
 
@@ -300,7 +323,18 @@ protected $table;
 		 */
 		public function delete( $id ) {
 
-			return false;
+	$id = absint( $id );
+
+	if ( ! $id ) {
+		return false;
+	}
+
+	return (bool) $this->db->delete(
+		$this->table,
+		array(
+			'id' => $id,
+		)
+	);
 
 		}
 
