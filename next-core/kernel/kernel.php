@@ -239,10 +239,3 @@ class K86_Kernel {
 	}
 	}
 	
-
-		if ( ! $this->registry->has( 'module_registry' ) ) {
-			$this->registry->set( 'module_registry', $this->module_registry );
-		}
-
-		do_action( 'k86_kernel_managers_registered', $this );
-	}
