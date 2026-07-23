@@ -38,7 +38,11 @@ if ( ! class_exists( 'K86_Product_Title_Module' ) ) {
 			$rating  = isset( $product['rating'] ) ? (float) $product['rating'] : 0;
 			$reviews = isset( $product['review_count'] ) ? (int) $product['review_count'] : 0;
 			$sold    = ! empty( $product['sold'] ) ? esc_html( $product['sold'] ) : '';
-
+$brand    = ! empty( $product['brand'] ) ? esc_html( $product['brand'] ) : '';
+$sku      = ! empty( $product['sku'] ) ? esc_html( $product['sku'] ) : '';
+$category = ! empty( $product['category'] ) ? esc_html( $product['category'] ) : '';
+$stock    = ! empty( $product['stock_status'] ) ? esc_html( $product['stock_status'] ) : '';
+$official = ! empty( $product['official'] );
 			ob_start();
 			?>
 
