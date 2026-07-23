@@ -43,8 +43,17 @@ if ( ! class_exists( 'K86_Product_Model' ) ) {
 					'stock'             => 0,
 					'in_stock'          => false,
 
+					'image'             => '',
 					'gallery'           => array(),
 					'video'             => '',
+					'youtube'           => '',
+					'tiktok'            => '',
+					'pdf'               => '',
+					'documents'         => array(),
+					'audio'             => array(),
+					'icon'              => '',
+					'downloads'         => array(),
+
 					'highlights'        => array(),
 
 					'rating'            => 0,
@@ -78,11 +87,64 @@ if ( ! class_exists( 'K86_Product_Model' ) ) {
 		}
 
 		/**
+		 * Convert model to array.
+		 *
+		 * @return array
+		 */
+		public function to_array() {
+
+			return $this->data;
+
+		}
+
+		/**
+		 * Set data from array.
+		 *
+		 * @param array $data Product data.
+		 * @return $this
+		 */
+		public function from_array( array $data ) {
+
+			$this->set_data( $data );
+
+			return $this;
+
+		}
+
+		/**
+		 * Merge multiple fields.
+		 *
+		 * @param array $data Product data.
+		 * @return $this
+		 */
+		public function set_data( array $data ) {
+
+			$this->data = wp_parse_args(
+				$data,
+				$this->data
+			);
+
+			return $this;
+
+		}
+
+		/**
+		 * Check field exists.
+		 *
+		 * @param string $key Field name.
+		 * @return bool
+		 */
+		public function has( $key ) {
+
+			return isset( $this->data[ $key ] );
+
+		}
+
+		/**
 		 * Get a product field.
 		 *
-		 * @param string $key     Field name.
+		 * @param string $key Field name.
 		 * @param mixed  $default Default value.
-		 *
 		 * @return mixed
 		 */
 		public function get( $key, $default = null ) {
@@ -96,9 +158,8 @@ if ( ! class_exists( 'K86_Product_Model' ) ) {
 		/**
 		 * Set a product field.
 		 *
-		 * @param string $key   Field name.
+		 * @param string $key Field name.
 		 * @param mixed  $value Field value.
-		 *
 		 * @return $this
 		 */
 		public function set( $key, $value ) {
@@ -110,4 +171,5 @@ if ( ! class_exists( 'K86_Product_Model' ) ) {
 		}
 
 	}
+
 }
