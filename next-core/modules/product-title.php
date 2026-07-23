@@ -55,6 +55,35 @@ if ( ! class_exists( 'K86_Product_Title_Module' ) ) {
 				</h1>
 
 				<div class="k86-product-meta">
+					<?php if ( $brand ) : ?>
+	<span class="k86-product-brand">
+		Thương hiệu: <?php echo $brand; ?>
+	</span>
+<?php endif; ?>
+
+<?php if ( $sku ) : ?>
+	<span class="k86-product-sku">
+		SKU: <?php echo $sku; ?>
+	</span>
+<?php endif; ?>
+
+<?php if ( $category ) : ?>
+	<span class="k86-product-category">
+		<?php echo $category; ?>
+	</span>
+<?php endif; ?>
+
+<?php if ( $stock ) : ?>
+	<span class="k86-product-stock">
+		<?php echo $stock; ?>
+	</span>
+<?php endif; ?>
+
+<?php if ( $official ) : ?>
+	<span class="k86-product-official">
+		✔ Chính hãng
+	</span>
+<?php endif; ?>
 
 					<?php if ( $rating > 0 ) : ?>
 						<span class="k86-product-rating">
