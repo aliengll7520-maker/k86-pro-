@@ -61,7 +61,7 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		return null;
 	}
 
-	return new K86_Product_Model( $row );
+	return K86_Product_Mapper::to_model( $row );
 
 		}
 
@@ -88,7 +88,7 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		return null;
 	}
 
-	return new K86_Product_Model( $row );
+	return K86_Product_Mapper::to_model( $row );
 
 		}
 
@@ -115,7 +115,7 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		return null;
 	}
 
-	return new K86_Product_Model( $row );
+	return K86_Product_Mapper::to_model( $row );
 
 		}
 
@@ -136,7 +136,7 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 	$products = array();
 
 	foreach ( $rows as $row ) {
-		$products[] = new K86_Product_Model( $row );
+		$products[] = K86_Product_Mapper::to_model( $row );
 	}
 
 	return $products;
@@ -168,7 +168,7 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 	$items = array();
 
 	foreach ( $rows as $row ) {
-		$items[] = new K86_Product_Model( $row );
+		$items[] = K86_Product_Mapper::to_model( $row );
 	}
 
 	return array(
