@@ -1,67 +1,303 @@
 <?php
 /**
- * K86 Pro Next Core
- * Product Layout
+ * Layout ID.
  *
- * @package K86Pro
+ * @var string
  */
+protected $layout = 'default';
 
-defined( 'ABSPATH' ) || exit;
+/**
+ * Layout sections.
+ *
+ * @var array
+ */
+protected $sections = array();
 
-?>
+/**
+ * Constructor.
+ *
+ * @param string $layout Layout name.
+ */
+public function __construct( $layout = 'default' ) {
 
-<div class="k86-product-layout">
+	$this->layout = $layout;
 
-	<div class="k86-product-header">
+	$this->register_default_sections();
 
-		<?php require dirname( __DIR__ ) . '/modules/product-title.php'; ?>
+}
 
-	</div>
+/**
+ * Register default sections.
+ *
+ * @return void
+ */
+protected function register_default_sections() {
 
-	<div class="k86-product-content">
+	$this->sections = array(
 
-		<div class="k86-product-left">
+		'header',
+		'media',
+		'summary',
+		'pricing',
+		'promotion',
+		'purchase',
+		'service',
+		'description',
+		'extra',
 
-			<?php require dirname( __DIR__ ) . '/modules/product-video.php'; ?>
+	);
 
-			<?php require dirname( __DIR__ ) . '/modules/product-gallery.php'; ?>
+}
 
-			<?php require dirname( __DIR__ ) . '/modules/product-highlights.php'; ?>
+/**
+ * Get current layout.
+ *
+ * @return string
+ */
+public function get_layout() {
 
-			<?php require dirname( __DIR__ ) . '/modules/product-rating.php'; ?>
+	return $this->layout;
 
-			<?php require dirname( __DIR__ ) . '/modules/product-reviews.php'; ?>
+}
 
-			<?php require dirname( __DIR__ ) . '/modules/product-description.php'; ?>
+/**
+ * Set current layout.
+ *
+ * @param string $layout Layout name.
+ *
+ * @return void
+ */
+public function set_layout( $layout ) {
 
-			<?php require dirname( __DIR__ ) . '/modules/product-compare.php'; ?>
+	$this->layout = sanitize_key( $layout );
 
-		</div>
+}
+/**
+ * Register section.
+ *
+ * @param string $section Section name.
+ *
+ * @return void
+ */
+public function register_section( $section ) {
 
-		<div class="k86-product-right">
+	if ( ! in_array( $section, $this->sections, true ) ) {
+		$this->sections[] = sanitize_key( $section );
+	}
 
-			<?php require dirname( __DIR__ ) . '/modules/product-voucher.php'; ?>
+}
 
-			<?php require dirname( __DIR__ ) . '/modules/product-countdown.php'; ?>
+/**
+ * Remove section.
+ *
+ * @param string $section Section name.
+ *
+ * @return void
+ */
+public function unregister_section( $section ) {
 
-			<?php require dirname( __DIR__ ) . '/modules/product-stock.php'; ?>
+	$key = array_search( $section, $this->sections, true );
 
-			<?php require dirname( __DIR__ ) . '/modules/product-shipping.php'; ?>
+	if ( false !== $key ) {
 
-			<?php require dirname( __DIR__ ) . '/modules/product-policy.php'; ?>
+		unset( $this->sections[ $key ] );
 
-			<?php require dirname( __DIR__ ) . '/modules/product-actions.php'; ?>
+		$this->sections = array_values( $this->sections );
 
-		</div>
+	}
 
-	</div>
+}
 
-	<div class="k86-product-footer">
+/**
+ * Check section exists.
+ *
+ * @param string $section Section name.
+ *
+ * @return bool
+ */
+public function has_section( $section ) {
 
-		<?php require dirname( __DIR__ ) . '/modules/trust.php'; ?>
+	return in_array( $section, $this->sections, true );
 
-		<?php require dirname( __DIR__ ) . '/modules/product-faq.php'; ?>
+}
 
-	</div>
+/**
+ * Get all sections.
+ *
+ * @return array
+ */
+public function get_sections() {
 
-</div>
+	return $this->sections;
+
+}
+
+/**
+ * Set sections.
+ *
+ * @param array $sections Section list.
+ *
+ * @return void
+ */
+public function set_sections( array $sections ) {
+
+	$this->sections = array_values(
+		array_unique(
+			array_map( 'sanitize_key', $sections )
+		)
+	);
+
+}
+
+/**
+ * Get section count.
+ *
+ * @return int
+ */
+public function section_count() {
+
+	return count( $this->sections );
+
+}
+/**
+ * Render layout.
+ *
+ * @param int   $product_id Product ID.
+ * @param array $data       Product data.
+ *
+ * @return string
+ */
+public function render( $product_id, array $data = array() ) {
+
+	ob_start();
+
+	echo '<div class="k86-product-layout k86-layout-' . esc_attr( $this->layout ) . '">';
+
+	foreach ( $this->sections as $section ) {
+
+		$this->render_section(
+			$section,
+			$product_id,
+			$data
+		);
+
+	}
+
+	echo '</div>';
+
+	return ob_get_clean();
+
+}
+
+/**
+ * Render section.
+ *
+ * @param string $section
+ * @param int    $product_id
+ * @param array  $data
+ *
+ * @return void
+ */
+protected function render_section(
+	$section,
+	$product_id,
+	array $data
+) {
+
+	do_action(
+		'k86_before_layout_section',
+		$section,
+		$product_id,
+		$data,
+		$this
+	);
+
+	do_action(
+		'k86_render_layout_section',
+		$section,
+		$product_id,
+		$data,
+		$this
+	);
+
+	do_action(
+		'k86_after_layout_section',
+		$section,
+		$product_id,
+		$data,
+		$this
+	);
+
+}
+/**
+ * Boot layout.
+ *
+ * @return void
+ */
+public function boot() {
+
+	do_action(
+		'k86_product_layout_boot',
+		$this
+	);
+
+}
+
+/**
+ * Shutdown layout.
+ *
+ * @return void
+ */
+public function shutdown() {
+
+	do_action(
+		'k86_product_layout_shutdown',
+		$this
+	);
+
+}
+
+/**
+ * Get layout version.
+ *
+ * @return string
+ */
+public function version() {
+
+	return '2.0.0';
+
+}
+
+/**
+ * Magic getter.
+ *
+ * @param string $name Property name.
+ *
+ * @return mixed|null
+ */
+public function __get( $name ) {
+
+	if ( property_exists( $this, $name ) ) {
+		return $this->$name;
+	}
+
+	return null;
+
+}
+
+/**
+ * Export layout configuration.
+ *
+ * @return array
+ */
+public function to_array() {
+
+	return array(
+		'layout'  => $this->layout,
+		'sections' => $this->sections,
+		'version' => $this->version(),
+	);
+
+}
+
+}
