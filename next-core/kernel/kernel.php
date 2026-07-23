@@ -172,3 +172,58 @@ class K86_Kernel {
 
 		do_action( 'k86_kernel_running', $this );
 	}
+	/**
+	 * Get Container.
+	 *
+	 * @return K86_Container
+	 */
+	public function getContainer() {
+		return $this->container;
+	}
+
+	/**
+	 * Get Registry.
+	 *
+	 * @return K86_Registry
+	 */
+	public function getRegistry() {
+		return $this->registry;
+	}
+
+	/**
+	 * Get Engine Manager.
+	 *
+	 * @return K86_Engine_Manager
+	 */
+	public function getEngineManager() {
+		return $this->engine_manager;
+	}
+
+	/**
+	 * Get Module Registry.
+	 *
+	 * @return K86_Module_Registry
+	 */
+	public function getModuleRegistry() {
+		return $this->module_registry;
+	}
+
+	/**
+	 * Check whether Kernel has booted.
+	 *
+	 * @return bool
+	 */
+	public function isBooted() {
+		return $this->booted;
+	}
+
+	/**
+	 * Check whether Kernel is running.
+	 *
+	 * @return bool
+	 */
+	public function isRunning() {
+		return $this->running;
+	}
+
+}
