@@ -5,7 +5,7 @@
  * Manages the lifecycle state of the Kernel.
  *
  * @package K86Pro
- * @since 1.6.0
+ * @since   1.6.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,14 +25,14 @@ class K86_Kernel_Lifecycle {
 	const SHUTDOWN      = 'shutdown';
 
 	/**
-	 * Current state.
+	 * Current lifecycle state.
 	 *
 	 * @var string
 	 */
 	protected $state = self::CREATED;
 
 	/**
-	 * Get current state.
+	 * Get current lifecycle state.
 	 *
 	 * @return string
 	 */
@@ -41,99 +41,97 @@ class K86_Kernel_Lifecycle {
 	}
 
 	/**
-	 * Set state.
+	 * Set lifecycle state.
 	 *
-	 * @param string $state Lifecycle state.
+	 * @param string $state New lifecycle state.
 	 *
 	 * @return void
 	 */
 	public function setState( $state ) {
+
+		$previous_state = $this->state;
 
 		$this->state = $state;
 
 		do_action(
 			'k86_kernel_state_changed',
 			$state,
+			$previous_state,
 			$this
 		);
 	}
-
-	/**
-	 * Check current state.
+		/**
+	 * Check whether the lifecycle is in a specific state.
 	 *
-	 * @param string $state State to compare.
+	 * @param string $state Lifecycle state.
 	 *
 	 * @return bool
 	 */
 	public function is( $state ) {
 		return $this->state === $state;
-  }
-  	/**
-	 * Check if state is CREATED.
+	}
+
+	/**
+	 * Check whether the lifecycle has been created.
 	 *
 	 * @return bool
 	 */
 	public function isCreated() {
-		return $this->state === self::CREATED;
+		return $this->is( self::CREATED );
 	}
 
 	/**
-	 * Check if state is BOOTING.
+	 * Check whether the lifecycle is booting.
 	 *
 	 * @return bool
 	 */
 	public function isBooting() {
-		return $this->state === self::BOOTING;
+		return $this->is( self::BOOTING );
 	}
 
 	/**
-	 * Check if state is BOOTED.
+	 * Check whether the lifecycle has booted.
 	 *
 	 * @return bool
 	 */
 	public function isBooted() {
-		return $this->state === self::BOOTED;
+		return $this->is( self::BOOTED );
 	}
 
 	/**
-	 * Check if state is RUNNING.
+	 * Check whether the lifecycle is running.
 	 *
 	 * @return bool
 	 */
 	public function isRunning() {
-		return $this->state === self::RUNNING;
+		return $this->is( self::RUNNING );
 	}
 
 	/**
-	 * Check if state is SHUTTING_DOWN.
+	 * Check whether the lifecycle is shutting down.
 	 *
 	 * @return bool
 	 */
 	public function isShuttingDown() {
-		return $this->state === self::SHUTTING_DOWN;
+		return $this->is( self::SHUTTING_DOWN );
 	}
 
 	/**
-	 * Check if state is SHUTDOWN.
+	 * Check whether the lifecycle has shutdown.
 	 *
 	 * @return bool
 	 */
 	public function isShutdown() {
-		return $this->state === self::SHUTDOWN;
+		return $this->is( self::SHUTDOWN );
 	}
 
 	/**
-	 * Reset lifecycle to CREATED state.
+	 * Reset lifecycle.
 	 *
 	 * @return void
 	 */
 	public function reset() {
-
-		$this->state = self::CREATED;
-
-		do_action(
-			'k86_kernel_lifecycle_reset',
-			$this
-		);
+		$this->setState( self::CREATED );
 	}
+
 }
