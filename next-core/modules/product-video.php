@@ -25,6 +25,27 @@ if ( ! class_exists( 'K86_Product_Video_Module' ) ) {
 		}
 
 		/**
+		 * Detect video type.
+		 *
+		 * @param string $url Video URL.
+		 *
+		 * @return string
+		 */
+		protected function detect_video_type( $url ) {
+
+			if ( strpos( $url, 'youtube.com' ) !== false || strpos( $url, 'youtu.be' ) !== false ) {
+				return 'youtube';
+			}
+
+			if ( strpos( $url, 'tiktok.com' ) !== false ) {
+				return 'tiktok';
+			}
+
+			return 'mp4';
+
+		}
+
+		/**
 		 * Render module.
 		 *
 		 * @param array $product Product data.
@@ -58,21 +79,31 @@ if ( ! class_exists( 'K86_Product_Video_Module' ) ) {
 				$image = esc_url( $product['image'] );
 			}
 
+			$type = $this->detect_video_type( $video );
+
 			ob_start();
 			?>
 
 			<div class="k86-product-video">
 
-				<?php if ( $video ) : ?>
+				<?php if ( $video && 'mp4' === $type ) : ?>
 
 					<video
 						class="k86-video-player"
 						controls
 						preload="metadata"
-						playsinline
-					>
+						playsinline>
 						<source src="<?php echo esc_url( $video ); ?>">
 					</video>
+
+				<?php elseif ( $video && ( 'youtube' === $type || 'tiktok' === $type ) ) : ?>
+
+					<iframe
+						class="k86-video-player"
+						src="<?php echo esc_url( $video ); ?>"
+						loading="lazy"
+						allowfullscreen>
+					</iframe>
 
 				<?php elseif ( $image ) : ?>
 
@@ -80,7 +111,14 @@ if ( ! class_exists( 'K86_Product_Video_Module' ) ) {
 						class="k86-video-placeholder"
 						src="<?php echo esc_url( $image ); ?>"
 						alt=""
+						loading="lazy"
 					/>
+
+				<?php else : ?>
+
+					<div class="k86-video-empty">
+						Chưa có video sản phẩm
+					</div>
 
 				<?php endif; ?>
 
