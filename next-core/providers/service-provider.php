@@ -1,87 +1,228 @@
 <?php
 /**
- * K86 Pro Next Core
- * Service Provider
+ * Service Engine.
  *
- * @package K86Pro
+ * @var Service_Engine
  */
+protected $engine;
 
-defined( 'ABSPATH' ) || exit;
+/**
+ * Registered services.
+ *
+ * @var array
+ */
+protected $services = array();
 
-if ( ! class_exists( 'K86_Service_Provider' ) ) {
+/**
+ * Constructor.
+ *
+ * @param Service_Engine $engine Service engine.
+ */
+public function __construct( $engine ) {
 
-	class K86_Service_Provider {
+	$this->engine = $engine;
 
-		/**
-		 * Register services.
-		 *
-		 * @param K86_Container      $container Container.
-		 * @param K86_Engine_Manager $manager   Engine manager.
-		 *
-		 * @return void
-		 */
-		public static function register(
-			K86_Container $container,
-			K86_Engine_Manager $manager
-		) {
+}
 
-			/**
-			 * Foundation Services
-			 */
+/**
+ * Register all services.
+ *
+ * @return void
+ */
+public function register() {
 
-			$container->singleton(
-				'loader',
-				fn() => new K86_Loader()
-			);
+	$this->register_product_service();
 
-			$container->singleton(
-				'registry',
-				fn() => new K86_Registry()
-			);
+	$this->register_pricing_service();
 
-			/**
-			 * Engine Services
-			 */
+	$this->register_inventory_service();
 
-			$container->singleton(
-				'engine_manager',
-				fn() => $manager
-			);
+	$this->register_shipping_service();
 
-			/**
-			 * Core Services
-			 */
+	$this->register_warranty_service();
 
-			$container->singleton(
-				'product_repository',
-				fn() => new K86_Product_Repository()
-			);
-			$container->singleton(
-    'product_manager',
-    fn() => new K86_Product_Manager()
-);
+	$this->register_return_service();
 
-			$container->singleton(
-				'product_service',
-				fn() => new K86_Product_Service(
-					$manager,
-					$container->get( 'product_repository' )
-				)
-			);
-						/**
-			 * Bootstrap Services
-			 */
+	$this->register_review_service();
 
-			$container->singleton(
-				'bootstrap',
-				fn() => new K86_Bootstrap(
-					$container,
-					$manager
-				)
-			);
+}
+/**
+ * Register Product Service.
+ *
+ * @return void
+ */
+protected function register_product_service() {
 
-		}
+	$this->engine->register(
+		'product',
+		new Product_Service()
+	);
+
+}
+
+/**
+ * Register Pricing Service.
+ *
+ * @return void
+ */
+protected function register_pricing_service() {
+
+	$this->engine->register(
+		'pricing',
+		new Pricing_Service()
+	);
+
+}
+
+/**
+ * Register Inventory Service.
+ *
+ * @return void
+ */
+protected function register_inventory_service() {
+
+	$this->engine->register(
+		'inventory',
+		new Inventory_Service()
+	);
+
+}
+
+/**
+ * Register Shipping Service.
+ *
+ * @return void
+ */
+protected function register_shipping_service() {
+
+	$this->engine->register(
+		'shipping',
+		new Shipping_Service()
+	);
+
+}
+/**
+ * Register Warranty Service.
+ *
+ * @return void
+ */
+protected function register_warranty_service() {
+
+	$this->engine->register(
+		'warranty',
+		new Warranty_Service()
+	);
+
+}
+
+/**
+ * Register Return Policy Service.
+ *
+ * @return void
+ */
+protected function register_return_service() {
+
+	$this->engine->register(
+		'return',
+		new Return_Service()
+	);
+
+}
+
+/**
+ * Register Review Service.
+ *
+ * @return void
+ */
+protected function register_review_service() {
+
+	$this->engine->register(
+		'review',
+		new Review_Service()
+	);
+
+}
+
+/**
+ * Register custom services.
+ *
+ * @return void
+ */
+protected function register_custom_services() {
+
+	do_action(
+		'k86_register_services',
+		$this->engine,
+		$this
+	);
+
+}
+/**
+ * Boot provider.
+ *
+ * @return void
+ */
+public function boot() {
+
+	$this->register();
+
+	$this->register_custom_services();
+
+	if ( method_exists( $this->engine, 'boot' ) ) {
+
+		$this->engine->boot();
 
 	}
+
+	do_action(
+		'k86_service_provider_boot',
+		$this->engine,
+		$this
+	);
+
+}
+
+/**
+ * Shutdown provider.
+ *
+ * @return void
+ */
+public function shutdown() {
+
+	if ( method_exists( $this->engine, 'shutdown' ) ) {
+
+		$this->engine->shutdown();
+
+	}
+
+	do_action(
+		'k86_service_provider_shutdown',
+		$this->engine,
+		$this
+	);
+
+}
+
+/**
+ * Get Service Engine.
+ *
+ * @return Service_Engine
+ */
+public function engine() {
+
+	return $this->engine;
+
+}
+
+/**
+ * Get Provider Version.
+ *
+ * @return string
+ */
+public function version() {
+
+	return '2.0.0';
+
+}
 
 }
