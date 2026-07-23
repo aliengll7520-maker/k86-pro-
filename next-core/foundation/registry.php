@@ -4,6 +4,7 @@
  * Registry
  *
  * @package K86Pro
+ * @since   1.6.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -36,6 +37,21 @@ if ( ! class_exists( 'K86_Registry' ) ) {
 		}
 
 		/**
+		 * Replace all registry items.
+		 *
+		 * @param array $items Registry items.
+		 *
+		 * @return $this
+		 */
+		public function replace( array $items ) {
+
+			$this->items = $items;
+
+			return $this;
+
+		}
+
+		/**
 		 * Get an item.
 		 *
 		 * @param string $key     Registry key.
@@ -48,6 +64,30 @@ if ( ! class_exists( 'K86_Registry' ) ) {
 			return array_key_exists( $key, $this->items )
 				? $this->items[ $key ]
 				: $default;
+
+		}
+
+		/**
+		 * Get an item or throw an exception.
+		 *
+		 * @param string $key Registry key.
+		 *
+		 * @throws InvalidArgumentException When key does not exist.
+		 *
+		 * @return mixed
+		 */
+		public function getOrFail( $key ) {
+
+			if ( ! $this->has( $key ) ) {
+				throw new InvalidArgumentException(
+					sprintf(
+						'Registry key "%s" does not exist.',
+						$key
+					)
+				);
+			}
+
+			return $this->items[ $key ];
 
 		}
 
@@ -91,6 +131,68 @@ if ( ! class_exists( 'K86_Registry' ) ) {
 		public function all() {
 
 			return $this->items;
+
+		}
+
+		/**
+		 * Get all registry keys.
+		 *
+		 * @return array
+		 */
+		public function keys() {
+
+			return array_keys( $this->items );
+
+		}
+
+		/**
+		 * Get all registry values.
+		 *
+		 * @return array
+		 */
+		public function values() {
+
+			return array_values( $this->items );
+
+		}
+
+		/**
+		 * Check whether registry is empty.
+		 *
+		 * @return bool
+		 */
+		public function isEmpty() {
+
+			return empty( $this->items );
+
+		}
+
+		/**
+		 * Export registry.
+		 *
+		 * @return array
+		 */
+		public function export() {
+
+			return $this->items;
+
+		}
+
+		/**
+		 * Import registry.
+		 *
+		 * @param array $items Registry items.
+		 * @param bool  $merge Merge with existing items.
+		 *
+		 * @return $this
+		 */
+		public function import( array $items, $merge = true ) {
+
+			$this->items = $merge
+				? array_merge( $this->items, $items )
+				: $items;
+
+			return $this;
 
 		}
 
