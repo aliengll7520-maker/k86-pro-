@@ -162,26 +162,9 @@ require __DIR__ . '/product-layout.php';
 
 return ob_get_clean();
 					}
-	/**
-	 * Get complete product data.
-	 *
-	 * @return array
-	 */
-	public function get_product_data() {
-
-		return $this->service->get_product_data();
 
 	}
 
-	/**
-	 * Render current product.
-	 *
-	 * @return string
-	 */
-	public function render_current_product() {
-
-		return $this->renderer->render(
-			$this->get_product_data()
 		);
 
 	}
