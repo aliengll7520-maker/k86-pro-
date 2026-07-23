@@ -156,7 +156,44 @@ if ( ! class_exists( 'K86_Pricing_Engine' ) ) {
 			return $this->get_regular_price() - $this->get_sale_price();
 
 		}
+public function format_price( $price = null ) {
 
+    if ( null === $price ) {
+        $price = $this->get_current_price();
+    }
+
+    return number_format(
+        (float) $price,
+        0,
+        ',',
+        '.'
+    ) . ' ' . $this->get_currency();
+
+}
+
+public function get_formatted_price() {
+
+    return $this->format_price(
+        $this->get_current_price()
+    );
+
+}
+
+public function get_formatted_regular_price() {
+
+    return $this->format_price(
+        $this->get_regular_price()
+    );
+
+}
+
+public function get_formatted_sale_price() {
+
+    return $this->format_price(
+        $this->get_sale_price()
+    );
+
+}
 	}
 
 }
