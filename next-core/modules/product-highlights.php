@@ -25,6 +25,57 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 		}
 
 		/**
+		 * Get highlights.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return array
+		 */
+		protected function get_highlights( array $product ) {
+
+			$items = array();
+
+			if ( ! empty( $product['highlights'] ) && is_array( $product['highlights'] ) ) {
+				$items = $product['highlights'];
+			}
+
+			if ( ! empty( $product['official'] ) ) {
+				$items[] = array(
+					'icon'  => 'dashicons dashicons-yes-alt',
+					'title' => 'Chính hãng',
+					'text'  => 'Sản phẩm chính hãng',
+				);
+			}
+
+			if ( ! empty( $product['free_shipping'] ) ) {
+				$items[] = array(
+					'icon'  => 'dashicons dashicons-car',
+					'title' => 'Miễn phí vận chuyển',
+					'text'  => 'Áp dụng theo điều kiện',
+				);
+			}
+
+			if ( ! empty( $product['warranty'] ) ) {
+				$items[] = array(
+					'icon'  => 'dashicons dashicons-shield',
+					'title' => 'Bảo hành',
+					'text'  => $product['warranty'],
+				);
+			}
+
+			if ( ! empty( $product['return_policy'] ) ) {
+				$items[] = array(
+					'icon'  => 'dashicons dashicons-update',
+					'title' => 'Đổi trả',
+					'text'  => $product['return_policy'],
+				);
+			}
+
+			return $items;
+
+		}
+
+		/**
 		 * Render highlights.
 		 *
 		 * @param array $product Product data.
@@ -33,7 +84,9 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 		 */
 		public function render( array $product ) {
 
-			if ( empty( $product['highlights'] ) || ! is_array( $product['highlights'] ) ) {
+			$items = $this->get_highlights( $product );
+
+			if ( empty( $items ) ) {
 				return '';
 			}
 
@@ -42,7 +95,7 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 
 			<div class="k86-product-highlights">
 
-				<?php foreach ( $product['highlights'] as $item ) : ?>
+				<?php foreach ( $items as $item ) : ?>
 
 					<?php
 					$icon  = '';
@@ -67,9 +120,7 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 						<?php if ( $icon ) : ?>
 
 							<div class="k86-highlight-icon">
-
 								<span class="<?php echo esc_attr( $icon ); ?>"></span>
-
 							</div>
 
 						<?php endif; ?>
@@ -79,9 +130,7 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 							<?php if ( $title ) : ?>
 
 								<div class="k86-highlight-title">
-
 									<?php echo esc_html( $title ); ?>
-
 								</div>
 
 							<?php endif; ?>
@@ -89,9 +138,7 @@ if ( ! class_exists( 'K86_Product_Highlights_Module' ) ) {
 							<?php if ( $text ) : ?>
 
 								<div class="k86-highlight-text">
-
 									<?php echo esc_html( $text ); ?>
-
 								</div>
 
 							<?php endif; ?>
