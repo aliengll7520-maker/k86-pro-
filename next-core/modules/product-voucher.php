@@ -25,6 +25,23 @@ if ( ! class_exists( 'K86_Product_Voucher_Module' ) ) {
 		}
 
 		/**
+		 * Get vouchers.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return array
+		 */
+		protected function get_vouchers( array $product ) {
+
+			if ( ! empty( $product['vouchers'] ) && is_array( $product['vouchers'] ) ) {
+				return $product['vouchers'];
+			}
+
+			return array();
+
+		}
+
+		/**
 		 * Render voucher section.
 		 *
 		 * @param array $product Product data.
@@ -37,11 +54,7 @@ if ( ! class_exists( 'K86_Product_Voucher_Module' ) ) {
 				? sanitize_text_field( $product['voucher_title'] )
 				: __( 'Ưu đãi dành cho bạn', 'k86-pro' );
 
-			$vouchers = array();
-
-			if ( ! empty( $product['vouchers'] ) && is_array( $product['vouchers'] ) ) {
-				$vouchers = $product['vouchers'];
-			}
+			$vouchers = $this->get_vouchers( $product );
 
 			if ( empty( $vouchers ) ) {
 				return '';
@@ -62,9 +75,17 @@ if ( ! class_exists( 'K86_Product_Voucher_Module' ) ) {
 
 						<div class="k86-voucher-item">
 
-							<strong>
-								<?php echo esc_html( $voucher['code'] ?? '' ); ?>
-							</strong>
+							<div class="k86-voucher-code">
+								<strong><?php echo esc_html( $voucher['code'] ?? '' ); ?></strong>
+							</div>
+
+							<?php if ( ! empty( $voucher['discount'] ) ) : ?>
+
+								<div class="k86-voucher-discount">
+									<?php echo esc_html( $voucher['discount'] ); ?>
+								</div>
+
+							<?php endif; ?>
 
 							<?php if ( ! empty( $voucher['description'] ) ) : ?>
 
@@ -73,6 +94,28 @@ if ( ! class_exists( 'K86_Product_Voucher_Module' ) ) {
 								</div>
 
 							<?php endif; ?>
+
+							<?php if ( ! empty( $voucher['expiry'] ) ) : ?>
+
+								<div class="k86-voucher-expiry">
+									<?php
+									printf(
+										esc_html__( 'Hết hạn: %s', 'k86-pro' ),
+										esc_html( $voucher['expiry'] )
+									);
+									?>
+								</div>
+
+							<?php endif; ?>
+
+							<button
+								type="button"
+								class="k86-copy-voucher"
+								data-code="<?php echo esc_attr( $voucher['code'] ?? '' ); ?>">
+
+								<?php esc_html_e( 'Sao chép mã', 'k86-pro' ); ?>
+
+							</button>
 
 						</div>
 
