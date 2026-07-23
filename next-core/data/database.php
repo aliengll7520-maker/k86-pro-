@@ -98,6 +98,19 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 * @var K86_Database
 		 */
 		protected $database;
+		/**
+ * WordPress Database.
+ *
+ * @var wpdb
+ */
+protected $db;
+
+/**
+ * Product table.
+ *
+ * @var string
+ */
+protected $table;
 
 		/**
 		 * Constructor.
@@ -106,7 +119,11 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 */
 		public function __construct( K86_Database $database = null ) {
 
-			$this->database = $database ? $database : new K86_Database();
+    $this->database = $database ? $database : new K86_Database();
+
+    $this->db = $this->database->db();
+
+    $this->table = $this->database->table();
 
 		}
 
