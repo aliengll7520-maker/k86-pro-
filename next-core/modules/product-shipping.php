@@ -25,6 +25,23 @@ if ( ! class_exists( 'K86_Product_Shipping_Module' ) ) {
 		}
 
 		/**
+		 * Get shipping items.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return array
+		 */
+		protected function get_shipping_items( array $product ) {
+
+			if ( ! empty( $product['shipping'] ) && is_array( $product['shipping'] ) ) {
+				return $product['shipping'];
+			}
+
+			return array();
+
+		}
+
+		/**
 		 * Render shipping information.
 		 *
 		 * @param array $product Product data.
@@ -37,13 +54,23 @@ if ( ! class_exists( 'K86_Product_Shipping_Module' ) ) {
 				? sanitize_text_field( $product['shipping_title'] )
 				: __( 'Thông tin vận chuyển', 'k86-pro' );
 
-			$items = ! empty( $product['shipping'] ) && is_array( $product['shipping'] )
-				? $product['shipping']
-				: array();
+			$items = $this->get_shipping_items( $product );
 
 			if ( empty( $items ) ) {
 				return '';
 			}
+
+			$carrier = ! empty( $product['shipping_carrier'] )
+				? sanitize_text_field( $product['shipping_carrier'] )
+				: '';
+
+			$tracking = ! empty( $product['tracking_number'] )
+				? sanitize_text_field( $product['tracking_number'] )
+				: '';
+
+			$estimate = ! empty( $product['shipping_estimate'] )
+				? sanitize_text_field( $product['shipping_estimate'] )
+				: '';
 
 			ob_start();
 			?>
@@ -65,6 +92,33 @@ if ( ! class_exists( 'K86_Product_Shipping_Module' ) ) {
 					<?php endforeach; ?>
 
 				</ul>
+
+				<?php if ( $carrier ) : ?>
+
+					<div class="k86-shipping-carrier">
+						<strong><?php esc_html_e( 'Đơn vị vận chuyển:', 'k86-pro' ); ?></strong>
+						<?php echo esc_html( $carrier ); ?>
+					</div>
+
+				<?php endif; ?>
+
+				<?php if ( $estimate ) : ?>
+
+					<div class="k86-shipping-estimate">
+						<strong><?php esc_html_e( 'Dự kiến giao:', 'k86-pro' ); ?></strong>
+						<?php echo esc_html( $estimate ); ?>
+					</div>
+
+				<?php endif; ?>
+
+				<?php if ( $tracking ) : ?>
+
+					<div class="k86-shipping-tracking">
+						<strong><?php esc_html_e( 'Mã vận đơn:', 'k86-pro' ); ?></strong>
+						<?php echo esc_html( $tracking ); ?>
+					</div>
+
+				<?php endif; ?>
 
 			</div>
 
