@@ -24,6 +24,26 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 		}
 
 		/**
+		 * Get stock data.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return array
+		 */
+		protected function get_stock( array $product ) {
+
+			if (
+				! empty( $product['stock_progress'] ) &&
+				is_array( $product['stock_progress'] )
+			) {
+				return $product['stock_progress'];
+			}
+
+			return array();
+
+		}
+
+		/**
 		 * Render stock progress.
 		 *
 		 * @param array $product Product data.
@@ -32,37 +52,28 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 		 */
 		public function render( array $product = array() ) {
 
-			$stock = array();
+			$stock = $this->get_stock( $product );
 
-			if (
-				isset( $product['stock_progress'] ) &&
-				is_array( $product['stock_progress'] )
-			) {
-				$stock = $product['stock_progress'];
-			}
-
-			$total = isset( $stock['total'] )
-				? absint( $stock['total'] )
-				: 0;
-
-			$sold = isset( $stock['sold'] )
-				? absint( $stock['sold'] )
-				: 0;
-
+			$total = isset( $stock['total'] ) ? absint( $stock['total'] ) : 0;
+			$sold = isset( $stock['sold'] ) ? absint( $stock['sold'] ) : 0;
 			$remaining = isset( $stock['remaining'] )
 				? absint( $stock['remaining'] )
 				: max( 0, $total - $sold );
 
-			$status = $stock['status'] ?? '';
+			$status = ! empty( $stock['status'] )
+				? sanitize_text_field( $stock['status'] )
+				: __( 'Còn hàng', 'k86-pro' );
 
 			$percent = 0;
 
 			if ( $total > 0 ) {
-				$percent = min(
-					100,
-					round( ( $sold / $total ) * 100 )
-				);
+				$percent = min( 100, round( ( $sold / $total ) * 100 ) );
 			}
+
+			$low_stock = (
+				$remaining > 0 &&
+				$remaining <= 5
+			);
 
 			ob_start();
 			?>
@@ -75,8 +86,8 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 
 						<div
 							class="k86-stock-bar-fill"
-							style="width: <?php echo esc_attr( $percent ); ?>%;"
-						></div>
+							style="width: <?php echo esc_attr( $percent ); ?>%;">
+						</div>
 
 					</div>
 
@@ -103,10 +114,21 @@ if ( ! class_exists( 'K86_Stock_Progress_Module' ) ) {
 
 					</div>
 
-					<?php if ( ! empty( $status ) ) : ?>
+					<div class="k86-stock-status">
+						<?php echo esc_html( $status ); ?>
+					</div>
 
-						<div class="k86-stock-status">
-							<?php echo esc_html( $status ); ?>
+					<?php if ( $low_stock ) : ?>
+
+						<div class="k86-low-stock-warning">
+
+							<?php
+							printf(
+								esc_html__( 'Chỉ còn %d sản phẩm!', 'k86-pro' ),
+								$remaining
+							);
+							?>
+
 						</div>
 
 					<?php endif; ?>
