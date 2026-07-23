@@ -1,311 +1,757 @@
-<?php
+<?php	
 /**
- * K86 Pro Next Core
- * Product Service
+ * Cached product data.
  *
- * @package K86Pro
+ * @var array
  */
+protected $cache = array();
 
-defined( 'ABSPATH' ) || exit;
+/**
+ * Registered engines.
+ *
+ * @var array
+ */
+protected $engines = array();
 
-if ( ! class_exists( 'K86_Product_Service' ) ) {
+/**
+ * Constructor.
+ */
+public function __construct() {
 
-	class K86_Product_Service {
+	$this->register_engines();
 
-		/**
-		 * Engine Manager.
-		 *
-		 * @var K86_Engine_Manager
-		 */
-		protected $manager;
+}
 
-		/**
-		 * Product Repository.
-		 *
-		 * @var K86_Product_Repository
-		 */
-		protected $repository;
+/**
+ * Register engines.
+ *
+ * @return void
+ */
+protected function register_engines() {
 
-		/**
-		 * Constructor.
-		 *
-		 * @param K86_Engine_Manager $manager Engine manager.
-		 * @param K86_Product_Repository $repository Product repository.
-		 */
-		public function __construct(
-			K86_Engine_Manager $manager,
-			K86_Product_Repository $repository
-		) {
+	$this->engines = array(
+		'pricing'  => null,
+		'inventory'=> null,
+		'shipping' => null,
+		'warranty' => null,
+		'return'   => null,
+		'review'   => null,
+	);
 
-			$this->manager    = $manager;
-			$this->repository = $repository;
+}
 
-		}
+/**
+ * Get engine.
+ *
+ * @param string $engine Engine name.
+ * @return object|null
+ */
+protected function engine( $engine ) {
 
-		/**
-		 * Get engine by name.
-		 *
-		 * @param string $name Engine name.
-		 *
-		 * @return object|null
-		 */
-		public function engine( $name ) {
+	return isset( $this->engines[ $engine ] )
+		? $this->engines[ $engine ]
+		: null;
 
-			return $this->manager->get( $name );
+}
 
-		}
+/**
+ * Get cached product.
+ *
+ * @param int $product_id Product ID.
+ * @return array|null
+ */
+protected function cache_get( $product_id ) {
 
-		/**
-		 * Get repository.
-		 *
-		 * @return K86_Product_Repository
-		 */
-		public function repository() {
+	return $this->cache[ $product_id ] ?? null;
 
-			return $this->repository;
+}
 
-		}
+/**
+ * Store cache.
+ *
+ * @param int   $product_id Product ID.
+ * @param array $data Product data.
+ *
+ * @return void
+ */
+protected function cache_set( $product_id, array $data ) {
 
-		/**
-		 * Get complete product data.
-		 *
-		 * @return array
-		 */
-		public function get_product_data() {
+	$this->cache[ $product_id ] = $data;
 
-			return array(
-				'price'            => $this->get_current_price(),
-				'in_stock'         => $this->is_in_stock(),
-				'free_shipping'    => array(),
-				'warranty'         => array(),
-				'return_policy'    => array(),
-				'voucher'          => array(),
-				'countdown'        => array(),
-				'stock_progress'   => array(),
-				'trust'            => array(),
-				'gallery'          => array(),
-				'highlights'       => array(),
-				'comparison'       => array(),
-				'cta_buttons'      => array(),
-				'rating'           => 0,
-				'review_count'     => 0,
-				'description'      => '',
-				'video'            => '',
-				'title'            => '',
-			);
+}
+/**
+ * Get Pricing Engine.
+ *
+ * @return object|null
+ */
+protected function pricing_engine() {
 
-		}
+	return $this->engine( 'pricing' );
 
-		/**
-		 * Get current price.
-				 *
-		 * @return float
-		 */
-		public function get_current_price() {
+}
 
-			$pricing = $this->pricing();
+/**
+ * Get Inventory Engine.
+ *
+ * @return object|null
+ */
+protected function inventory_engine() {
 
-			if ( ! $pricing ) {
-				return 0;
-			}
+	return $this->engine( 'inventory' );
 
-			return $pricing->get_current_price();
+}
 
-		}
+/**
+ * Get Shipping Engine.
+ *
+ * @return object|null
+ */
+protected function shipping_engine() {
 
-		/**
-		 * Check stock.
-		 *
-		 * @return bool
-		 */
-		public function is_in_stock() {
+	return $this->engine( 'shipping' );
 
-			$inventory = $this->inventory();
+}
 
-			if ( ! $inventory ) {
-				return false;
-			}
+/**
+ * Get Warranty Engine.
+ *
+ * @return object|null
+ */
+protected function warranty_engine() {
 
-			return $inventory->is_in_stock();
+	return $this->engine( 'warranty' );
 
-		}
+}
 
-		/**
-		 * Shipping Engine.
-		 *
-		 * @return object|null
-		 */
-		public function shipping() {
+/**
+ * Get Return Policy Engine.
+ *
+ * @return object|null
+ */
+protected function return_engine() {
 
-			return $this->engine( 'shipping' );
+	return $this->engine( 'return' );
 
-		}
+}
 
-		/**
-		 * Warranty Engine.
-		 *
-		 * @return object|null
-		 */
-		public function warranty() {
+/**
+ * Get Review Engine.
+ *
+ * @return object|null
+ */
+protected function review_engine() {
 
-			return $this->engine( 'warranty' );
+	return $this->engine( 'review' );
 
-		}
+}
 
-		/**
-		 * Return Policy Engine.
-		 *
-		 * @return object|null
-		 */
-		public function return_policy() {
+/**
+ * Check engine availability.
+ *
+ * @param string $engine Engine name.
+ *
+ * @return bool
+ */
+protected function has_engine( $engine ) {
 
-			return $this->engine( 'return_policy' );
+	return null !== $this->engine( $engine );
 
-		}
+}
 
-		/**
-		 * Review Engine.
-		 *
-		 * @return object|null
-		 */
-		public function review() {
+/**
+ * Safe engine call.
+ *
+ * @param string $engine Engine name.
+ * @param string $method Method name.
+ * @param array  $args   Arguments.
+ *
+ * @return mixed|null
+ */
+protected function call_engine( $engine, $method, array $args = array() ) {
 
-			return $this->engine( 'review' );
+	$instance = $this->engine( $engine );
 
-		}
-				/**
-		 * Pricing Engine.
-		 *
-		 * @return object|null
-		 */
-		public function pricing() {
-
-			return $this->engine( 'pricing' );
-
-		}
-
-		/**
-		 * Inventory Engine.
-		 *
-		 * @return object|null
-		 */
-		public function inventory() {
-
-			return $this->engine( 'inventory' );
-
-		}
-	/**
-	 * Get product rating.
-	 *
-	 * @return float
-	 */
-	public function get_rating() {
-
-		$review = $this->review();
-
-		return $review
-			? $review->get_rating()
-			: 0;
-
+	if ( ! $instance ) {
+		return null;
 	}
 
-	/**
-	 * Get review count.
-	 *
-	 * @return int
-	 */
-	public function get_review_count() {
-
-		$review = $this->review();
-
-		return $review
-			? $review->get_review_count()
-			: 0;
-
+	if ( ! method_exists( $instance, $method ) ) {
+		return null;
 	}
 
-	/**
-	 * Get shipping information.
-	 *
-	 * @return array
-	 */
-	public function get_shipping_data() {
+	return call_user_func_array(
+		array( $instance, $method ),
+		$args
+	);
 
-		$shipping = $this->shipping();
+}
+/**
+ * Get complete product data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_product_data( $product_id ) {
 
-		if ( ! $shipping ) {
-			return array();
-		}
+	$product_id = absint( $product_id );
 
-		return array(
-			'fee'      => $shipping->calculate_shipping_fee(),
-			'free'     => $shipping->is_free_shipping(),
-			'estimate' => $shipping->get_estimate(),
-			'label'    => $shipping->get_shipping_label(),
+	if ( ! $product_id ) {
+		return array();
+	}
+
+	$cached = $this->cache_get( $product_id );
+
+	if ( null !== $cached ) {
+		return $cached;
+	}
+
+	$data = array(
+
+		'id'          => $product_id,
+
+		'title'       => $this->get_title( $product_id ),
+
+		'description' => $this->get_description( $product_id ),
+
+		'gallery'     => $this->get_gallery( $product_id ),
+
+		'video'       => $this->get_video( $product_id ),
+
+		'highlights'  => $this->get_highlights( $product_id ),
+
+		'pricing'     => $this->get_pricing_data( $product_id ),
+
+		'inventory'   => $this->get_inventory_data( $product_id ),
+
+		'shipping'    => $this->get_shipping_data( $product_id ),
+
+		'warranty'    => $this->get_warranty_data( $product_id ),
+
+		'return'      => $this->get_return_policy_data( $product_id ),
+
+		'reviews'     => $this->get_review_data( $product_id ),
+
+		'voucher'     => $this->get_voucher_data( $product_id ),
+
+		'countdown'   => $this->get_countdown_data( $product_id ),
+
+		'stock'       => $this->get_stock_data( $product_id ),
+
+		'compare'     => $this->get_compare_data( $product_id ),
+
+		'actions'     => $this->get_action_data( $product_id ),
+
+	);
+
+	$data = apply_filters(
+		'k86_product_service_data',
+		$data,
+		$product_id
+	);
+
+	$this->cache_set(
+		$product_id,
+		$data
+	);
+
+	return $data;
+
+}
+/**
+ * Get product title.
+ *
+ * @param int $product_id Product ID.
+ * @return string
+ */
+public function get_title( $product_id ) {
+
+	return get_the_title( $product_id );
+
+}
+
+/**
+ * Get product description.
+ *
+ * @param int $product_id Product ID.
+ * @return string
+ */
+public function get_description( $product_id ) {
+
+	$post = get_post( $product_id );
+
+	if ( ! $post ) {
+		return '';
+	}
+
+	return apply_filters(
+		'the_content',
+		$post->post_content
+	);
+
+}
+
+/**
+ * Get gallery.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_gallery( $product_id ) {
+
+	$gallery = get_post_meta(
+		$product_id,
+		'_k86_gallery',
+		true
+	);
+
+	return is_array( $gallery )
+		? $gallery
+		: array();
+
+}
+
+/**
+ * Get product video.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_video( $product_id ) {
+
+	return array(
+		'type' => get_post_meta(
+			$product_id,
+			'_k86_video_type',
+			true
+		),
+		'url' => get_post_meta(
+			$product_id,
+			'_k86_video_url',
+			true
+		),
+		'thumbnail' => get_post_meta(
+			$product_id,
+			'_k86_video_thumbnail',
+			true
+		),
+	);
+
+}
+
+/**
+ * Get highlights.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_highlights( $product_id ) {
+
+	$items = get_post_meta(
+		$product_id,
+		'_k86_highlights',
+		true
+	);
+
+	return is_array( $items )
+		? $items
+		: array();
+
+}
+/**
+ * Get pricing data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_pricing_data( $product_id ) {
+
+	if ( $this->has_engine( 'pricing' ) ) {
+
+		$data = $this->call_engine(
+			'pricing',
+			'get_pricing_data',
+			array( $product_id )
 		);
 
-	}
-			/**
-	 * Get warranty information.
-	 *
-	 * @return array
-	 */
-	public function get_warranty_data() {
-
-		$warranty = $this->warranty();
-
-		return $warranty
-			? $warranty->get_warranty_info()
-			: array();
-
-	}
-
-	/**
-	 * Get return policy information.
-	 *
-	 * @return array
-	 */
-	public function get_return_policy_data() {
-
-		$return = $this->return_policy();
-
-		return $return
-			? $return->get_return_policy()
-			: array();
-
-	}
-
-	/**
-	 * Get inventory information.
-	 *
-	 * @return array
-	 */
-	public function get_inventory_data() {
-
-		$inventory = $this->inventory();
-
-		if ( ! $inventory ) {
-			return array();
+		if ( is_array( $data ) ) {
+			return $data;
 		}
+	}
 
-		return array(
-			'stock'    => $inventory->get_stock(),
-			'status'   => $inventory->get_stock_status(),
-			'in_stock' => $inventory->is_in_stock(),
+	return array(
+		'price'          => get_post_meta( $product_id, '_k86_price', true ),
+		'regular_price'  => get_post_meta( $product_id, '_k86_regular_price', true ),
+		'sale_price'     => get_post_meta( $product_id, '_k86_sale_price', true ),
+		'discount'       => get_post_meta( $product_id, '_k86_discount', true ),
+		'currency'       => get_post_meta( $product_id, '_k86_currency', true ),
+	);
+
+}
+
+/**
+ * Get voucher data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_voucher_data( $product_id ) {
+
+	return array(
+		'code'        => get_post_meta( $product_id, '_k86_voucher_code', true ),
+		'title'       => get_post_meta( $product_id, '_k86_voucher_title', true ),
+		'description' => get_post_meta( $product_id, '_k86_voucher_description', true ),
+		'expire'      => get_post_meta( $product_id, '_k86_voucher_expire', true ),
+	);
+
+}
+
+/**
+ * Get countdown data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_countdown_data( $product_id ) {
+
+	return array(
+		'start' => get_post_meta( $product_id, '_k86_countdown_start', true ),
+		'end'   => get_post_meta( $product_id, '_k86_countdown_end', true ),
+		'label' => get_post_meta( $product_id, '_k86_countdown_label', true ),
+	);
+
+}
+
+/**
+ * Get stock data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_stock_data( $product_id ) {
+
+	return array(
+		'quantity'   => get_post_meta( $product_id, '_k86_stock_quantity', true ),
+		'sold'       => get_post_meta( $product_id, '_k86_stock_sold', true ),
+		'remaining'  => get_post_meta( $product_id, '_k86_stock_remaining', true ),
+		'status'     => get_post_meta( $product_id, '_k86_stock_status', true ),
+		'progress'   => get_post_meta( $product_id, '_k86_stock_progress', true ),
+	);
+
+}
+/**
+ * Get shipping data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_shipping_data( $product_id ) {
+
+	if ( $this->has_engine( 'shipping' ) ) {
+
+		$data = $this->call_engine(
+			'shipping',
+			'get_shipping_data',
+			array( $product_id )
 		);
 
+		if ( is_array( $data ) ) {
+			return $data;
+		}
 	}
 
-	/**
-	 * Check whether the product is available for sale.
-	 *
-	 * @return bool
-	 */
-	public function is_available_for_sale() {
+	return array(
+		'title'      => get_post_meta( $product_id, '_k86_shipping_title', true ),
+		'items'      => get_post_meta( $product_id, '_k86_shipping_items', true ),
+		'free'       => get_post_meta( $product_id, '_k86_free_shipping', true ),
+		'estimate'   => get_post_meta( $product_id, '_k86_shipping_estimate', true ),
+		'carrier'    => get_post_meta( $product_id, '_k86_shipping_carrier', true ),
+	);
 
-		return $this->is_in_stock()
-			&& $this->get_current_price() > 0;
+}
+
+/**
+ * Get warranty data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_warranty_data( $product_id ) {
+
+	if ( $this->has_engine( 'warranty' ) ) {
+
+		$data = $this->call_engine(
+			'warranty',
+			'get_warranty_data',
+			array( $product_id )
+		);
+
+		if ( is_array( $data ) ) {
+			return $data;
+		}
+	}
+
+	return array(
+		'title'          => get_post_meta( $product_id, '_k86_warranty_title', true ),
+		'period'         => get_post_meta( $product_id, '_k86_warranty_period', true ),
+		'type'           => get_post_meta( $product_id, '_k86_warranty_type', true ),
+		'provider'       => get_post_meta( $product_id, '_k86_warranty_provider', true ),
+		'policy_url'     => get_post_meta( $product_id, '_k86_warranty_policy_url', true ),
+		'claim_url'      => get_post_meta( $product_id, '_k86_warranty_claim_url', true ),
+	);
+
+}
+
+/**
+ * Get return policy data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_return_policy_data( $product_id ) {
+
+	if ( $this->has_engine( 'return' ) ) {
+
+		$data = $this->call_engine(
+			'return',
+			'get_return_policy_data',
+			array( $product_id )
+		);
+
+		if ( is_array( $data ) ) {
+			return $data;
+		}
+	}
+
+	return array(
+		'title'         => get_post_meta( $product_id, '_k86_return_title', true ),
+		'return_days'   => get_post_meta( $product_id, '_k86_return_days', true ),
+		'exchange_days' => get_post_meta( $product_id, '_k86_exchange_days', true ),
+		'condition'     => get_post_meta( $product_id, '_k86_return_condition', true ),
+		'policy_url'    => get_post_meta( $product_id, '_k86_return_policy_url', true ),
+	);
+
+}
+
+/**
+ * Get review data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_review_data( $product_id ) {
+
+	if ( $this->has_engine( 'review' ) ) {
+
+		$data = $this->call_engine(
+			'review',
+			'get_review_data',
+			array( $product_id )
+		);
+
+		if ( is_array( $data ) ) {
+			return $data;
+		}
+	}
+
+	return array(
+		'rating' => $this->get_rating( $product_id ),
+		'count'  => $this->get_review_count( $product_id ),
+		'items'  => get_post_meta( $product_id, '_k86_reviews', true ),
+	);
+
+}
+/**
+ * Get action data.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function get_action_data( $product_id ) {
+
+	return array(
+
+		'affiliate' => $this->get_affiliate_data( $product_id ),
+
+		'buy'       => $this->get_buy_button_data( $product_id ),
+
+		'wishlist'  => $this->get_wishlist_data( $product_id ),
+
+		'compare'   => $this->get_compare_data( $product_id ),
+
+		'share'     => $this->get_share_data( $product_id ),
+
+	);
+
+}
+
+/**
+ * Get affiliate data.
+ */
+public function get_affiliate_data( $product_id ) {
+
+	return array(
+
+		'shopee' => get_post_meta( $product_id, '_k86_shopee_url', true ),
+
+		'lazada' => get_post_meta( $product_id, '_k86_lazada_url', true ),
+
+		'tiktok' => get_post_meta( $product_id, '_k86_tiktok_url', true ),
+
+	);
+
+}
+
+/**
+ * Buy button.
+ */
+public function get_buy_button_data( $product_id ) {
+
+	return array(
+
+		'label' => get_post_meta(
+			$product_id,
+			'_k86_buy_button_label',
+			true
+		),
+
+		'style' => get_post_meta(
+			$product_id,
+			'_k86_buy_button_style',
+			true
+		),
+
+		'target' => '_blank',
+
+	);
+
+}
+
+/**
+ * Wishlist.
+ */
+public function get_wishlist_data( $product_id ) {
+
+	return array(
+
+		'enabled' => (bool) get_post_meta(
+			$product_id,
+			'_k86_enable_wishlist',
+			true
+		),
+
+	);
+
+}
+
+/**
+ * Compare.
+ */
+public function get_compare_data( $product_id ) {
+
+	return array(
+
+		'enabled' => (bool) get_post_meta(
+			$product_id,
+			'_k86_enable_compare',
+			true
+		),
+
+	);
+
+}
+
+/**
+ * Share.
+ */
+public function get_share_data( $product_id ) {
+
+	return array(
+
+		'facebook' => true,
+
+		'x'         => true,
+
+		'telegram' => true,
+
+		'copy_link'=> true,
+
+	);
+
+}
+/**
+ * Check whether a product exists.
+ *
+ * @param int $product_id Product ID.
+ * @return bool
+ */
+public function product_exists( $product_id ) {
+
+	return (bool) get_post( absint( $product_id ) );
+
+}
+
+/**
+ * Clear product cache.
+ *
+ * @param int $product_id Product ID.
+ * @return void
+ */
+public function clear_cache( $product_id = 0 ) {
+
+	if ( $product_id ) {
+
+		unset( $this->cache[ absint( $product_id ) ] );
+
+		return;
 
 	}
-	}
+
+	$this->cache = array();
+
+}
+
+/**
+ * Normalize array.
+ *
+ * @param mixed $data Data.
+ * @return array
+ */
+protected function normalize_array( $data ) {
+
+	return is_array( $data ) ? $data : array();
+
+}
+
+/**
+ * Get product field safely.
+ *
+ * @param array  $data    Product data.
+ * @param string $key     Field key.
+ * @param mixed  $default Default value.
+ * @return mixed
+ */
+public function get( array $data, $key, $default = null ) {
+
+	return array_key_exists( $key, $data )
+		? $data[ $key ]
+		: $default;
+
+}
+
+/**
+ * Build final product payload.
+ *
+ * @param int $product_id Product ID.
+ * @return array
+ */
+public function build( $product_id ) {
+
+	return apply_filters(
+		'k86_product_service_build',
+		$this->get_product_data( $product_id ),
+		$product_id
+	);
+
+}
+
 }
