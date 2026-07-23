@@ -25,6 +25,23 @@ if ( ! class_exists( 'K86_Product_Compare_Module' ) ) {
 		}
 
 		/**
+		 * Get compare items.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return array
+		 */
+		protected function get_compare_items( array $product ) {
+
+			if ( ! empty( $product['compare_items'] ) && is_array( $product['compare_items'] ) ) {
+				return $product['compare_items'];
+			}
+
+			return array();
+
+		}
+
+		/**
 		 * Render compare section.
 		 *
 		 * @param array $product Product data.
@@ -37,15 +54,15 @@ if ( ! class_exists( 'K86_Product_Compare_Module' ) ) {
 				? sanitize_text_field( $product['compare_title'] )
 				: __( 'So sánh sản phẩm', 'k86-pro' );
 
-			$items = array();
-
-			if ( ! empty( $product['compare_items'] ) && is_array( $product['compare_items'] ) ) {
-				$items = $product['compare_items'];
-			}
+			$items = $this->get_compare_items( $product );
 
 			if ( empty( $items ) ) {
 				return '';
 			}
+
+			$product_id = ! empty( $product['id'] )
+				? absint( $product['id'] )
+				: 0;
 
 			ob_start();
 			?>
@@ -79,6 +96,19 @@ if ( ! class_exists( 'K86_Product_Compare_Module' ) ) {
 					</tbody>
 
 				</table>
+
+				<div class="k86-compare-actions">
+
+					<button
+						type="button"
+						class="k86-compare-button"
+						data-product-id="<?php echo esc_attr( $product_id ); ?>">
+
+						<?php esc_html_e( 'Thêm vào so sánh', 'k86-pro' ); ?>
+
+					</button>
+
+				</div>
 
 			</div>
 
