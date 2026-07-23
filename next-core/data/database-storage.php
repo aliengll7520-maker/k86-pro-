@@ -70,7 +70,25 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 */
 		public function find_by_slug( $slug ) {
 
-			return null;
+	$slug = sanitize_title( $slug );
+
+	if ( '' === $slug ) {
+		return null;
+	}
+
+	$row = $this->db->get_row(
+		$this->db->prepare(
+			"SELECT * FROM {$this->table} WHERE slug = %s LIMIT 1",
+			$slug
+		),
+		ARRAY_A
+	);
+
+	if ( empty( $row ) ) {
+		return null;
+	}
+
+	return new K86_Product_Model( $row );
 
 		}
 
@@ -79,7 +97,25 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 */
 		public function find_by_sku( $sku ) {
 
-			return null;
+	$sku = sanitize_text_field( $sku );
+
+	if ( '' === $sku ) {
+		return null;
+	}
+
+	$row = $this->db->get_row(
+		$this->db->prepare(
+			"SELECT * FROM {$this->table} WHERE sku = %s LIMIT 1",
+			$sku
+		),
+		ARRAY_A
+	);
+
+	if ( empty( $row ) ) {
+		return null;
+	}
+
+	return new K86_Product_Model( $row );
 
 		}
 
@@ -88,7 +124,22 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 */
 		public function all() {
 
-			return array();
+	$rows = $this->db->get_results(
+		"SELECT * FROM {$this->table} ORDER BY id DESC",
+		ARRAY_A
+	);
+
+	if ( empty( $rows ) ) {
+		return array();
+	}
+
+	$products = array();
+
+	foreach ( $rows as $row ) {
+		$products[] = new K86_Product_Model( $row );
+	}
+
+	return $products;
 
 		}
 
@@ -97,12 +148,35 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 */
 		public function paginate( $page = 1, $per_page = 20 ) {
 
-			return array(
-				'items'    => array(),
-				'total'    => 0,
-				'page'     => max( 1, absint( $page ) ),
-				'per_page' => max( 1, absint( $per_page ) ),
-			);
+	$page     = max( 1, absint( $page ) );
+	$per_page = max( 1, absint( $per_page ) );
+	$offset   = ( $page - 1 ) * $per_page;
+
+	$total = (int) $this->db->get_var(
+		"SELECT COUNT(*) FROM {$this->table}"
+	);
+
+	$rows = $this->db->get_results(
+		$this->db->prepare(
+			"SELECT * FROM {$this->table} ORDER BY id DESC LIMIT %d OFFSET %d",
+			$per_page,
+			$offset
+		),
+		ARRAY_A
+	);
+
+	$items = array();
+
+	foreach ( $rows as $row ) {
+		$items[] = new K86_Product_Model( $row );
+	}
+
+	return array(
+		'items'    => $items,
+		'total'    => $total,
+		'page'     => $page,
+		'per_page' => $per_page,
+	);
 
 		}
 
