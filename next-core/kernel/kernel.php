@@ -141,6 +141,13 @@ class K86_Kernel {
 		if ( ! $this->registry->has( 'engine_manager' ) ) {
 			$this->registry->set( 'engine_manager', $this->engine_manager );
 		}
+		if ( ! $this->registry->has( 'module_registry' ) ) {
+    $this->registry->set( 'module_registry', $this->module_registry );
+}
+
+do_action( 'k86_kernel_managers_registered', $this );
+
+	}
 			/**
 	 * Start Kernel.
 	 *
