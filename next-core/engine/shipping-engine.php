@@ -134,7 +134,121 @@ if ( ! class_exists( 'K86_Shipping_Engine' ) ) {
 			return $this->get_fee();
 
 		}
+	/**
+	 * Set shipping carrier.
+	 *
+	 * @param string $carrier Carrier.
+	 *
+	 * @return $this
+	 */
+	public function set_carrier( $carrier ) {
 
+		return $this->register(
+			'shipping_carrier',
+			sanitize_text_field( $carrier )
+		);
+
+	}
+
+	/**
+	 * Get shipping carrier.
+	 *
+	 * @return string
+	 */
+	public function get_carrier() {
+
+		return (string) $this->get( 'shipping_carrier', '' );
+
+	}
+
+	/**
+	 * Set tracking number.
+	 *
+	 * @param string $tracking Tracking number.
+	 *
+	 * @return $this
+	 */
+	public function set_tracking_number( $tracking ) {
+
+		return $this->register(
+			'tracking_number',
+			sanitize_text_field( $tracking )
+		);
+
+	}
+
+	/**
+	 * Get tracking number.
+	 *
+	 * @return string
+	 */
+	public function get_tracking_number() {
+
+		return (string) $this->get( 'tracking_number', '' );
+
+	}
+
+	/**
+	 * Has tracking number.
+	 *
+	 * @return bool
+	 */
+	public function has_tracking_number() {
+
+		return '' !== $this->get_tracking_number();
+
+	}
+
+	/**
+	 * Set shipping insurance.
+	 *
+	 * @param bool $enabled Insurance.
+	 *
+	 * @return $this
+	 */
+	public function set_shipping_insurance( $enabled ) {
+
+		return $this->register(
+			'shipping_insurance',
+			(bool) $enabled
+		);
+
+	}
+
+	/**
+	 * Check shipping insurance.
+	 *
+	 * @return bool
+	 */
+	public function has_shipping_insurance() {
+
+		return (bool) $this->get(
+			'shipping_insurance',
+			false
+		);
+
+	}
+
+	/**
+	 * Get shipping label.
+	 *
+	 * @return string
+	 */
+	public function get_shipping_label() {
+
+		if ( $this->is_free_shipping() ) {
+			return __( 'Miễn phí vận chuyển', 'k86-pro' );
+		}
+
+		return sprintf(
+			__( 'Phí vận chuyển: %s', 'k86-pro' ),
+			number_format_i18n(
+				$this->calculate_shipping_fee(),
+				0
+			)
+		);
+
+	}
 	}
 
 }
