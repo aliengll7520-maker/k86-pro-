@@ -185,7 +185,32 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 */
 		public function save( K86_Product_Model $product ) {
 
-			return true;
+    $data = K86_Product_Mapper::to_array( $product );
+
+    $id = isset( $data['id'] ) ? absint( $data['id'] ) : 0;
+
+    if ( $id > 0 ) {
+
+        unset( $data['id'] );
+
+        $result = $this->db->update(
+            $this->table,
+            $data,
+            array( 'id' => $id )
+        );
+
+    } else {
+
+        unset( $data['id'] );
+
+        $result = $this->db->insert(
+            $this->table,
+            $data
+        );
+
+    }
+
+    return false !== $result;
 
 		}
 
@@ -194,7 +219,20 @@ if ( ! class_exists( 'K86_Product_Database_Storage' ) ) {
 		 */
 		public function delete( $id ) {
 
-			return true;
+    $id = absint( $id );
+
+    if ( $id <= 0 ) {
+        return false;
+    }
+
+    $result = $this->db->delete(
+        $this->table,
+        array(
+            'id' => $id,
+        )
+    );
+
+    return false !== $result;
 
 		}
 
