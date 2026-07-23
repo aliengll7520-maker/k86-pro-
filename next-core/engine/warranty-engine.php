@@ -118,7 +118,124 @@ if ( ! class_exists( 'K86_Warranty_Engine' ) ) {
 			);
 
 		}
+	/**
+	 * Set warranty policy.
+	 *
+	 * @param string $policy Warranty policy.
+	 *
+	 * @return $this
+	 */
+	public function set_policy( $policy ) {
 
+		return $this->register(
+			'warranty_policy',
+			sanitize_text_field( $policy )
+		);
+
+	}
+
+	/**
+	 * Get warranty policy.
+	 *
+	 * @return string
+	 */
+	public function get_policy() {
+
+		return (string) $this->get(
+			'warranty_policy',
+			''
+		);
+
+	}
+
+	/**
+	 * Set warranty contact.
+	 *
+	 * @param string $contact Contact information.
+	 *
+	 * @return $this
+	 */
+	public function set_contact( $contact ) {
+
+		return $this->register(
+			'warranty_contact',
+			sanitize_text_field( $contact )
+		);
+
+	}
+
+	/**
+	 * Get warranty contact.
+	 *
+	 * @return string
+	 */
+	public function get_contact() {
+
+		return (string) $this->get(
+			'warranty_contact',
+			''
+		);
+
+	}
+
+	/**
+	 * Set warranty note.
+	 *
+	 * @param string $note Warranty note.
+	 *
+	 * @return $this
+	 */
+	public function set_note( $note ) {
+
+		return $this->register(
+			'warranty_note',
+			sanitize_text_field( $note )
+		);
+
+	}
+
+	/**
+	 * Get warranty note.
+	 *
+	 * @return string
+	 */
+	public function get_note() {
+
+		return (string) $this->get(
+			'warranty_note',
+			''
+		);
+
+	}
+
+	/**
+	 * Check official warranty.
+	 *
+	 * @return bool
+	 */
+	public function is_official_warranty() {
+
+		return 'official' === strtolower( $this->get_type() );
+
+	}
+
+	/**
+	 * Get warranty label.
+	 *
+	 * @return string
+	 */
+	public function get_warranty_label() {
+
+		if ( ! $this->has_warranty() ) {
+			return __( 'Không có bảo hành', 'k86-pro' );
+		}
+
+		return sprintf(
+			__( 'Bảo hành %s', 'k86-pro' ),
+			$this->get_period()
+		);
+
+	}
 	}
 
 }
