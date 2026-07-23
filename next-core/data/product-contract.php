@@ -23,6 +23,7 @@ if ( ! class_exists( 'K86_Product_Contract' ) ) {
 			return array(
 
 				'basic' => array(
+					'id',
 					'title',
 					'slug',
 					'sku',
@@ -32,8 +33,16 @@ if ( ! class_exists( 'K86_Product_Contract' ) ) {
 				),
 
 				'media' => array(
+					'image',
 					'gallery',
 					'video',
+					'youtube',
+					'tiktok',
+					'pdf',
+					'documents',
+					'audio',
+					'icon',
+					'downloads',
 				),
 
 				'pricing' => array(
@@ -41,35 +50,47 @@ if ( ! class_exists( 'K86_Product_Contract' ) ) {
 					'sale_price',
 				),
 
+				'stock' => array(
+					'stock',
+					'in_stock',
+					'stock_progress',
+				),
+
 				'affiliate' => array(
 					'affiliate_links',
+					'cta_buttons',
 				),
 
 				'review' => array(
 					'rating',
 					'review_count',
+					'highlights',
+					'comparison',
 				),
 
 				'voucher' => array(
 					'voucher',
 				),
 
-				'countdown' => array(),
-
-				'stock' => array(
-					'stock',
+				'countdown' => array(
+					'countdown',
 				),
 
 				'shipping' => array(
-					'shipping',
+					'free_shipping',
 				),
 
 				'policy' => array(
 					'warranty',
 					'return_policy',
+					'trust',
 				),
 
-				'seo' => array(),
+				'seo' => array(
+					'meta_title',
+					'meta_description',
+					'focus_keyword',
+				),
 
 				'system' => array(
 					'post_id',
@@ -82,5 +103,4 @@ if ( ! class_exists( 'K86_Product_Contract' ) ) {
 		}
 
 	}
-
 }
