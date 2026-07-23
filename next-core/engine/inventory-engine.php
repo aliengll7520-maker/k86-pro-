@@ -134,7 +134,158 @@ if ( ! class_exists( 'K86_Inventory_Engine' ) ) {
 			}
 
 		}
+/**
+ * Set low stock threshold.
+ *
+ * @param int $quantity Threshold.
+ *
+ * @return $this
+ */
+public function set_low_stock_threshold( $quantity ) {
 
+	return $this->register(
+		'low_stock_threshold',
+		max( 0, (int) $quantity )
+	);
+
+}
+
+/**
+ * Get low stock threshold.
+ *
+ * @return int
+ */
+public function get_low_stock_threshold() {
+
+	return (int) $this->get(
+		'low_stock_threshold',
+		5
+	);
+
+}
+
+/**
+ * Check low stock.
+ *
+ * @return bool
+ */
+public function is_low_stock() {
+
+	$stock = $this->get_stock();
+
+	return $stock > 0 &&
+		$stock <= $this->get_low_stock_threshold();
+
+}
+
+/**
+ * Set max stock.
+ *
+ * @param int $quantity Max stock.
+ *
+ * @return $this
+ */
+public function set_max_stock( $quantity ) {
+
+	return $this->register(
+		'max_stock',
+		max( 0, (int) $quantity )
+	);
+
+}
+
+/**
+ * Get max stock.
+ *
+ * @return int
+ */
+public function get_max_stock() {
+
+	return (int) $this->get(
+		'max_stock',
+		0
+	);
+
+}
+		/**
+ * Get stock progress percentage.
+ *
+ * @return int
+ */
+public function get_stock_progress() {
+
+	$max = $this->get_max_stock();
+
+	if ( $max <= 0 ) {
+		return 0;
+	}
+
+	return (int) min(
+		100,
+		round( ( $this->get_stock() / $max ) * 100 )
+	);
+
+}
+
+/**
+ * Get stock message.
+ *
+ * @return string
+ */
+public function get_stock_message() {
+
+	if ( ! $this->is_in_stock() ) {
+		return __( 'Hết hàng', 'k86-pro' );
+	}
+
+	if ( $this->is_low_stock() ) {
+		return sprintf(
+			__( 'Chỉ còn %d sản phẩm', 'k86-pro' ),
+			$this->get_stock()
+		);
+	}
+
+	return sprintf(
+		__( 'Còn %d sản phẩm', 'k86-pro' ),
+		$this->get_stock()
+	);
+
+}
+
+/**
+ * Can purchase.
+ *
+ * @return bool
+ */
+public function can_purchase() {
+
+	return $this->is_in_stock()
+		&& 'outofstock' !== $this->get_stock_status();
+
+}
+
+/**
+ * Is backorder.
+ *
+ * @return bool
+ */
+public function is_backorder() {
+
+	return 'onbackorder' === $this->get_stock_status();
+
+}
+
+/**
+ * Reset stock.
+ *
+ * @return void
+ */
+public function reset_stock() {
+
+	$this->set_stock( 0 );
+	$this->sync_stock_status();
+
+}
 	}
 
 }
