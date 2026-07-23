@@ -102,7 +102,86 @@ if ( ! class_exists( 'K86_Review_Engine' ) ) {
 			return (float) $average;
 
 		}
+	/**
+	 * Set recommendation rate.
+	 *
+	 * @param float $rate Recommendation rate.
+	 *
+	 * @return $this
+	 */
+	public function set_recommendation_rate( $rate ) {
 
+		$rate = max( 0, min( 100, (float) $rate ) );
+
+		return $this->register(
+			'recommendation_rate',
+			$rate
+		);
+
+	}
+
+	/**
+	 * Get recommendation rate.
+	 *
+	 * @return float
+	 */
+	public function get_recommendation_rate() {
+
+		return (float) $this->get(
+			'recommendation_rate',
+			0
+		);
+
+	}
+
+	/**
+	 * Set five-star reviews.
+	 *
+	 * @param int $count Count.
+	 *
+	 * @return $this
+	 */
+	public function set_five_star_count( $count ) {
+
+		return $this->register(
+			'five_star_count',
+			max( 0, (int) $count )
+		);
+
+	}
+
+	/**
+	 * Get five-star reviews.
+	 *
+	 * @return int
+	 */
+	public function get_five_star_count() {
+
+		return (int) $this->get(
+			'five_star_count',
+			0
+		);
+
+	}
+
+	/**
+	 * Get review summary.
+	 *
+	 * @return string
+	 */
+	public function get_review_summary() {
+
+		if ( ! $this->has_reviews() ) {
+			return __( 'Chưa có đánh giá', 'k86-pro' );
+		}
+
+		return sprintf(
+			__( '%.1f/5 (%d đánh giá)', 'k86-pro' ),
+			$this->get_rating(),
+			$this->get_review_count()
+		);
+
+	}
 	}
 
 }
