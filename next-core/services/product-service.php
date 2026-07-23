@@ -245,5 +245,67 @@ if ( ! class_exists( 'K86_Product_Service' ) ) {
 		);
 
 	}
+			/**
+	 * Get warranty information.
+	 *
+	 * @return array
+	 */
+	public function get_warranty_data() {
+
+		$warranty = $this->warranty();
+
+		return $warranty
+			? $warranty->get_warranty_info()
+			: array();
+
+	}
+
+	/**
+	 * Get return policy information.
+	 *
+	 * @return array
+	 */
+	public function get_return_policy_data() {
+
+		$return = $this->return_policy();
+
+		return $return
+			? $return->get_return_policy()
+			: array();
+
+	}
+
+	/**
+	 * Get inventory information.
+	 *
+	 * @return array
+	 */
+	public function get_inventory_data() {
+
+		$inventory = $this->inventory();
+
+		if ( ! $inventory ) {
+			return array();
+		}
+
+		return array(
+			'stock'    => $inventory->get_stock(),
+			'status'   => $inventory->get_stock_status(),
+			'in_stock' => $inventory->is_in_stock(),
+		);
+
+	}
+
+	/**
+	 * Check whether the product is available for sale.
+	 *
+	 * @return bool
+	 */
+	public function is_available_for_sale() {
+
+		return $this->is_in_stock()
+			&& $this->get_current_price() > 0;
+
+	}
 	}
 }
