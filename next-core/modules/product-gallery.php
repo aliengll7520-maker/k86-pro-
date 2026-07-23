@@ -25,13 +25,13 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 		}
 
 		/**
-		 * Render module.
+		 * Get gallery images.
 		 *
 		 * @param array $product Product data.
 		 *
-		 * @return string
+		 * @return array
 		 */
-		public function render( array $product ) {
+		protected function get_gallery( array $product ) {
 
 			$gallery = array();
 
@@ -41,6 +41,10 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 
 				if ( ! empty( $media['gallery'] ) && is_array( $media['gallery'] ) ) {
 					$gallery = $media['gallery'];
+				}
+
+				if ( empty( $gallery ) && ! empty( $media['featured'] ) ) {
+					$gallery[] = $media['featured'];
 				}
 
 			}
@@ -53,9 +57,28 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 				$gallery[] = $product['image'];
 			}
 
+			return array_values( array_unique( $gallery ) );
+
+		}
+
+		/**
+		 * Render module.
+		 *
+		 * @param array $product Product data.
+		 *
+		 * @return string
+		 */
+		public function render( array $product ) {
+
+			$gallery = $this->get_gallery( $product );
+
 			if ( empty( $gallery ) ) {
 				return '';
 			}
+
+			$product_name = ! empty( $product['name'] )
+				? esc_attr( $product['name'] )
+				: esc_attr__( 'Product Image', 'k86-pro' );
 
 			ob_start();
 			?>
@@ -66,8 +89,11 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 
 					<img
 						src="<?php echo esc_url( $gallery[0] ); ?>"
-						alt=""
-						class="k86-gallery-image"
+						alt="<?php echo $product_name; ?>"
+						class="k86-gallery-image active"
+						loading="lazy"
+						width="800"
+						height="800"
 					/>
 
 				</div>
@@ -76,12 +102,16 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 
 					<div class="k86-gallery-thumbnails">
 
-						<?php foreach ( $gallery as $image ) : ?>
+						<?php foreach ( $gallery as $index => $image ) : ?>
 
 							<img
 								src="<?php echo esc_url( $image ); ?>"
-								alt=""
-								class="k86-gallery-thumb"
+								alt="<?php echo $product_name; ?>"
+								class="k86-gallery-thumb<?php echo 0 === $index ? ' active' : ''; ?>"
+								loading="lazy"
+								width="120"
+								height="120"
+								data-index="<?php echo esc_attr( $index ); ?>"
 							/>
 
 						<?php endforeach; ?>
@@ -89,6 +119,10 @@ if ( ! class_exists( 'K86_Product_Gallery_Module' ) ) {
 					</div>
 
 				<?php endif; ?>
+
+				<div class="k86-gallery-count">
+					<?php echo esc_html( count( $gallery ) ); ?> ảnh
+				</div>
 
 			</div>
 
