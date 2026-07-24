@@ -36,6 +36,7 @@ if ( ! class_exists( 'K86_Render_Manager' ) ) {
 		 * @var K86_HTML_Builder|null
 		 */
 		protected $builder = null;
+		protected $product_renderer = null;
 
 		/**
 		 * Khởi tạo.
