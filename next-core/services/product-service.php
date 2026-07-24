@@ -1,5 +1,6 @@
 <?php	
 defined( 'ABSPATH' ) || exit;
+require_once K86_PRO_PATH . 'next-core/repositories/product-repository.php';
 
 if ( ! class_exists( 'K86_Product_Service' ) ) {
 
