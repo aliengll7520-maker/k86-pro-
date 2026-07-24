@@ -60,6 +60,9 @@ function k86_get_products() {
 	global $wpdb;
 
 	return $wpdb->get_results(
+		if ( k86_container() && k86_container()->has( 'product_service' ) ) {
+    return k86_container()->get( 'product_service' )->all();
+}
 		'SELECT * FROM ' . k86_get_table() . ' ORDER BY id DESC'
 	);
 
