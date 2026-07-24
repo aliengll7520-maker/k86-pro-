@@ -1,14 +1,18 @@
-		/**
-		 * Save product.
-		 *
-		 * @param array $product Product data.
-		 * @return bool
-		 */
-		public function save( array $product ) {
+/**
+ * Save product.
+ *
+ * @param K86_Product|array $product Product data.
+ * @return bool
+ */
+public function save( $product ) {
 
-			$wpdb = $GLOBALS['wpdb'];
+    $wpdb = $GLOBALS['wpdb'];
 
-			$product = $this->prepare_data( $product );
+    if ( $product instanceof K86_Product ) {
+        $product = $product->to_array();
+    }
+
+    $product = $this->prepare_data( $product );
 
 			if ( empty( $product ) ) {
 				return false;
@@ -34,7 +38,7 @@
 		 * @param array $product Product data.
 		 * @return bool
 		 */
-		public function update( $id, array $product ) {
+		public function update( $id, $product ) {
 
 			$wpdb = $GLOBALS['wpdb'];
 
