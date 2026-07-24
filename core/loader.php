@@ -159,7 +159,7 @@ if ( $bridge_available ) {
 				$bootstrap = new K86_Bootstrap();
 
 				if ( method_exists( $bootstrap, 'boot' ) ) {
-					$bootstrap->boot();
+					$GLOBALS['k86_registry'] = $bootstrap->boot();
 				}
 			}
 
