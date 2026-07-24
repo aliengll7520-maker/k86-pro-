@@ -86,7 +86,7 @@ protected function register_service( $name, $service ) {
  */
 protected function register_product_service() {
 
-	$this->engine->register(
+	$this->register_service(
 		'product',
 		new K86_Product_Service()
 	);
@@ -98,7 +98,7 @@ protected function register_product_service() {
  */
 protected function register_pricing_service() {
 
-	$this->engine->register(
+	$this->register_service(
 		'pricing',
 		new K86_Pricing_Service()
 	);
@@ -110,7 +110,7 @@ protected function register_pricing_service() {
  */
 protected function register_inventory_service() {
 
-	$this->engine->register(
+	$this->register_service(
 		'inventory',
 		new K86_Inventory_Service()
 	);
@@ -122,7 +122,7 @@ protected function register_inventory_service() {
  */
 protected function register_shipping_service() {
 
-	$this->engine->register(
+	$this->register_service(
 		'shipping',
 		new K86_Shipping_Service()
 	);
@@ -134,7 +134,7 @@ protected function register_shipping_service() {
  */
 protected function register_warranty_service() {
 
-	$this->engine->register(
+	$this->register_service(
 		'warranty',
 		new K86_Warranty_Service()
 	);
@@ -146,7 +146,7 @@ protected function register_warranty_service() {
  */
 protected function register_return_service() {
 
-	$this->engine->register(
+	$this->register_service(
 		'return',
 		new K86_Return_Service()
 	);
@@ -158,7 +158,7 @@ protected function register_return_service() {
  */
 protected function register_review_service() {
 
-	$this->engine->register(
+	$this->register_service(
 		'review',
 		new K86_Review_Service()
 	);
@@ -172,6 +172,16 @@ protected function register_review_service() {
 protected function register_custom_services() {
 
 	do_action( 'k86_register_services', $this->engine );
+
+}
+	/**
+ * Get registered services.
+ *
+ * @return array
+ */
+public function get_services() {
+
+	return $this->services;
 
 }
 
