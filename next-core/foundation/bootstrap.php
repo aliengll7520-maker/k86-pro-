@@ -52,6 +52,8 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 			$registry  = new K86_Registry();
 			$container = new K86_Container();
 			$manager   = new K86_Engine_Manager();
+			$registry->set( 'container', $container );
+$registry->set( 'engine_manager', $manager );
 
 			// Register framework services.
 			$provider = new K86_Service_Provider();
