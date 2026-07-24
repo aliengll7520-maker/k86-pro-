@@ -472,3 +472,18 @@ function k86_products_output( $products ) {
 	);
 
 }
+function k86_registry() {
+    return $GLOBALS['k86_registry'] ?? null;
+}
+
+function k86_container() {
+    $registry = k86_registry();
+
+    return $registry ? $registry->get( 'container' ) : null;
+}
+
+function k86_engine() {
+    $registry = k86_registry();
+
+    return $registry ? $registry->get( 'engine_manager' ) : null;
+}
