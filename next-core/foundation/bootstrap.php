@@ -83,7 +83,27 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 					}
 				}
 			}
+// Boot Module Registry.
+if ( $registry->has( 'module_registry' ) ) {
 
+	$module_registry = $registry->get( 'module_registry' );
+
+	if ( method_exists( $module_registry, 'boot' ) ) {
+		$module_registry->boot();
+	}
+}
+
+// Boot WordPress Hooks.
+if ( $registry->has( 'wordpress_hooks' ) ) {
+
+	$wp_hooks = $registry->get( 'wordpress_hooks' );
+
+	if ( method_exists( $wp_hooks, 'boot' ) ) {
+		$wp_hooks->boot();
+	}
+}
+
+do_action( 'k86_next_core_booted', $registry );
 			return $registry;
 
 		}
