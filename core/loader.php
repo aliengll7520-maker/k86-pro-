@@ -156,12 +156,38 @@ foreach ( $core_components as $component ) {
 
 if ( $bridge_available ) {
 
-	require_once K86_PRO_PATH .
-		'next-core/kernel/kernel.php';
+	require_once K86_PRO_PATH . 'next-core/kernel/kernel.php';
 
-	do_action(
-		'k86_bridge_loaded'
-	);
+	// Boot thử Next Core
+	if ( file_exists( K86_PRO_PATH . 'next-core/kernel/kernel-loader.php' ) ) {
+
+		require_once K86_PRO_PATH . 'next-core/kernel/kernel-loader.php';
+
+		if ( class_exists( 'K86_Kernel' ) && class_exists( 'K86_Kernel_Loader' ) ) {
+
+			try {
+
+				$kernel = new K86_Kernel();
+
+				$loader = new K86_Kernel_Loader( $kernel );
+
+				if ( method_exists( $loader, 'boot' ) ) {
+					$loader->boot();
+				}
+
+			} catch ( Throwable $e ) {
+
+				error_log(
+					'K86 Next Core Boot: ' . $e->getMessage()
+				);
+
+			}
+
+		}
+
+	}
+
+	do_action( 'k86_bridge_loaded' );
 
 }
 
