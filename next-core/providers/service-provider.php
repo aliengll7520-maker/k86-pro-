@@ -1,5 +1,31 @@
 <?php
 /**
+ * K86 Pro Next Core
+ * Service Provider
+ *
+ * @package K86Pro
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+if ( ! class_exists( 'K86_Service_Provider' ) ) {
+
+class K86_Service_Provider {
+
+	/**
+	 * Service Engine.
+	 *
+	 * @var object|null
+	 */
+	protected $engine;
+
+	/**
+	 * Registered services.
+	 *
+	 * @var array
+	 */
+	protected $services = array();
+/**
  * Constructor.
  *
  * @param Service_Engine|null $engine Service engine.
