@@ -1,9 +1,9 @@
 <?php
 /**
- * K86 Pro Next Core
- * Loader
+ * K86 Pro Next Core Loader
  *
  * @package K86Pro
+ * @since 1.6.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -23,16 +23,13 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 		 * Constructor.
 		 */
 		public function __construct() {
-
 			$this->base_path = dirname( __DIR__ );
-
 		}
 
 		/**
 		 * Require a file if it exists.
 		 *
 		 * @param string $file File path.
-		 *
 		 * @return void
 		 */
 		protected function require_file( $file ) {
@@ -40,7 +37,6 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 			if ( is_string( $file ) && is_file( $file ) ) {
 				require_once $file;
 			}
-
 		}
 
 		/**
@@ -48,10 +44,13 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 		 *
 		 * @param string $directory Directory path.
 		 * @param array  $exclude   Excluded filenames.
-		 *
 		 * @return void
 		 */
 		protected function require_directory( $directory, array $exclude = array() ) {
+
+			if ( ! is_dir( $directory ) ) {
+				return;
+			}
 
 			$files = glob( $directory . '/*.php' );
 
@@ -68,9 +67,7 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 				}
 
 				$this->require_file( $file );
-
 			}
-
 		}
 
 		/**
@@ -100,7 +97,10 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 				)
 			);
 
-			// Other framework layers.
+			// Kernel.
+			$this->require_directory( $this->base_path . '/kernel' );
+
+			// Framework layers.
 			$this->require_directory( $this->base_path . '/repositories' );
 			$this->require_directory( $this->base_path . '/managers' );
 			$this->require_directory( $this->base_path . '/services' );
@@ -111,9 +111,7 @@ if ( ! class_exists( 'K86_Loader' ) ) {
 			$this->require_directory( $this->base_path . '/modules' );
 			$this->require_directory( $this->base_path . '/compatibility' );
 			$this->require_directory( $this->base_path . '/frontend' );
-
 		}
-
 	}
 
 }
