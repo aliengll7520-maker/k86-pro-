@@ -35,7 +35,7 @@ public function save( $product ) {
 		 * Update product.
 		 *
 		 * @param int   $id Product ID.
-		 @param K86_Product|array $product Product data.
+		* @param K86_Product|array $product Product data.
 		 * @return bool
 		 */
 		public function update( $id, $product ) {
