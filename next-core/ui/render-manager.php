@@ -77,7 +77,9 @@ if ( ! class_exists( 'K86_Render_Manager' ) ) {
 				);
 
 			}
-
+if ( class_exists( 'K86_Product_Renderer' ) ) {
+    $this->product_renderer = new K86_Product_Renderer();
+}
 		}
 
 		/**
