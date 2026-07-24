@@ -171,7 +171,11 @@ protected function register_review_service() {
  */
 protected function register_custom_services() {
 
-	do_action( 'k86_register_services', $this->engine );
+	do_action(
+	'k86_register_services',
+	$this->engine,
+	$this
+);
 
 }
 	/**
