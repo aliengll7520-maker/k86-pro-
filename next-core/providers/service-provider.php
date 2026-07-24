@@ -168,7 +168,6 @@ public function boot() {
 		return;
 	}
 
-	$this->register();
 
 	$this->register_custom_services();
 
