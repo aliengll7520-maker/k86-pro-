@@ -1,4 +1,9 @@
 <?php	
+defined( 'ABSPATH' ) || exit;
+
+if ( ! class_exists( 'K86_Product_Service' ) ) {
+
+class K86_Product_Service {
 /**
  * Cached product data.
  *
