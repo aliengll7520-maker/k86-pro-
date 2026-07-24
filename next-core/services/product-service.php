@@ -165,16 +165,12 @@ protected function has_engine( $engine ) {
 	return null !== $this->engine( $engine );
 
 }
-
-/**
- * Safe engine call.
- *
- * @param string $engine Engine name.
- * @param string $method Method name.
- * @param array  $args   Arguments.
- *
- * @return mixed|null
- */
+public function all() {
+    return $this->repository->find_all();
+}
+public function all() {
+    return $this->repository->find_all();
+}
 protected function call_engine( $engine, $method, array $args = array() ) {
 
 	$instance = $this->engine( $engine );
