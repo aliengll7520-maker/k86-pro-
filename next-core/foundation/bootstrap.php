@@ -4,6 +4,7 @@
  * Bootstrap
  *
  * @package K86Pro
+ * @since 1.6.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -15,13 +16,37 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 		/**
 		 * Bootstrap framework.
 		 *
-		 * @return K86_Registry
+		 * @return K86_Registry|null
 		 */
 		public function boot() {
+
+			// Load Loader class.
+			if ( ! class_exists( 'K86_Loader' ) ) {
+
+				$loader_file = dirname( __FILE__ ) . '/loader.php';
+
+				if ( file_exists( $loader_file ) ) {
+					require_once $loader_file;
+				}
+			}
+
+			if ( ! class_exists( 'K86_Loader' ) ) {
+				return null;
+			}
 
 			// Load framework.
 			$loader = new K86_Loader();
 			$loader->load();
+
+			// Verify core classes.
+			if (
+				! class_exists( 'K86_Registry' ) ||
+				! class_exists( 'K86_Container' ) ||
+				! class_exists( 'K86_Engine_Manager' ) ||
+				! class_exists( 'K86_Service_Provider' )
+			) {
+				return null;
+			}
 
 			// Create core objects.
 			$registry  = new K86_Registry();
@@ -33,22 +58,15 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 			$provider->register( $container, $manager );
 			$provider->boot();
 
-			// Shared services.
 			$services = array(
-
-				// Core.
 				'container'       => $container,
 				'engine_manager'  => $manager,
-
-				// Foundation.
 				'config'          => 'config',
 				'registry'        => 'registry',
 				'helpers'         => 'helpers',
 				'logger'          => 'logger',
 				'event_manager'   => 'event_manager',
 				'error_handler'   => 'error_handler',
-
-				// Services.
 				'product_service' => 'product_service',
 				'health_check'    => 'health_check',
 				'module_registry' => 'module_registry',
@@ -66,12 +84,7 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 					method_exists( $container, 'has' ) &&
 					$container->has( $service )
 				) {
-
-					$registry->set(
-						$key,
-						$container->get( $service )
-					);
-
+					$registry->set( $key, $container->get( $service ) );
 					continue;
 				}
 
@@ -85,7 +98,6 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 				}
 			}
 
-			// Boot Module Registry.
 			if ( $registry->has( 'module_registry' ) ) {
 
 				$module_registry = $registry->get( 'module_registry' );
@@ -95,7 +107,6 @@ if ( ! class_exists( 'K86_Bootstrap' ) ) {
 				}
 			}
 
-			// Boot WordPress Hooks.
 			if ( $registry->has( 'wordpress_hooks' ) ) {
 
 				$wp_hooks = $registry->get( 'wordpress_hooks' );
