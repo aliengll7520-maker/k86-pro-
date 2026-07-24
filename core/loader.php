@@ -12,7 +12,7 @@
  * - Bridge Ready
  * - Next Core Detection
  *
- * Chưa Boot Kernel.
+ * Boot thông qua K86_Bootstrap.
  *
  * @package K86_Pro
  * @since   2.0.0
@@ -60,12 +60,12 @@ if ( ! function_exists( 'k86_next_core_exists' ) ) {
 
 }
 
-if ( ! function_exists( 'k86_kernel_exists' ) ) {
+if ( ! function_exists( 'k86_bootstrap_exists' ) ) {
 
-	function k86_kernel_exists() {
+	function k86_bootstrap_exists() {
 
 		return file_exists(
-			K86_PRO_PATH . 'next-core/kernel/kernel.php'
+			K86_PRO_PATH . 'next-core/foundation/bootstrap.php'
 		);
 
 	}
@@ -83,7 +83,7 @@ $bridge_available = false;
 if (
 	k86_next_core_exists()
 	&&
-	k86_kernel_exists()
+	k86_bootstrap_exists()
 ) {
 
 	$bridge_available = true;
@@ -99,19 +99,12 @@ if (
 $core_components = array(
 
 	'functions',
-
 	'hooks',
-
 	'assets',
-
 	'admin',
-
 	'ajax',
-
 	'shortcodes',
-
 	'blocks',
-
 	'api',
 
 );
@@ -141,9 +134,7 @@ foreach ( $core_components as $component ) {
 		'.php';
 
 	if ( file_exists( $file ) ) {
-
 		require_once $file;
-
 	}
 
 }
@@ -153,41 +144,36 @@ foreach ( $core_components as $component ) {
 | Bridge Layer
 |--------------------------------------------------------------------------
 */
-
 if ( $bridge_available ) {
 
-	require_once K86_PRO_PATH . 'next-core/kernel/kernel.php';
+	$bootstrap_file = K86_PRO_PATH . 'next-core/foundation/bootstrap.php';
 
-	// Boot thử Next Core
-	if ( file_exists( K86_PRO_PATH . 'next-core/kernel/kernel-loader.php' ) ) {
+	if ( file_exists( $bootstrap_file ) ) {
 
-		require_once K86_PRO_PATH . 'next-core/kernel/kernel-loader.php';
+		require_once $bootstrap_file;
 
-		if ( class_exists( 'K86_Kernel' ) && class_exists( 'K86_Kernel_Loader' ) ) {
+		try {
 
-			try {
+			if ( class_exists( 'K86_Bootstrap' ) ) {
 
-				$kernel = new K86_Kernel();
+				$bootstrap = new K86_Bootstrap();
 
-				$loader = new K86_Kernel_Loader( $kernel );
-
-				if ( method_exists( $loader, 'boot' ) ) {
-					$loader->boot();
+				if ( method_exists( $bootstrap, 'boot' ) ) {
+					$bootstrap->boot();
 				}
-
-			} catch ( Throwable $e ) {
-
-				error_log(
-					'K86 Next Core Boot: ' . $e->getMessage()
-				);
-
 			}
+
+			do_action( 'k86_bridge_loaded' );
+
+		} catch ( Throwable $e ) {
+
+			error_log(
+				'K86 Next Core Boot Error: ' . $e->getMessage()
+			);
 
 		}
 
 	}
-
-	do_action( 'k86_bridge_loaded' );
 
 }
 
@@ -197,9 +183,8 @@ if ( $bridge_available ) {
 |--------------------------------------------------------------------------
 */
 
-do_action(
-	'k86_legacy_loaded'
-);
+do_action( 'k86_legacy_loaded' );
+
 /*
 |--------------------------------------------------------------------------
 | Loader Status
