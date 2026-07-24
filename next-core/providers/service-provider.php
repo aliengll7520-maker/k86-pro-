@@ -92,7 +92,7 @@ protected function register_product_service() {
 	);
 $product_service = $this->services['product'];
 
-$container = $this->registry->get( 'container' );
+$container = k86_container();
 
 if ( $container ) {
     $container->instance( 'product_service', $product_service );
