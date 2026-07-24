@@ -63,6 +63,24 @@ public function register( $container = null, $manager = null ) {
 	$this->register_review_service();
 
 }
+	/**
+ * Register a Service.
+ *
+ * @param string $name    Service name.
+ * @param object $service Service instance.
+ *
+ * @return void
+ */
+protected function register_service( $name, $service ) {
+
+	$this->engine->register(
+		$name,
+		$service
+	);
+
+	$this->services[ $name ] = $service;
+
+}
 /**
  * Register Product Service.
  */
