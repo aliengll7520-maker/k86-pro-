@@ -16,12 +16,14 @@ protected $cache = array();
  *
  * @var array
  */
+	protected $repository;
 protected $engines = array();
 
 /**
  * Constructor.
  */
 public function __construct() {
+	$this->repository = new K86_Product_Repository();
 
 	$this->register_engines();
 
