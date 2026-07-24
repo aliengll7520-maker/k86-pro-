@@ -90,7 +90,13 @@ protected function register_product_service() {
 		'product',
 		new K86_Product_Service()
 	);
+$product_service = $this->services['product'];
 
+$container = $this->registry->get( 'container' );
+
+if ( $container ) {
+    $container->instance( 'product_service', $product_service );
+}
 }
 
 /**
